@@ -1,0 +1,25 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F4F1EA"/>
+  <rect x="32" y="32" width="1136" height="566" rx="32" fill="url(#paint0_linear)"/>
+  <rect x="68" y="68" width="1064" height="494" rx="28" stroke="#B4D7C9" stroke-opacity="0.35" stroke-width="2"/>
+  <circle cx="956" cy="146" r="110" fill="#91D0BA" fill-opacity="0.1"/>
+  <circle cx="1036" cy="238" r="54" fill="#91D0BA" fill-opacity="0.14"/>
+  <circle cx="910" cy="274" r="24" fill="#F0C97A" fill-opacity="0.25"/>
+  <path d="M870 390C922 318 1013 282 1106 297" stroke="#9ED8C4" stroke-width="2" stroke-opacity="0.35" stroke-dasharray="8 12"/>
+  <rect x="108" y="114" width="132" height="132" rx="32" fill="#163427"/>
+  <rect x="123" y="129" width="102" height="102" rx="24" stroke="#80C8B2" stroke-opacity="0.3" stroke-width="2"/>
+  <path d="M148 156H200" stroke="#DDF6EB" stroke-width="8" stroke-linecap="round"/>
+  <path d="M160 156V182L141 215.5C137.2 222.1 142 230 149.8 230H198.2C206 230 210.8 222.1 207 215.5L188 182V156" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M154 202H194" stroke="#80C8B2" stroke-width="8" stroke-linecap="round"/>
+  <text x="108" y="316" fill="#F7FCF9" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700">SOMADI LIFESCIENCE</text>
+  <text x="108" y="380" fill="#D6EDE3" font-family="Arial, Helvetica, sans-serif" font-size="26">Scientific equipment, chemicals and consumables for laboratories,</text>
+  <text x="108" y="416" fill="#D6EDE3" font-family="Arial, Helvetica, sans-serif" font-size="26">institutions and industrial buyers across India.</text>
+  <text x="108" y="500" fill="#F0C97A" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Trusted Scientific &amp; Laboratory Supply Partner Since 1966</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="72" y1="76" x2="1121" y2="585" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#214737"/>
+      <stop offset="0.56" stop-color="#173528"/>
+      <stop offset="1" stop-color="#224D3A"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -27,6 +27,9 @@ function site_data(): array
             'default_description' => 'Premium B2B scientific ecommerce platform for laboratory chemicals, instruments, consumables, ethanol, glassware and procurement solutions across India.',
             'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, ethanol supplier India, scientific instruments Delhi, lab consumables distributor, scientific hypermarket India',
             'base_url' => 'https://www.somadilifescience.com',
+            'logo' => '/assets/brand/logo-badge.svg',
+            'og_image' => '/assets/brand/og-card.svg',
+            'favicon' => '/assets/brand/favicon.svg',
         ],
         'metrics' => [
             ['value' => 60, 'suffix' => '+', 'label' => 'Years of Experience'],
@@ -193,20 +196,24 @@ function page_meta(string $page): array
 
     $pages = [
         'home' => [
-            'title' => 'SOMADI LIFESCIENCE | Premium Scientific Ecommerce Platform',
-            'description' => 'Scientific equipment supplier India with enterprise-grade discovery, RFQ workflows, catalogue center and modern B2B procurement experiences.',
+            'title' => 'SOMADI LIFESCIENCE | Scientific Equipment Supplier India',
+            'description' => 'Scientific equipment supplier India with enterprise-grade discovery, RFQ workflows, catalogue center and modern B2B procurement for laboratory chemicals, instruments and consumables.',
+            'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, lab consumables distributor, scientific instruments Delhi, scientific hypermarket India',
         ],
         'products' => [
-            'title' => 'Products | SOMADI LIFESCIENCE',
-            'description' => 'Browse laboratory chemicals, ethanol, instruments, consumables, glassware, balances and water testing solutions with RFQ-ready product cards.',
+            'title' => 'Laboratory Products & Scientific Equipment | SOMADI LIFESCIENCE',
+            'description' => 'Browse laboratory chemicals, ethanol, instruments, consumables, glassware, balances and water testing products with RFQ-ready product discovery for labs across India.',
+            'keywords' => 'laboratory chemicals supplier, ethanol supplier India, scientific equipment supplier India, lab consumables distributor, scientific instruments Delhi',
         ],
         'catalogues' => [
-            'title' => 'Catalogues | SOMADI LIFESCIENCE',
-            'description' => 'Explore scientific product catalogues, brochures and downloadable procurement resources across chemicals, glassware, consumables and instruments.',
+            'title' => 'Scientific Catalogues & Brochures | SOMADI LIFESCIENCE',
+            'description' => 'Explore scientific product catalogues, brochures and downloadable procurement resources for chemicals, glassware, consumables and instruments.',
+            'keywords' => 'scientific catalogue India, laboratory product brochures, lab consumables distributor, scientific equipment supplier India, laboratory chemicals supplier',
         ],
         'contact' => [
             'title' => 'Contact & RFQ | SOMADI LIFESCIENCE',
-            'description' => 'Connect with SOMADI LIFESCIENCE for laboratory procurement, technical product support, bulk orders and fast quotation workflows.',
+            'description' => 'Contact SOMADI LIFESCIENCE for laboratory procurement, technical product support, bulk orders, catalogue requests and fast quotation workflows.',
+            'keywords' => 'contact laboratory chemicals supplier, scientific equipment supplier India contact, RFQ lab consumables distributor, scientific instruments Delhi contact',
         ],
     ];
 
@@ -255,10 +262,14 @@ function absolute_url(string $path = '/'): string
 
 function current_request_path(): string
 {
-    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+    $requestUri = $_SERVER['REQUEST_URI'] ?? ($_SERVER['SCRIPT_NAME'] ?? '/');
     $path = (string) parse_url($requestUri, PHP_URL_PATH);
 
-    return $path !== '' ? $path : '/';
+    if ($path === '' || $path === '/index.php') {
+        return '/';
+    }
+
+    return $path;
 }
 
 function current_page_url(): string
@@ -281,7 +292,7 @@ function breadcrumb_items(string $page): array
     $items = [
         [
             'name' => 'Home',
-            'url' => absolute_url('/index.php'),
+            'url' => absolute_url('/'),
         ],
     ];
 
@@ -305,7 +316,6 @@ function page_schema_type(string $page): string
     return match ($page) {
         'products' => 'CollectionPage',
         'catalogues' => 'CollectionPage',
-        'contact' => 'ContactPage',
         default => 'WebPage',
     };
 }
@@ -314,6 +324,7 @@ function build_business_schema(): array
 {
     $data = site_data();
     $company = $data['company'];
+    $meta = $data['meta'];
 
     return [
         '@type' => ['Organization', 'LocalBusiness'],
@@ -324,6 +335,8 @@ function build_business_schema(): array
         'email' => $company['email'],
         'telephone' => $company['phone'],
         'description' => $company['tagline'],
+        'logo' => absolute_url($meta['logo']),
+        'image' => absolute_url($meta['og_image']),
         'foundingDate' => $company['founding_year'],
         'address' => [
             '@type' => 'PostalAddress',
@@ -373,6 +386,7 @@ function build_website_schema(): array
         'url' => absolute_url('/'),
         'name' => $data['company']['name'],
         'description' => $data['meta']['default_description'],
+        'image' => absolute_url($data['meta']['og_image']),
         'publisher' => [
             '@id' => absolute_url('/#organization'),
         ],
@@ -410,12 +424,20 @@ function build_page_schema(string $page): array
         'url' => current_page_url(),
         'name' => $meta['title'] ?? $meta['default_title'],
         'description' => $meta['description'] ?? $meta['default_description'],
+        'keywords' => $meta['keywords'],
         'isPartOf' => [
             '@id' => absolute_url('/#website'),
+        ],
+        'breadcrumb' => [
+            '@id' => current_page_url() . '#breadcrumb',
         ],
         'about' => [
             '@id' => absolute_url('/#organization'),
         ],
+        'publisher' => [
+            '@id' => absolute_url('/#organization'),
+        ],
+        'primaryImageOfPage' => absolute_url($meta['og_image']),
         'inLanguage' => 'en-IN',
     ];
 }
@@ -523,12 +545,13 @@ function build_contact_page_schema(): array
         'name' => 'Contact SOMADI LIFESCIENCE',
         'description' => 'Contact SOMADI LIFESCIENCE for laboratory procurement, quotations, bulk sourcing and technical product support.',
         'mainEntity' => [
-            '@id' => absolute_url('/#organization'),
+            '@type' => 'ContactPoint',
+            'contactType' => 'sales',
+            'telephone' => $company['phone'],
+            'email' => $company['email'],
+            'areaServed' => 'IN',
+            'availableLanguage' => ['en', 'hi'],
         ],
-        'contactOption' => ['TollFree', 'HearingImpairedSupported'],
-        'availableLanguage' => ['en', 'hi'],
-        'telephone' => $company['phone'],
-        'email' => $company['email'],
     ];
 }
 
@@ -608,6 +631,8 @@ function render_head(string $page): void
     $title = $meta['title'] ?? $meta['default_title'];
     $description = $meta['description'] ?? $meta['default_description'];
     $canonicalUrl = current_page_url();
+    $imageUrl = absolute_url($meta['og_image']);
+    $imageAlt = 'Social preview for ' . $title;
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -619,6 +644,8 @@ function render_head(string $page): void
     <meta name="keywords" content="<?= h($meta['keywords']) ?>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="author" content="SOMADI LIFESCIENCE">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#1f4f3e">
     <meta property="og:locale" content="en_IN">
     <meta property="og:site_name" content="SOMADI LIFESCIENCE">
@@ -626,10 +653,16 @@ function render_head(string $page): void
     <meta property="og:description" content="<?= h($description) ?>">
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?= h($canonicalUrl) ?>">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="<?= h($imageUrl) ?>">
+    <meta property="og:image:alt" content="<?= h($imageAlt) ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= h($title) ?>">
     <meta name="twitter:description" content="<?= h($description) ?>">
+    <meta name="twitter:image" content="<?= h($imageUrl) ?>">
     <link rel="canonical" href="<?= h($canonicalUrl) ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= h($meta['favicon']) ?>">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <?php render_schema_markup($page); ?>
 </head>
