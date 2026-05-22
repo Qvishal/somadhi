@@ -20,9 +20,9 @@ render_header();
             </div>
             <div class="page-hero__grid">
                 <div class="reveal">
-                    <span class="eyebrow">Search-first product discovery</span>
-                    <h1>Scientific products organized for faster evaluation and cleaner procurement workflows</h1>
-                    <p>Browse enterprise-style product cards with filters, availability signals, compare actions and RFQ-ready details across chemicals, instruments, consumables and more.</p>
+                    <span class="eyebrow">Product range</span>
+                    <h1>Laboratory products, research chemicals and scientific equipment organized for easier sourcing</h1>
+                    <p>Browse representative products across our wider supply range, including chemicals, labware, HPLC supplies, consumables, instruments and healthcare-oriented categories.</p>
                 </div>
             </div>
         </div>
@@ -71,9 +71,9 @@ render_header();
                 <div class="filter-panel__section">
                     <span class="eyebrow">Conversion tools</span>
                     <ul class="feature-list">
-                        <li><?= icon('check') ?> Add multiple products to an RFQ</li>
+                        <li><?= icon('check') ?> Add multiple products to one inquiry</li>
                         <li><?= icon('check') ?> Compare key specifications quickly</li>
-                        <li><?= icon('check') ?> Download brochure-oriented resources</li>
+                        <li><?= icon('check') ?> Request category-wise catalogue support</li>
                     </ul>
                 </div>
             </aside>
@@ -116,8 +116,8 @@ render_header();
                                     <button type="button" class="link-button" data-compare-trigger data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Compare</button>
                                 </div>
                                 <div class="product-card__actions">
-                                    <button class="button button--primary button--small" type="button" data-add-quote data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Add to Quotation</button>
-                                    <a class="button button--ghost button--small" href="/catalogues.php">Download Brochure</a>
+                                    <button class="button button--primary button--small" type="button" data-add-quote data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Quotation</button>
+                                    <a class="button button--ghost button--small" href="/catalogues.php">Brochure</a>
                                 </div>
                             </div>
                         </article>
@@ -135,25 +135,25 @@ render_header();
         <div class="container section-heading reveal">
             <div>
                 <span class="eyebrow">Procurement support</span>
-                <h2>Built for B2B buying, not just browsing</h2>
+                <h2>Structured to support practical laboratory and institutional buying</h2>
             </div>
-            <p>Every page is optimized to reduce evaluation time, improve trust and move complex requirements toward a structured inquiry rather than a dead-end product list.</p>
+            <p>From product browsing to quotation requests, the page is designed to help customers move from requirement identification to clear communication with the Somadi team.</p>
         </div>
         <div class="container info-grid">
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('spark') ?></span>
                 <h3>Quick technical preview</h3>
-                <p>Core specs surface above the fold so buyers can assess fit before requesting details.</p>
+                <p>Core specifications are visible early so laboratories can assess fit before reaching out.</p>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('quote') ?></span>
-                <h3>Quote list workflow</h3>
-                <p>Collect multiple SKUs across brands and submit one cleaner RFQ with notes and quantities.</p>
+                <h3>Multi-product inquiry flow</h3>
+                <p>Collect multiple SKUs across categories and submit one cleaner RFQ with notes and quantities.</p>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('download') ?></span>
-                <h3>Brochure-led validation</h3>
-                <p>Download catalogue resources to support internal approvals, lab comparisons and budget planning.</p>
+                <h3>Catalogue-backed decisions</h3>
+                <p>Use downloadable resources to support internal approvals, comparisons and requirement planning.</p>
             </article>
         </div>
     </section>

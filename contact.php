@@ -22,8 +22,8 @@ render_header();
             <div class="page-hero__grid">
                 <div class="reveal">
                     <span class="eyebrow">Sales, support and RFQ intake</span>
-                    <h1>Contact the team behind your next scientific procurement decision</h1>
-                    <p>From urgent chemical requirements to multi-brand instrumentation sourcing, the contact experience is rebuilt to feel faster, clearer and more enterprise-grade.</p>
+                    <h1>Contact the team for laboratory products, research chemicals and healthcare supply support</h1>
+                    <p>Reach out for quotations, sourcing assistance, product guidance and dependable support for laboratory, diagnostics and healthcare-related requirements.</p>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@ render_header();
             <div class="contact-panel reveal">
                 <span class="eyebrow">Office details</span>
                 <h2>SOMADI LIFESCIENCE</h2>
-                <p>Legacy scientific supply expertise, now paired with a cleaner digital procurement workflow for laboratories, institutions and industrial buyers.</p>
+                <p><?= h($company['commitment']) ?></p>
                 <div class="contact-list contact-list--stacked">
                     <a href="tel:<?= h(str_replace(' ', '', $company['phone'])) ?>"><span><?= icon('phone') ?></span><?= h($company['phone']) ?></a>
                     <a href="https://wa.me/919810024567" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
@@ -53,8 +53,8 @@ render_header();
 
             <form class="form-card reveal reveal--delay" id="rfq-form" data-inquiry-form>
                 <input type="hidden" name="form_type" value="Contact RFQ">
-                <span class="eyebrow">Modern inquiry form</span>
-                <h3>Request pricing, stock confirmation or sourcing support</h3>
+                <span class="eyebrow">Inquiry form</span>
+                <h3>Request pricing, stock confirmation or customized support</h3>
                 <div class="form-row">
                     <label>
                         Full name
@@ -109,18 +109,18 @@ render_header();
         <div class="container info-grid">
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('quote') ?></span>
-                <h3>RFQ-ready intake</h3>
-                <p>The form structure supports multi-item procurement and cleaner internal follow-up.</p>
+                <h3>Quotation support</h3>
+                <p>Share multiple products, quantities and delivery details in one place for faster follow-up.</p>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('whatsapp') ?></span>
-                <h3>WhatsApp escalation path</h3>
-                <p>Urgent buyers can move from web inquiry to rapid conversation without losing context.</p>
+                <h3>Direct communication</h3>
+                <p>Move from web inquiry to phone or WhatsApp quickly when your requirement is urgent or time-sensitive.</p>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('spark') ?></span>
-                <h3>Enterprise trust cues</h3>
-                <p>Address, GST and clear communications build confidence for first-time institutional buyers.</p>
+                <h3>Trust and coordination</h3>
+                <p>Clear business details, careful coordination and responsive support help build long-term customer confidence.</p>
             </article>
         </div>
     </section>

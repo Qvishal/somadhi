@@ -8,8 +8,8 @@ function site_data(): array
         'company' => [
             'name' => 'SOMADI LIFESCIENCE',
             'short' => 'SL',
-            'tagline' => 'India\'s trusted scientific and laboratory supply partner since 1966.',
-            'founding_year' => '1966',
+            'tagline' => 'Trusted distributor and supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions across India.',
+            'founding_year' => '2015',
             'phone' => '+91 98100 24567',
             'whatsapp' => '+91 98100 24567',
             'email' => 'sales@somadilifescience.com',
@@ -21,41 +21,46 @@ function site_data(): array
             'country' => 'IN',
             'gst' => '07AABCA1966Q1Z4',
             'map' => 'https://www.google.com/maps?q=3481+Nicholson+Road+Mori+Gate+Delhi&output=embed',
+            'intro' => 'Established in 2015, Somadi Lifesciences is a trusted distributor and supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions for customers across India.',
+            'commitment' => 'We are committed to delivering reliable laboratory and healthcare solutions with a strong focus on quality, efficiency and customer satisfaction, especially for temperature-sensitive and research-critical requirements.',
+            'closing' => 'Our team works closely with customers to provide dependable support, smooth coordination and complete laboratory solutions tailored to their requirements.',
         ],
         'meta' => [
             'default_title' => 'SOMADI LIFESCIENCE | Scientific Equipment Supplier India',
-            'default_description' => 'Premium B2B scientific ecommerce platform for laboratory chemicals, instruments, consumables, ethanol, glassware and procurement solutions across India.',
-            'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, ethanol supplier India, scientific instruments Delhi, lab consumables distributor, scientific hypermarket India',
+            'default_description' => 'Trusted supplier of laboratory products, scientific instruments, research chemicals, consumables and healthcare solutions across India.',
+            'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, scientific instruments Delhi, lab consumables distributor, research chemicals supplier India, laboratory products supplier',
             'base_url' => 'https://www.somadilifescience.com',
             'logo' => '/assets/brand/logo-badge.svg',
             'og_image' => '/assets/brand/og-card.svg',
             'favicon' => '/assets/brand/favicon.svg',
         ],
         'metrics' => [
-            ['value' => 60, 'suffix' => '+', 'label' => 'Years of Experience'],
-            ['value' => 10000, 'suffix' => '+', 'label' => 'Products Ready for Procurement'],
-            ['value' => 5000, 'suffix' => '+', 'label' => 'Institutions and Industrial Clients'],
-            ['value' => 100, 'suffix' => '+', 'label' => 'Scientific Brand Partnerships'],
-            ['value' => 28, 'suffix' => ' States', 'label' => 'Pan India Distribution Reach'],
+            ['value' => 2015, 'suffix' => '', 'label' => 'Established'],
+            ['value' => 13, 'suffix' => '+', 'label' => 'Product Segments'],
+            ['value' => 6, 'suffix' => '+', 'label' => 'Core Customer Sectors'],
+            ['value' => 100, 'suffix' => '%', 'label' => 'Quality-Focused Supply'],
         ],
         'categories' => [
-            ['slug' => 'laboratory-chemicals', 'name' => 'Laboratory Chemicals', 'summary' => 'AR, LR, HPLC and specialty reagents for daily lab workflows.', 'accent' => 'Cyan Flux', 'icon' => 'flask'],
-            ['slug' => 'ethanol-solvents', 'name' => 'Ethanol & Solvents', 'summary' => 'High-purity solvents for pharma, research and QA environments.', 'accent' => 'Polar Grade', 'icon' => 'droplet'],
-            ['slug' => 'glassware', 'name' => 'Glassware', 'summary' => 'Beakers, burettes, volumetric glassware and custom lab setups.', 'accent' => 'Precision Form', 'icon' => 'beaker'],
-            ['slug' => 'pipettes', 'name' => 'Pipettes', 'summary' => 'Micropipettes, dispensers and liquid handling essentials.', 'accent' => 'Microliter Control', 'icon' => 'pipette'],
-            ['slug' => 'safety-products', 'name' => 'Safety Products', 'summary' => 'PPE, spill handling and compliant storage solutions.', 'accent' => 'LabSafe', 'icon' => 'shield'],
-            ['slug' => 'analytical-instruments', 'name' => 'Analytical Instruments', 'summary' => 'Bench instruments and QA systems for high-trust measurement.', 'accent' => 'Signal Accuracy', 'icon' => 'wave'],
-            ['slug' => 'chromatography', 'name' => 'Chromatography', 'summary' => 'Columns, filters and accessories for analytical separation.', 'accent' => 'Separation Grade', 'icon' => 'columns'],
-            ['slug' => 'consumables', 'name' => 'Consumables', 'summary' => 'Daily-use plasticware, filter media and sample prep items.', 'accent' => 'High Rotation', 'icon' => 'box'],
-            ['slug' => 'balances', 'name' => 'Balances', 'summary' => 'Analytical and precision balances for compliant weighing.', 'accent' => 'Calibrated Mass', 'icon' => 'scale'],
-            ['slug' => 'water-testing', 'name' => 'Water Testing', 'summary' => 'Field and laboratory solutions for water quality analytics.', 'accent' => 'Purity Insight', 'icon' => 'water'],
+            ['slug' => 'research-chemicals', 'name' => 'Research Chemicals', 'summary' => 'Reliable chemicals for research, analytical work and routine laboratory operations.', 'accent' => 'Research Grade', 'icon' => 'flask'],
+            ['slug' => 'molecular-biology-reagents', 'name' => 'Molecular Biology Reagents', 'summary' => 'Reagents and supporting supplies for molecular and life science workflows.', 'accent' => 'Life Science', 'icon' => 'spark'],
+            ['slug' => 'biochemicals-immunochemicals', 'name' => 'Biochemicals & Immunochemicals', 'summary' => 'Specialized products for advanced biological and immunological applications.', 'accent' => 'Biochemical Range', 'icon' => 'droplet'],
+            ['slug' => 'indian-imported-chemicals', 'name' => 'Indian & Imported Chemicals', 'summary' => 'Authentic products sourced from leading national and international brands.', 'accent' => 'Authentic Sourcing', 'icon' => 'beaker'],
+            ['slug' => 'glassware-plasticware', 'name' => 'Laboratory Glassware & Plasticware', 'summary' => 'Daily-use essentials for handling, measuring, storage and sample preparation.', 'accent' => 'Core Labware', 'icon' => 'beaker'],
+            ['slug' => 'liquid-handling', 'name' => 'Liquid Handling Products', 'summary' => 'Pipettes, dispensers and accessories for controlled, repeatable handling.', 'accent' => 'Precision Handling', 'icon' => 'pipette'],
+            ['slug' => 'hplc-solvents', 'name' => 'HPLC Solvents', 'summary' => 'High-purity solvents for chromatography and analytical testing.', 'accent' => 'Chromatography Ready', 'icon' => 'droplet'],
+            ['slug' => 'hplc-columns-vials', 'name' => 'HPLC Columns & Vials', 'summary' => 'Separation columns and sample containment products for HPLC workflows.', 'accent' => 'Analytical Support', 'icon' => 'columns'],
+            ['slug' => 'culture-media', 'name' => 'Dehydrated Culture Media', 'summary' => 'Microbiology media solutions for research, diagnostics and quality testing.', 'accent' => 'Microbiology', 'icon' => 'wave'],
+            ['slug' => 'safety-products', 'name' => 'Laboratory Safety Products', 'summary' => 'Protective gear and safety-focused products for compliant lab environments.', 'accent' => 'Safe Operations', 'icon' => 'shield'],
+            ['slug' => 'scientific-instruments', 'name' => 'Scientific Instruments & Laboratory Equipment', 'summary' => 'Instruments and equipment for research, diagnostics and laboratory setup.', 'accent' => 'Equipment Supply', 'icon' => 'scale'],
+            ['slug' => 'medical-diagnostics', 'name' => 'Medical Equipment & Diagnostics', 'summary' => 'Selected healthcare and diagnostics products for medical and clinical needs.', 'accent' => 'Healthcare Ready', 'icon' => 'check'],
+            ['slug' => 'scientific-consumables', 'name' => 'Scientific Consumables', 'summary' => 'Fast-moving consumables that keep routine lab operations running smoothly.', 'accent' => 'Daily Supply', 'icon' => 'box'],
         ],
         'products' => [
             [
                 'slug' => 'hplc-acetonitrile',
                 'name' => 'HPLC Acetonitrile',
                 'brand' => 'Merck',
-                'category' => 'Laboratory Chemicals',
+                'category' => 'HPLC Solvents',
                 'availability' => 'In Stock',
                 'specs' => ['Pack' => '2.5 L', 'Grade' => 'HPLC', 'Purity' => '99.9%'],
                 'summary' => 'Low UV absorbance solvent for chromatography and analytical workflows.',
@@ -65,7 +70,7 @@ function site_data(): array
                 'slug' => 'absolute-ethanol',
                 'name' => 'Absolute Ethanol',
                 'brand' => 'Somadi Supply',
-                'category' => 'Ethanol & Solvents',
+                'category' => 'Indian & Imported Chemicals',
                 'availability' => 'Ready Stock',
                 'specs' => ['Pack' => '500 mL / 2.5 L', 'Grade' => 'AR', 'Assay' => '99.9%'],
                 'summary' => 'High-purity ethanol for pharma labs, universities and industrial QC.',
@@ -75,7 +80,7 @@ function site_data(): array
                 'slug' => 'volumetric-flask-set',
                 'name' => 'Class A Volumetric Flask Set',
                 'brand' => 'Borosil',
-                'category' => 'Glassware',
+                'category' => 'Laboratory Glassware & Plasticware',
                 'availability' => 'In Stock',
                 'specs' => ['Range' => '10-1000 mL', 'Class' => 'A', 'Material' => 'Boro 3.3'],
                 'summary' => 'Calibrated laboratory glassware with serialized certification support.',
@@ -85,7 +90,7 @@ function site_data(): array
                 'slug' => 'single-channel-pipette',
                 'name' => 'Variable Volume Pipette',
                 'brand' => 'Thermo Fisher',
-                'category' => 'Pipettes',
+                'category' => 'Liquid Handling Products',
                 'availability' => '2 Day Lead',
                 'specs' => ['Range' => '0.5-10 uL', 'Accuracy' => '+/-0.8%', 'Warranty' => '1 Year'],
                 'summary' => 'Ergonomic single-channel pipette for precise liquid handling.',
@@ -95,7 +100,7 @@ function site_data(): array
                 'slug' => 'nitrile-gloves',
                 'name' => 'Powder-Free Nitrile Gloves',
                 'brand' => 'Ansell',
-                'category' => 'Safety Products',
+                'category' => 'Laboratory Safety Products',
                 'availability' => 'In Stock',
                 'specs' => ['Box' => '100 pcs', 'Color' => 'Blue', 'Use' => 'Chemical Handling'],
                 'summary' => 'Reliable hand protection for research, QA and production floors.',
@@ -105,7 +110,7 @@ function site_data(): array
                 'slug' => 'uv-vis-spectrophotometer',
                 'name' => 'UV-Vis Spectrophotometer',
                 'brand' => 'Shimadzu',
-                'category' => 'Analytical Instruments',
+                'category' => 'Scientific Instruments & Laboratory Equipment',
                 'availability' => 'On Request',
                 'specs' => ['Range' => '190-1100 nm', 'Mode' => 'Scan & Quant', 'Interface' => 'USB'],
                 'summary' => 'Enterprise-grade spectral analysis for regulated laboratory use.',
@@ -115,7 +120,7 @@ function site_data(): array
                 'slug' => 'hplc-column-c18',
                 'name' => 'C18 HPLC Column',
                 'brand' => 'Avantor',
-                'category' => 'Chromatography',
+                'category' => 'HPLC Columns & Vials',
                 'availability' => 'Ready Stock',
                 'specs' => ['Size' => '250 x 4.6 mm', 'Particle' => '5 um', 'pH' => '2-8'],
                 'summary' => 'Stable reversed-phase column for routine and high-throughput methods.',
@@ -125,7 +130,7 @@ function site_data(): array
                 'slug' => 'syringe-filters',
                 'name' => 'Sterile Syringe Filters',
                 'brand' => 'Pall',
-                'category' => 'Consumables',
+                'category' => 'Scientific Consumables',
                 'availability' => 'In Stock',
                 'specs' => ['Pore' => '0.22 um', 'Dia' => '25 mm', 'Pack' => '100 pcs'],
                 'summary' => 'High-flow sterile filters for sample prep and membrane clarification.',
@@ -135,7 +140,7 @@ function site_data(): array
                 'slug' => 'analytical-balance',
                 'name' => 'Analytical Balance 0.1 mg',
                 'brand' => 'Mettler Toledo',
-                'category' => 'Balances',
+                'category' => 'Scientific Instruments & Laboratory Equipment',
                 'availability' => '5 Day Lead',
                 'specs' => ['Capacity' => '220 g', 'Readability' => '0.1 mg', 'Calibration' => 'Internal'],
                 'summary' => 'Audit-ready weighing performance for QC, R&D and regulated settings.',
@@ -145,7 +150,7 @@ function site_data(): array
                 'slug' => 'tds-meter-kit',
                 'name' => 'Water Quality Test Kit',
                 'brand' => 'Hach',
-                'category' => 'Water Testing',
+                'category' => 'Scientific Instruments & Laboratory Equipment',
                 'availability' => 'In Stock',
                 'specs' => ['Tests' => 'pH/TDS/Conductivity', 'Format' => 'Portable', 'Users' => 'Field + Lab'],
                 'summary' => 'Portable water analysis kit built for environmental and utility teams.',
@@ -154,37 +159,42 @@ function site_data(): array
         ],
         'brands' => ['Thermo Fisher', 'Merck', 'Avantor', 'Qiagen', 'Whatman', 'Borosil', 'Pall Corporation', 'Shimadzu', 'Mettler Toledo', 'Hach'],
         'industries' => [
-            ['name' => 'Pharma', 'summary' => 'Validated sourcing for QA, QC and formulation teams.'],
-            ['name' => 'Universities', 'summary' => 'Fast-moving laboratory essentials for teaching and research.'],
-            ['name' => 'Research Labs', 'summary' => 'Technical product access for advanced scientific workflows.'],
-            ['name' => 'Biotechnology', 'summary' => 'Sample handling, filtration and analytical readiness at scale.'],
-            ['name' => 'Food Testing', 'summary' => 'Reliable consumables and instrumentation for compliance-heavy analysis.'],
-            ['name' => 'Chemical Industries', 'summary' => 'Bulk procurement support for plants, pilot labs and process teams.'],
-            ['name' => 'Water Testing', 'summary' => 'Environmental and municipal testing solutions with quick dispatch.'],
-            ['name' => 'Educational Institutions', 'summary' => 'Cost-aware procurement with service continuity and stock depth.'],
+            ['name' => 'Research Laboratories', 'summary' => 'Dependable products for day-to-day research workflows and technical studies.'],
+            ['name' => 'Educational Institutions', 'summary' => 'Laboratory essentials and instruments for teaching, training and academic research.'],
+            ['name' => 'Pharmaceutical Companies', 'summary' => 'Quality-focused supply support for analytical, QC and production-linked teams.'],
+            ['name' => 'Hospitals', 'summary' => 'Selected laboratory and healthcare requirements supported through reliable sourcing.'],
+            ['name' => 'Diagnostic Centers', 'summary' => 'Consumables, reagents and support products for testing and diagnostics environments.'],
+            ['name' => 'Industrial Organizations', 'summary' => 'Scientific supply support for plant labs, QA teams and industrial testing functions.'],
+            ['name' => 'Biotechnology', 'summary' => 'Life science-aligned products for biology, reagent handling and filtration needs.'],
+            ['name' => 'Healthcare', 'summary' => 'Practical healthcare solution support with careful handling and timely coordination.'],
         ],
         'differentiators' => [
-            ['title' => 'Authorized Distributor Network', 'summary' => 'Source global brands with documentation-backed confidence.'],
-            ['title' => 'Huge Ready Stock', 'summary' => 'Critical SKUs available for fast dispatch and urgent replenishment.'],
-            ['title' => 'Fast Procurement', 'summary' => 'Structured RFQ handling with quick turnaround and bulk support.'],
-            ['title' => 'Technical Support', 'summary' => 'Product selection assistance for research, QA and industrial teams.'],
-            ['title' => 'Bulk Orders', 'summary' => 'Enterprise pricing paths for tenders, annual contracts and repeat demand.'],
-            ['title' => 'Pan India Delivery', 'summary' => 'Reliable delivery coordination across institutional and industrial sites.'],
-            ['title' => 'Trusted Since 1966', 'summary' => 'Legacy credibility modernized for the next generation of procurement.'],
+            ['title' => 'Trusted Since 2015', 'summary' => 'A growing reputation for professionalism, authenticity and service excellence.'],
+            ['title' => 'Genuine & High-Quality Products', 'summary' => 'Products sourced from leading national and international brands with a focus on reliability.'],
+            ['title' => 'Competitive Pricing', 'summary' => 'Practical commercial support for institutions, laboratories and industrial buyers.'],
+            ['title' => 'Prompt Delivery Across India', 'summary' => 'Reliable coordination for urgent, routine and recurring supply requirements.'],
+            ['title' => 'Temperature-Controlled Handling', 'summary' => 'Careful storage and transportation for sensitive research and healthcare products.'],
+            ['title' => 'Dedicated Customer Support', 'summary' => 'Dependable support, smooth coordination and responsive follow-up for every inquiry.'],
+            ['title' => 'Customized Laboratory Solutions', 'summary' => 'Product combinations and sourcing support tailored to customer requirements.'],
         ],
         'catalogues' => [
-            ['title' => 'Analytical & QA Instruments', 'category' => 'Instruments', 'pages' => 48, 'size' => '12.4 MB'],
-            ['title' => 'Laboratory Chemicals & Solvents', 'category' => 'Chemicals', 'pages' => 76, 'size' => '18.1 MB'],
-            ['title' => 'Glassware & Volumetric Essentials', 'category' => 'Glassware', 'pages' => 34, 'size' => '9.7 MB'],
-            ['title' => 'Safety, PPE & Storage', 'category' => 'Safety', 'pages' => 26, 'size' => '8.3 MB'],
-            ['title' => 'Filtration, Consumables & Sample Prep', 'category' => 'Consumables', 'pages' => 44, 'size' => '11.6 MB'],
-            ['title' => 'Water Testing & Field Analytics', 'category' => 'Water Testing', 'pages' => 22, 'size' => '7.8 MB'],
+            ['title' => 'Research Chemicals & Imported Chemicals', 'category' => 'Chemicals', 'pages' => 52, 'size' => '11.8 MB'],
+            ['title' => 'Molecular Biology, Biochemicals & Immunochemicals', 'category' => 'Life Science', 'pages' => 46, 'size' => '10.9 MB'],
+            ['title' => 'Glassware, Plasticware & Liquid Handling', 'category' => 'Labware', 'pages' => 38, 'size' => '8.7 MB'],
+            ['title' => 'HPLC Solvents, Columns & Vials', 'category' => 'Chromatography', 'pages' => 34, 'size' => '7.9 MB'],
+            ['title' => 'Culture Media, Safety Products & Consumables', 'category' => 'Consumables', 'pages' => 42, 'size' => '9.8 MB'],
+            ['title' => 'Scientific Instruments, Medical Equipment & Diagnostics', 'category' => 'Equipment', 'pages' => 48, 'size' => '12.2 MB'],
         ],
         'faqs' => [
-            ['question' => 'Can we request a quote for multiple products in one inquiry?', 'answer' => 'Yes. The quote drawer and inquiry forms are designed for multi-item RFQs with quantities, notes and delivery requirements.'],
-            ['question' => 'Do you support institutional and tender-based procurement?', 'answer' => 'Yes. We support universities, laboratories, industrial teams and organizations managing recurring or tender-based procurement.'],
-            ['question' => 'How quickly can you dispatch fast-moving products?', 'answer' => 'Many daily-use chemicals, consumables and glassware items are available from ready stock for rapid dispatch.'],
-            ['question' => 'Can catalogues and brochures be shared digitally?', 'answer' => 'Yes. Product brochures, category catalogues and brand-specific resources can be shared through the catalogue center or by request.'],
+            ['question' => 'What types of products does Somadi Lifescience supply?', 'answer' => 'We supply laboratory products, scientific instruments, research chemicals, consumables, liquid handling products, HPLC supplies, safety products, medical equipment and diagnostics solutions.'],
+            ['question' => 'Which customer segments do you support?', 'answer' => 'We work with research laboratories, educational institutions, pharmaceutical companies, hospitals, diagnostic centers and industrial organizations across India.'],
+            ['question' => 'Do you handle temperature-sensitive products carefully?', 'answer' => 'Yes. Proper handling, storage and transportation are a key part of our supply process for temperature-sensitive products used in research, diagnostics and healthcare applications.'],
+            ['question' => 'Can we request customized laboratory solutions or bulk supply support?', 'answer' => 'Yes. We provide customized laboratory solutions, dependable coordination and support for bulk, recurring and application-specific requirements.'],
+        ],
+        'overview_blocks' => [
+            ['icon' => 'spark', 'title' => 'Who We Are', 'summary' => 'Established in 2015, Somadi Lifesciences serves scientific, research and healthcare customers with dependable sourcing and responsive service.'],
+            ['icon' => 'box', 'title' => 'What We Supply', 'summary' => 'Our portfolio covers laboratory products, scientific instruments, research chemicals, consumables and healthcare-oriented product requirements.'],
+            ['icon' => 'check', 'title' => 'Our Commitment', 'summary' => 'We focus on quality, efficiency, careful handling and customer satisfaction for every inquiry, order and delivery.'],
         ],
     ];
 }
@@ -197,23 +207,23 @@ function page_meta(string $page): array
     $pages = [
         'home' => [
             'title' => 'SOMADI LIFESCIENCE | Scientific Equipment Supplier India',
-            'description' => 'Scientific equipment supplier India with enterprise-grade discovery, RFQ workflows, catalogue center and modern B2B procurement for laboratory chemicals, instruments and consumables.',
-            'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, lab consumables distributor, scientific instruments Delhi, scientific hypermarket India',
+            'description' => 'Trusted supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions across India.',
+            'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, research chemicals supplier India, scientific instruments Delhi, lab consumables distributor',
         ],
         'products' => [
             'title' => 'Laboratory Products & Scientific Equipment | SOMADI LIFESCIENCE',
-            'description' => 'Browse laboratory chemicals, ethanol, instruments, consumables, glassware, balances and water testing products with RFQ-ready product discovery for labs across India.',
-            'keywords' => 'laboratory chemicals supplier, ethanol supplier India, scientific equipment supplier India, lab consumables distributor, scientific instruments Delhi',
+            'description' => 'Browse laboratory products, scientific instruments, research chemicals, HPLC supplies, consumables and healthcare-oriented product categories for buyers across India.',
+            'keywords' => 'laboratory chemicals supplier, scientific equipment supplier India, research chemicals supplier India, lab consumables distributor, scientific instruments Delhi',
         ],
         'catalogues' => [
             'title' => 'Scientific Catalogues & Brochures | SOMADI LIFESCIENCE',
-            'description' => 'Explore scientific product catalogues, brochures and downloadable procurement resources for chemicals, glassware, consumables and instruments.',
-            'keywords' => 'scientific catalogue India, laboratory product brochures, lab consumables distributor, scientific equipment supplier India, laboratory chemicals supplier',
+            'description' => 'Explore scientific product catalogues and brochures covering chemicals, life science products, labware, HPLC supplies, consumables and instruments.',
+            'keywords' => 'scientific catalogue India, laboratory product brochures, scientific equipment supplier India, laboratory chemicals supplier, research chemicals supplier India',
         ],
         'contact' => [
             'title' => 'Contact & RFQ | SOMADI LIFESCIENCE',
-            'description' => 'Contact SOMADI LIFESCIENCE for laboratory procurement, technical product support, bulk orders, catalogue requests and fast quotation workflows.',
-            'keywords' => 'contact laboratory chemicals supplier, scientific equipment supplier India contact, RFQ lab consumables distributor, scientific instruments Delhi contact',
+            'description' => 'Contact SOMADI LIFESCIENCE for laboratory procurement, product sourcing, technical support, healthcare supply queries and quotation requests.',
+            'keywords' => 'contact laboratory chemicals supplier, scientific equipment supplier India contact, research chemicals supplier India contact, scientific instruments Delhi contact',
         ],
     ];
 
@@ -664,6 +674,9 @@ function render_head(string $page): void
     <link rel="canonical" href="<?= h($canonicalUrl) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= h($meta['favicon']) ?>">
     <link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">    
     <?php render_schema_markup($page); ?>
 </head>
 <body data-page="<?= h($page) ?>">
@@ -676,7 +689,7 @@ function render_header(): void
     ?>
     <div class="topbar">
         <div class="container topbar__inner">
-            <p>Scientific equipment, chemicals and consumables for laboratories, institutions and industrial buyers.</p>
+            <p>Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
             <a href="tel:+919810024567">Delhi Sales Desk: +91 98100 24567</a>
         </div>
     </div>
@@ -810,7 +823,7 @@ function render_footer(): void
                     <span class="brand-mark__logo">SL</span>
                     <span class="brand-mark__copy">
                         <strong>SOMADI LIFESCIENCE</strong>
-                        <small>Since 1966</small>
+                        <small>Established 2015</small>
                     </span>
                 </a>
                 <p><?= h($data['company']['tagline']) ?></p>

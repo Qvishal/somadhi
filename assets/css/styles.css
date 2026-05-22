@@ -39,6 +39,7 @@
 *::before,
 *::after {
     box-sizing: border-box;
+    font-family: 'Poppins','Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
 html {
@@ -455,6 +456,7 @@ textarea {
     border-radius: 14px;
     background: linear-gradient(135deg, rgba(11, 95, 255, 0.12), rgba(39, 215, 255, 0.2));
     color: var(--primary-deep);
+    margin-bottom: 20px;
 }
 
 .mini-card strong,
@@ -525,6 +527,12 @@ textarea {
     visibility: visible;
 }
 
+.mobile-menu.is-open,
+.search-overlay.is-open,
+.compare-modal.is-open {
+    pointer-events: auto;
+}
+
 .page-dim {
     background: rgba(3, 11, 18, 0.5);
     backdrop-filter: blur(8px);
@@ -583,6 +591,10 @@ textarea {
     place-items: center;
     padding: 28px;
     z-index: 70;
+}
+
+.compare-modal {
+    z-index: 71;
 }
 
 .search-overlay__panel,
@@ -651,6 +663,10 @@ textarea {
     background: white;
 }
 
+.catalogue-card__actions{
+    margin-top: 20px;
+}
+
 .quote-item__top,
 .quote-item__meta,
 .availability-row,
@@ -682,8 +698,7 @@ textarea {
 .catalogue-toolbar,
 .site-footer__meta,
 .page-hero__grid,
-.topbar__inner,
-.breadcrumb {
+.topbar__inner{
     justify-content: space-between;
 }
 
@@ -803,31 +818,41 @@ p {
 }
 
 .hero__trust {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
     margin-top: 28px;
 }
 
 .trust-pill {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
     align-items: center;
     gap: 12px;
-    min-height: 46px;
-    padding: 0 18px;
-    border-radius: 999px;
-    border: 1px solid rgba(31, 62, 48, 0.08);
-    background: rgba(255, 255, 255, 0.88);
+    min-height: 74px;
+    padding: 16px 18px;
+    border-radius: 22px;
+    border: 1px solid rgba(31, 62, 48, 0.1);
+    background: rgba(255, 255, 255, 0.92);
     color: var(--heading);
-    font-weight: 600;
+    font-weight: 650;
+    line-height: 1.35;
+    box-shadow: 0 12px 24px rgba(27, 43, 34, 0.06);
 }
 
 .trust-pill span {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    background: rgba(207, 154, 71, 0.14);
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+    background: rgba(207, 154, 71, 0.16);
     color: var(--primary-deep);
+}
+
+.trust-pill strong {
+    display: block;
+    font-size: 0.94rem;
 }
 
 .science-scene {
@@ -1042,7 +1067,7 @@ p {
 }
 
 .metrics-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .metric-card {
@@ -1331,7 +1356,7 @@ p {
 }
 
 .info-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .info-card {
@@ -1714,6 +1739,7 @@ label {
     border: 1px solid rgba(31, 62, 48, 0.08);
     background: rgba(255, 255, 255, 0.92);
     color: var(--muted);
+    width: 416px;
 }
 
 .search-field input {
@@ -1970,7 +1996,8 @@ label {
     .product-grid,
     .info-grid,
     .industries-grid,
-    .catalogue-grid {
+    .catalogue-grid,
+    .hero__trust {
         grid-template-columns: 1fr;
     }
 

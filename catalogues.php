@@ -21,8 +21,8 @@ render_header();
             <div class="page-hero__grid">
                 <div class="reveal">
                     <span class="eyebrow">Catalogue center</span>
-                    <h1>Digital brochures and category resources with a cleaner, dashboard-style experience</h1>
-                    <p>Replace dense PDF link lists with searchable catalogue cards, category filters and a more premium product resource center.</p>
+                    <h1>Scientific brochures and category-wise resources organized for faster product review</h1>
+                    <p>Explore catalogue resources for chemicals, life science products, labware, HPLC supplies, consumables and instruments in one cleaner resource center.</p>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@ render_header();
                         <span><?= h((string) $catalogue['pages']) ?> pages</span>
                         <span><?= h($catalogue['size']) ?></span>
                     </div>
-                    <p>Built for fast technical review, category discovery and internal procurement approvals.</p>
+                    <p>Useful for product review, range discovery and internal laboratory procurement planning.</p>
                     <div class="catalogue-card__actions">
                         <button class="button button--secondary button--small" type="button" data-toast-message="Preview experiences can be connected to a document viewer or CMS asset URL.">Preview</button>
                         <button class="button button--ghost button--small" type="button" data-toast-message="Download actions can be wired to real PDF assets in your CMS."><?= icon('download') ?> Download</button>
@@ -75,25 +75,25 @@ render_header();
         <div class="container section-heading reveal">
             <div>
                 <span class="eyebrow">Resource strategy</span>
-                <h2>Designed to support complex B2B evaluation journeys</h2>
+                <h2>Built to make scientific product selection more practical and organized</h2>
             </div>
-            <p>Catalogues are treated as part of the conversion experience, not an afterthought. This improves trust, simplifies internal sharing and gives buyers more confidence to move forward.</p>
+            <p>Catalogue access helps customers understand the broader product range and share relevant resources internally before moving ahead with quotations or discussions.</p>
         </div>
         <div class="container info-grid">
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('search') ?></span>
                 <h3>Searchable structure</h3>
-                <p>Users can search by product family, resource type or category rather than scanning long legacy lists.</p>
+                <p>Search by product family or category instead of scanning long lists of static files.</p>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('download') ?></span>
-                <h3>Conversion-aware downloads</h3>
-                <p>Catalogue interactions can connect to analytics, lead capture and asset management workflows.</p>
+                <h3>Useful downloads</h3>
+                <p>Brochures can be shared with internal teams to support product validation and planning.</p>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('spark') ?></span>
-                <h3>CMS-ready content blocks</h3>
-                <p>Each card is ready to be sourced from a headless CMS when backend integration is added.</p>
+                <h3>Organized content blocks</h3>
+                <p>Each catalogue group is structured to reflect Somadi’s real supply categories and inquiry flow.</p>
             </article>
         </div>
     </section>

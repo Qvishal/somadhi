@@ -16,65 +16,48 @@ render_header();
         <div class="hero__backdrop"></div>
         <div class="container hero__grid">
             <div class="hero__content reveal">
-                <span class="eyebrow">Premium scientific ecommerce platform</span>
-                <h1>India's Trusted Scientific &amp; Laboratory Supply Partner Since 1966</h1>
-                <p class="hero__lead">Chemicals, instruments, consumables and laboratory solutions from global brands, reimagined through a modern enterprise procurement experience.</p>
+                <span class="eyebrow">Welcome to Somadi Lifesciences</span>
+                <h1>Trusted Laboratory Products and Scientific Supplies Across India</h1>
+                <p class="hero__lead">Laboratory products, scientific instruments and research chemicals for customers across India. <?= h($company['intro']) ?></p>
                 <div class="hero__actions">
                     <a class="button button--primary" href="/products.php">Explore Products <?= icon('arrow') ?></a>
                     <a class="button button--secondary" href="/contact.php#rfq-form">Request Quotation</a>
                     <a class="button button--ghost" href="/catalogues.php">Download Catalogues</a>
                 </div>
-                <div class="hero__trust">
-                    <div class="trust-pill">
-                        <span><?= icon('check') ?></span>
-                        <strong>Authorized brand sourcing</strong>
-                    </div>
-                    <div class="trust-pill">
-                        <span><?= icon('spark') ?></span>
-                        <strong>Fast RFQ turnaround</strong>
-                    </div>
-                    <div class="trust-pill">
-                        <span><?= icon('map') ?></span>
-                        <strong>Pan India delivery</strong>
-                    </div>
-                </div>
             </div>
             <div class="hero__visual reveal reveal--delay">
                 <div class="science-scene">
-                    <div class="science-scene__orb science-scene__orb--one"></div>
-                    <div class="science-scene__orb science-scene__orb--two"></div>
-                    <div class="science-scene__grid"></div>
                     <div class="science-scene__glass science-scene__glass--tall">
-                        <span>Advanced lab supply network</span>
-                        <strong>10,000+ procurement-ready SKUs</strong>
+                        <span>Trusted supplier since 2015</span>
+                        <strong>Laboratory and healthcare solutions</strong>
                     </div>
                     <div class="science-scene__glass science-scene__glass--wide">
-                        <span>Enterprise procurement</span>
-                        <strong>Quote, compare, source and scale</strong>
+                        <span>Pan India support</span>
+                        <strong>Supply, coordinate and deliver with care</strong>
                     </div>
                     <div class="science-scene__molecule science-scene__molecule--one"></div>
                     <div class="science-scene__molecule science-scene__molecule--two"></div>
                     <div class="science-scene__panel">
-                        <span class="eyebrow">Scientific sourcing dashboard</span>
+                        <span class="eyebrow">Somadi supply overview</span>
                         <div class="signal-card">
                             <div>
-                                <small>Global brands</small>
-                                <strong>Merck, Thermo Fisher, Avantor</strong>
+                                <small>Core strengths</small>
+                                <strong>Chemicals, instruments, consumables</strong>
                             </div>
-                            <span class="signal-card__status">Live Stock Visibility</span>
+                            <span class="signal-card__status">Responsive RFQ Support</span>
                         </div>
                         <div class="signal-columns">
                             <div>
-                                <small>Ready stock</small>
-                                <strong>2,400+</strong>
+                                <small>Established</small>
+                                <strong>2015</strong>
                             </div>
                             <div>
-                                <small>Pending RFQs</small>
-                                <strong>24h response</strong>
+                                <small>Coverage</small>
+                                <strong>Pan India</strong>
                             </div>
                             <div>
-                                <small>Logistics</small>
-                                <strong>India-wide</strong>
+                                <small>Handling</small>
+                                <strong>Temperature aware</strong>
                             </div>
                         </div>
                         <div class="science-bars">
@@ -84,6 +67,20 @@ render_header();
                             <span style="--bar: 73%"></span>
                             <span style="--bar: 88%"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="hero__trust">
+                    <div class="trust-pill">
+                        <span><?= icon('check') ?></span>
+                        <strong>Genuine quality products</strong>
+                    </div>
+                    <div class="trust-pill">
+                        <span><?= icon('spark') ?></span>
+                        <strong>Dedicated customer support</strong>
+                    </div>
+                    <div class="trust-pill">
+                        <span><?= icon('map') ?></span>
+                        <strong>Prompt delivery across India</strong>
                     </div>
                 </div>
             </div>
@@ -101,13 +98,32 @@ render_header();
         </div>
     </section>
 
+    <section class="section">
+        <div class="container section-heading reveal">
+            <div>
+                <span class="eyebrow">Company profile</span>
+                <h2>Reliable scientific supply with practical support for laboratories and healthcare buyers</h2>
+            </div>
+            <p><?= h($company['commitment']) ?></p>
+        </div>
+        <div class="container info-grid">
+            <?php foreach ($data['overview_blocks'] as $block): ?>
+                <article class="info-card reveal">
+                    <span class="info-card__icon"><?= icon($block['icon']) ?></span>
+                    <h3><?= h($block['title']) ?></h3>
+                    <p><?= h($block['summary']) ?></p>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </section>
+
     <section class="section section--alt">
         <div class="container section-heading reveal">
             <div>
                 <span class="eyebrow">Featured products</span>
-                <h2>Products are now the first thing buyers can properly scan</h2>
+                <h2>Representative products from our broader scientific supply portfolio</h2>
             </div>
-            <p>Instead of oversized marketing treatment, the home experience now moves faster into practical product visibility with cleaner spacing, RFQ actions and more consistent product presentation.</p>
+            <p>These RFQ-ready cards make it easier to review practical product examples while the broader product range remains available through category discovery and direct inquiry.</p>
         </div>
         <div class="container product-grid product-grid--featured">
             <?php foreach (array_slice($data['products'], 0, 8) as $product): ?>
@@ -135,8 +151,8 @@ render_header();
                             <button type="button" class="link-button" data-compare-trigger data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Compare</button>
                         </div>
                         <div class="product-card__actions">
-                            <button class="button button--primary button--small" type="button" data-add-quote data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Add to Quotation</button>
-                            <a class="button button--ghost button--small" href="/catalogues.php">Download Brochure</a>
+                            <button class="button button--primary button--small" type="button" data-add-quote data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Quotation</button>
+                            <a class="button button--ghost button--small" href="/catalogues.php">Brochure</a>
                         </div>
                     </div>
                 </article>
@@ -147,10 +163,10 @@ render_header();
     <section class="section">
         <div class="container section-heading reveal">
             <div>
-                <span class="eyebrow">Category architecture</span>
-                <h2>Featured product categories designed for faster discovery</h2>
+                <span class="eyebrow">Our product range</span>
+                <h2>Core laboratory, life science and healthcare-focused supply categories</h2>
             </div>
-            <p>Category access stays prominent, but no longer overpowers actual products. Buyers can move from broad browsing into card-level product review much faster.</p>
+            <p>Our supply range covers routine laboratory essentials as well as specialized product lines used in research, diagnostics, education and industrial testing.</p>
         </div>
         <div class="container category-grid">
             <?php foreach ($data['categories'] as $category): ?>
@@ -170,7 +186,7 @@ render_header();
             <div class="section-heading section-heading--compact">
                 <div>
                     <span class="eyebrow">Brand ecosystem</span>
-                    <h2>Trusted by teams that source from global scientific leaders</h2>
+                    <h2>Products sourced from trusted scientific brands and quality-focused supply partners</h2>
                 </div>
             </div>
             <div class="marquee">
@@ -187,9 +203,9 @@ render_header();
         <div class="container section-heading reveal">
             <div>
                 <span class="eyebrow">Why choose us</span>
-                <h2>Industrial trust, elevated through an enterprise-grade customer experience</h2>
+                <h2>Built on dependable service, careful handling and customer-focused support</h2>
             </div>
-            <p>The redesign turns legacy credibility into modern conversion power through clearer hierarchy, stronger proof signals and a cleaner path from discovery to inquiry.</p>
+            <p><?= h($company['closing']) ?></p>
         </div>
         <div class="container info-grid">
             <?php foreach ($data['differentiators'] as $item): ?>
@@ -207,9 +223,9 @@ render_header();
             <div class="section-heading reveal">
                 <div>
                     <span class="eyebrow">Industries served</span>
-                    <h2>Scientific supply infrastructure for regulated, research-driven and high-throughput environments</h2>
+                    <h2>Supporting research, education, diagnostics, healthcare and industrial buyers</h2>
                 </div>
-                <p>From universities and biotech labs to process industries and water testing teams, the platform is structured around how real buyers search, validate and procure.</p>
+                <p>We serve diverse scientific and healthcare environments with products selected for reliability, authenticity and practical day-to-day use.</p>
             </div>
             <div class="industries-grid">
                 <?php foreach ($data['industries'] as $industry): ?>
@@ -226,9 +242,9 @@ render_header();
         <div class="container section-heading reveal">
             <div>
                 <span class="eyebrow">Catalogue center</span>
-                <h2>Digital product resources, reimagined as a modern dashboard</h2>
+                <h2>Product brochures and reference resources organized for quicker review</h2>
             </div>
-            <p>Searchable catalogue previews, filtered downloads and cleaner visual packaging reduce the friction that usually slows internal product evaluation and approvals.</p>
+            <p>Use the catalogue center to review category-wise resources for chemicals, labware, consumables, life science products and instruments before placing an inquiry.</p>
         </div>
         <div class="container catalogue-grid">
             <?php foreach ($data['catalogues'] as $catalogue): ?>
@@ -257,7 +273,7 @@ render_header();
             <div class="contact-panel reveal">
                 <span class="eyebrow">Direct access</span>
                 <h2>Talk to the scientific procurement team</h2>
-                <p>For urgent requirements, bulk sourcing, recurring supply needs or technical product matching, connect directly with the SOMADI LIFESCIENCE team.</p>
+                <p>For urgent requirements, recurring supply needs, diagnostics support or product sourcing assistance, connect directly with the SOMADI LIFESCIENCE team.</p>
                 <div class="contact-list">
                     <a href="tel:<?= h(str_replace(' ', '', $company['phone'])) ?>"><span><?= icon('phone') ?></span><?= h($company['phone']) ?></a>
                     <a href="https://wa.me/919810024567" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
@@ -268,7 +284,7 @@ render_header();
             <form class="form-card reveal reveal--delay" data-inquiry-form>
                 <input type="hidden" name="form_type" value="Homepage Inquiry">
                 <span class="eyebrow">Quick RFQ</span>
-                <h3>Start an inquiry in under two minutes</h3>
+                <h3>Request support for products, quotations or customized laboratory solutions</h3>
                 <div class="form-row">
                     <label>
                         Name
@@ -303,9 +319,9 @@ render_header();
         <div class="container section-heading reveal">
             <div>
                 <span class="eyebrow">FAQs</span>
-                <h2>Built to reduce procurement friction</h2>
+                <h2>Answers to common supply and sourcing questions</h2>
             </div>
-            <p>Clear answers, modular content and collapsible sections replace text-heavy pages with cleaner decision support.</p>
+            <p>These quick answers reflect the core information from our company profile, support scope and handling commitments.</p>
         </div>
         <div class="container faq-list">
             <?php foreach ($data['faqs'] as $faq): ?>

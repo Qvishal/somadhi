@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const product = parseDatasetJson(button.dataset.product);
             if (!product) return;
             const exists = state.quote.some((item) => item.slug === product.slug);
-            button.textContent = exists ? "Added to Quotation" : "Add to Quotation";
+            button.textContent = exists ? "Added to Quotation" : "Quotation";
             button.classList.toggle("button--secondary", exists);
             button.classList.toggle("button--primary", !exists);
         });
