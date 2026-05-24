@@ -1,0 +1,15 @@
+# Version Control
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Dynamic Storage & Submissions
+storage/inquiries.ndjson
