@@ -91,7 +91,11 @@ render_header();
         <div class="container metrics-grid">
             <?php foreach ($data['metrics'] as $metric): ?>
                 <article class="metric-card reveal">
-                    <strong data-counter="<?= h((string) $metric['value']) ?>" data-suffix="<?= h($metric['suffix']) ?>">0</strong>
+                    <strong
+                        data-counter="<?= h((string) $metric['value']) ?>"
+                        data-suffix="<?= h($metric['suffix']) ?>"
+                        data-format="<?= h($metric['format'] ?? 'localized') ?>"
+                    >0</strong>
                     <p><?= h($metric['label']) ?></p>
                 </article>
             <?php endforeach; ?>
@@ -186,7 +190,7 @@ render_header();
             <div class="section-heading section-heading--compact">
                 <div>
                     <span class="eyebrow">Brand ecosystem</span>
-                    <h2>Products sourced from trusted scientific brands and quality-focused supply partners</h2>
+                    <h2>Featured scientific brands from our current supply and sourcing portfolio</h2>
                 </div>
             </div>
             <div class="marquee">
@@ -196,6 +200,38 @@ render_header();
                     <?php endforeach; ?>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="section section--alt">
+        <div class="container section-heading reveal">
+            <div>
+                <span class="eyebrow">Authorized network</span>
+                <h2>Authorized brands and wider dealing portfolio from the Somadi brand file</h2>
+            </div>
+            <p>The latest Somadi website document has been applied here as a clearer trust section, showing both authorized brands and the broader dealing portfolio buyers can inquire against.</p>
+        </div>
+        <div class="container brand-directory">
+            <article class="brand-directory__card reveal">
+                <span class="eyebrow">Authorized brands</span>
+                <h3>Selected authorization-backed partners</h3>
+                <p>These brands are surfaced as direct authorization and core trust signals for the business.</p>
+                <div class="brand-cloud">
+                    <?php foreach ($data['authorized_brands'] as $brand): ?>
+                        <span class="brand-chip"><?= h($brand) ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </article>
+            <article class="brand-directory__card reveal reveal--delay">
+                <span class="eyebrow">Dealing brands</span>
+                <h3>Broader scientific and laboratory sourcing coverage</h3>
+                <p>This extended brand list reflects the wider product ecosystem available for enquiries, catalogues and sourcing discussions.</p>
+                <div class="brand-cloud">
+                    <?php foreach ($data['dealing_brands'] as $brand): ?>
+                        <span class="brand-chip"><?= h($brand) ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </article>
         </div>
     </section>
 
@@ -276,7 +312,7 @@ render_header();
                 <p>For urgent requirements, recurring supply needs, diagnostics support or product sourcing assistance, connect directly with the SOMADI LIFESCIENCE team.</p>
                 <div class="contact-list">
                     <a href="tel:<?= h(str_replace(' ', '', $company['phone'])) ?>"><span><?= icon('phone') ?></span><?= h($company['phone']) ?></a>
-                    <a href="https://wa.me/919810024567" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
+                    <a href="https://wa.me/919717844841" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
                     <a href="mailto:<?= h($company['email']) ?>"><span><?= icon('mail') ?></span><?= h($company['email']) ?></a>
                     <p><span><?= icon('map') ?></span><?= h($company['address']) ?></p>
                 </div>

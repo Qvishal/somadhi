@@ -6,6 +6,7 @@ require __DIR__ . '/includes/site.php';
 
 $page = 'catalogues';
 $data = site_data();
+$catalogueItems = catalogue_items();
 
 render_head($page);
 render_header();
@@ -22,7 +23,7 @@ render_header();
                 <div class="reveal">
                     <span class="eyebrow">Catalogue center</span>
                     <h1>Scientific brochures and category-wise resources organized for faster product review</h1>
-                    <p>Explore catalogue resources for chemicals, life science products, labware, HPLC supplies, consumables and instruments in one cleaner resource center.</p>
+                    <p>Explore catalogue resources organized by category and brand across life science, chemicals, plasticware, glassware, laboratory filtration, liquid handling instruments and instruments.</p>
                 </div>
             </div>
         </div>
@@ -32,11 +33,11 @@ render_header();
         <div class="container catalogue-toolbar reveal">
             <label class="search-field search-field--light">
                 <?= icon('search') ?>
-                <input type="search" placeholder="Search catalogues by topic or category" data-catalogue-search>
+                <input type="search" placeholder="Search catalogues by category or brand" data-catalogue-search>
             </label>
             <div class="toolbar-filters">
                 <button class="chip chip--active" type="button" data-filter-catalogue="all">All</button>
-                <?php foreach (array_unique(array_map(static fn(array $item): string => $item['category'], $data['catalogues'])) as $category): ?>
+                <?php foreach (array_unique(array_map(static fn(array $item): string => $item['category'], $catalogueItems)) as $category): ?>
                     <button class="chip" type="button" data-filter-catalogue="<?= h($category) ?>"><?= h($category) ?></button>
                 <?php endforeach; ?>
             </div>
@@ -45,8 +46,13 @@ render_header();
 
     <section class="section">
         <div class="container catalogue-grid" data-catalogue-grid>
-            <?php foreach ($data['catalogues'] as $catalogue): ?>
-                <article class="catalogue-card reveal" data-catalogue-card data-category="<?= h($catalogue['category']) ?>" data-title="<?= h($catalogue['title']) ?>">
+            <?php foreach ($catalogueItems as $catalogue): ?>
+                <article
+                    class="catalogue-card reveal"
+                    data-catalogue-card
+                    data-category="<?= h($catalogue['category']) ?>"
+                    data-title="<?= h($catalogue['title']) ?>"
+                    data-search="<?= h($catalogue['search_terms']) ?>">
                     <div class="catalogue-card__preview">
                         <div class="preview-sheet"></div>
                         <div class="preview-sheet preview-sheet--offset"></div>
@@ -54,13 +60,17 @@ render_header();
                     <span class="catalogue-card__tag"><?= h($catalogue['category']) ?></span>
                     <h3><?= h($catalogue['title']) ?></h3>
                     <div class="catalogue-card__meta">
-                        <span><?= h((string) $catalogue['pages']) ?> pages</span>
+                        <span><?= h($catalogue['brand']) ?></span>
+                        <span><?= h($catalogue['extension']) ?></span>
                         <span><?= h($catalogue['size']) ?></span>
                     </div>
-                    <p>Useful for product review, range discovery and internal laboratory procurement planning.</p>
-                    <div class="catalogue-card__actions">
-                        <button class="button button--secondary button--small" type="button" data-toast-message="Preview experiences can be connected to a document viewer or CMS asset URL.">Preview</button>
-                        <button class="button button--ghost button--small" type="button" data-toast-message="Download actions can be wired to real PDF assets in your CMS."><?= icon('download') ?> Download</button>
+                    <p class="catalogue-card__brands"><?= h($catalogue['brand']) ?></p>
+                    <p>Useful for category-wise review, internal sharing and faster procurement coordination.</p>
+                    <div class="product-card__actions mt-4">
+                        <?php if ($catalogue['previewable']): ?>
+                            <a class="button button--secondary button--small" href="<?= h($catalogue['url']) ?>" target="_blank" rel="noopener noreferrer">View</a>
+                        <?php endif; ?>
+                        <a class="button button--ghost button--small" href="<?= h($catalogue['url']) ?>" download><?= icon('download') ?> Download</a>
                     </div>
                 </article>
             <?php endforeach; ?>

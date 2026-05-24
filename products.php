@@ -29,7 +29,7 @@ render_header();
     </section>
 
     <section class="section section--tight">
-        <div class="container catalogue-toolbar reveal">
+        <div class="container catalogue-toolbar catalogue-toolbar--products reveal">
             <label class="search-field search-field--light">
                 <?= icon('search') ?>
                 <input type="search" placeholder="Search product name, category or brand" data-product-search>
@@ -95,14 +95,22 @@ render_header();
                         <article class="product-card reveal" data-product-card data-name="<?= h($product['name']) ?>" data-brand="<?= h($product['brand']) ?>" data-category="<?= h($product['category']) ?>" data-availability="<?= h($product['availability']) ?>">
                             <div class="product-card__visual">
                                 <span class="product-badge"><?= h($product['badge']) ?></span>
-                                <div class="product-art product-art--<?= h(strtolower(str_replace([' ', '&'], ['-', 'and'], $product['category']))) ?>">
-                                    <span><?= h($product['category']) ?></span>
-                                </div>
+                                <?php if (!empty($product['image'])): ?>
+                                    <div class="product-art product-art--image">
+                                        <img class="product-card__image" src="<?= h($product['image']) ?>" alt="<?= h($product['name']) ?>">
+                                    </div>
+                                <?php else: ?>
+                                    <div class="product-art product-art--<?= h(strtolower(str_replace([' ', '&'], ['-', 'and'], $product['category']))) ?>">
+                                        <span><?= h($product['category']) ?></span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="product-card__copy">
                                 <div class="product-card__meta">
                                     <span><?= h($product['category']) ?></span>
-                                    <strong><?= h($product['brand']) ?></strong>
+                                    <?php if (strcasecmp($product['brand'], $product['category']) !== 0): ?>
+                                        <strong><?= h($product['brand']) ?></strong>
+                                    <?php endif; ?>
                                 </div>
                                 <h3><?= h($product['name']) ?></h3>
                                 <p><?= h($product['summary']) ?></p>

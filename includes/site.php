@@ -2,25 +2,364 @@
 
 declare(strict_types=1);
 
+function catalogue_asset_path(string $filename): string
+{
+    return dirname(__DIR__) . '/storage/cataloges/' . $filename;
+}
+
+function catalogue_asset_url(string $filename): string
+{
+    return '/storage/cataloges/' . rawurlencode($filename);
+}
+
+function product_asset_url(string $filename): string
+{
+    return '/storage/extracted_doc_products/images/' . rawurlencode($filename);
+}
+
+function format_file_size_label(int $bytes): string
+{
+    if ($bytes >= 1024 * 1024) {
+        return number_format($bytes / (1024 * 1024), 1) . ' MB';
+    }
+
+    if ($bytes >= 1024) {
+        return number_format($bytes / 1024, 1) . ' KB';
+    }
+
+    return $bytes . ' B';
+}
+
+function catalogue_document(string $filename, ?string $label = null, ?string $brand = null): array
+{
+    $path = catalogue_asset_path($filename);
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+    return [
+        'label' => $label ?? pathinfo($filename, PATHINFO_FILENAME),
+        'brand' => $brand,
+        'filename' => $filename,
+        'url' => catalogue_asset_url($filename),
+        'extension' => strtoupper($extension),
+        'size' => is_file($path) ? format_file_size_label((int) filesize($path)) : 'File unavailable',
+        'previewable' => $extension === 'pdf',
+    ];
+}
+
+function document_product_catalog(): array
+{
+    return [
+        [
+            'slug' => 'agar-powder-bacteriological-grade',
+            'name' => 'Agar Powder, Bacteriological Grade',
+            'brand' => 'HiMedia',
+            'category' => 'Dehydrated Culture Media',
+            'availability' => 'Ready Stock',
+            'specs' => ['Grade' => 'Bacteriological', 'Format' => 'Powder', 'Use' => 'Microbiology media prep'],
+            'summary' => 'Bacteriological agar for microbiology, media preparation and routine culture work.',
+            'badge' => 'Culture Media',
+            'image' => product_asset_url('02-agar-powder-bacteriological-grade.png'),
+        ],
+        [
+            'slug' => 'fetal-bovine-sera',
+            'name' => 'Fetal Bovine Sera',
+            'brand' => 'Life Science Range',
+            'category' => 'Biochemicals & Immunochemicals',
+            'availability' => 'On Request',
+            'specs' => ['Type' => 'Sera', 'Workflow' => 'Cell biology', 'Handling' => 'Temperature sensitive'],
+            'summary' => 'Cell culture serum solutions suited for life science and cell biology workflows.',
+            'badge' => 'Cold Chain',
+            'image' => product_asset_url('03-fetal-bovine-sera-sera-cell-biology.jpeg'),
+        ],
+        [
+            'slug' => 'dmem-high-glucose-medium',
+            'name' => 'DMEM High Glucose Medium',
+            'brand' => 'Life Science Range',
+            'category' => 'Molecular Biology Reagents',
+            'availability' => 'On Request',
+            'specs' => ['Glucose' => '4.5 g/L', 'Additives' => 'L-Glutamine + Sodium Pyruvate', 'Use' => 'Cell culture'],
+            'summary' => 'Dulbecco’s Modified Eagle Medium configured for cell culture applications and research support.',
+            'badge' => 'Cell Culture',
+            'image' => product_asset_url('04-dulbecco-s-modified-eagle-medium-dmem-high-glucose-w-4-5gms-glucose-per-litre-l-.jpeg'),
+        ],
+        [
+            'slug' => 'silver-nitrate-extrapure-ar',
+            'name' => 'Silver Nitrate Extrapure AR',
+            'brand' => 'Research Chemicals',
+            'category' => 'Research Chemicals',
+            'availability' => 'Ready Stock',
+            'specs' => ['Purity' => '99.9%', 'Grade' => 'Extrapure AR', 'Use' => 'Analytical reagents'],
+            'summary' => 'High-purity silver nitrate for analytical chemistry, inorganic salt requirements and research use.',
+            'badge' => 'High Purity',
+            'image' => product_asset_url('05-silver-nitrate-extrapure-ar-99-9-inorganic-salts-reagents-for-analysis-extrapure.jpeg'),
+        ],
+        [
+            'slug' => 'acetone-extrapure',
+            'name' => 'Acetone Extrapure',
+            'brand' => 'Solvent Range',
+            'category' => 'Indian & Imported Chemicals',
+            'availability' => 'In Stock',
+            'specs' => ['Purity' => '99%', 'Type' => 'Liquid solvent', 'Grade' => 'Extrapure'],
+            'summary' => 'Extrapure acetone suitable for laboratory solvent use, cleaning, dilution and routine analytical work.',
+            'badge' => 'Solvent Supply',
+            'image' => product_asset_url('06-acetone-extrapure-99-solvents-liquids-pure-extrapure-grade-solvents.jpeg'),
+        ],
+        [
+            'slug' => 'potassium-iodate-emsure',
+            'name' => 'Potassium Iodate EMSURE',
+            'brand' => 'Merck',
+            'category' => 'Research Chemicals',
+            'availability' => 'On Request',
+            'specs' => ['Grade' => 'ACS / ISO / Ph Eur', 'Type' => 'Analytical reagent', 'CAS' => '7758-05-6'],
+            'summary' => 'Analytical-grade potassium iodate for regulated testing, reagent preparation and research laboratories.',
+            'badge' => 'EMSURE Grade',
+            'image' => product_asset_url('07-potassium-iodate-for-analysis-emsure-acs-iso-reag-ph-eur-7758-05-6.jpeg'),
+        ],
+        [
+            'slug' => 'single-channel-plastic-micropipette',
+            'name' => 'Single Channel Plastic Micropipette',
+            'brand' => 'Microlit',
+            'category' => 'Liquid Handling Products',
+            'availability' => 'In Stock',
+            'specs' => ['Type' => 'Single channel', 'Capacity' => '10.0 mL', 'Use' => 'Laboratory dispensing'],
+            'summary' => 'Microlit single-channel micropipette for routine laboratory liquid handling and measured dispensing.',
+            'badge' => 'Microlit',
+            'image' => product_asset_url('09-single-channel-plastic-micropipette-microlit-for-laboratory-capacity-10-0-millil.jpeg'),
+        ],
+        [
+            'slug' => 'microlit-lab-micropipette',
+            'name' => 'Microlit Lab Micropipette',
+            'brand' => 'Microlit',
+            'category' => 'Liquid Handling Products',
+            'availability' => 'In Stock',
+            'specs' => ['Range' => '100-1000 uL', 'Type' => 'Adjustable volume', 'Feature' => 'Autoclavable'],
+            'summary' => 'Adjustable-volume Microlit micropipette designed for accurate daily liquid transfer in lab workflows.',
+            'badge' => 'Autoclavable',
+            'image' => product_asset_url('11-microlit-lab-micropipette-single-channel-adjustable-volume-micro-pipette-fully-a.jpeg'),
+        ],
+        [
+            'slug' => 'microlit-beatus-dispenser',
+            'name' => 'Microlit Beatus Dispenser',
+            'brand' => 'Microlit',
+            'category' => 'Liquid Handling Products',
+            'availability' => 'On Request',
+            'specs' => ['Technology' => 'Springless valve', 'Valve' => 'Recirculation ready', 'Use' => 'Bottle-top dispensing'],
+            'summary' => 'Bottle-top liquid handling solution from Microlit for repeat dispensing and controlled reagent transfer.',
+            'badge' => 'Precision Dispensing',
+            'image' => product_asset_url('13-microlit-beatus-with-recirculation-valve-and-springless-valvetm-technology-manuf.png'),
+        ],
+        [
+            'slug' => '100bp-dna-ladder-h3',
+            'name' => '100bp DNA Ladder H3',
+            'brand' => 'Universal Biotechnology',
+            'category' => 'Molecular Biology Reagents',
+            'availability' => 'On Request',
+            'specs' => ['Type' => 'DNA ladder', 'Use' => 'Fragment sizing', 'Workflow' => 'Electrophoresis'],
+            'summary' => 'DNA ladder reference for fragment sizing in molecular biology and gel electrophoresis workflows.',
+            'badge' => 'Electrophoresis',
+            'image' => product_asset_url('15-100bp-dna-ladder-h3-universal-biotechnology-accurate-dna-fragment-sizing.jpeg'),
+        ],
+        [
+            'slug' => '100bp-dna-ladder-rtu',
+            'name' => '100bp DNA Ladder RTU',
+            'brand' => 'Universal Biotechnology',
+            'category' => 'Molecular Biology Reagents',
+            'availability' => 'On Request',
+            'specs' => ['Format' => 'Ready-to-use', 'Type' => 'DNA ladder', 'Workflow' => 'Gel electrophoresis'],
+            'summary' => 'Ready-to-use DNA ladder for quick electrophoresis setup and dependable fragment estimation.',
+            'badge' => 'Ready To Use',
+            'image' => product_asset_url('17-100bp-dna-ladder-rtu-ready-to-use-molecular-biology-products-universal-biotechno.jpeg'),
+        ],
+        [
+            'slug' => 'corning-15ml-centrifuge-tubes',
+            'name' => 'Corning 15 mL Centrifuge Tubes',
+            'brand' => 'Corning',
+            'category' => 'Laboratory Glassware & Plasticware',
+            'availability' => 'In Stock',
+            'specs' => ['Capacity' => '15 mL', 'Material' => 'Polypropylene', 'Pack' => 'Sterile rack packed'],
+            'summary' => 'Sterile centrifuge tubes with conical bottoms for sample handling, storage and centrifugation tasks.',
+            'badge' => 'Sterile Labware',
+            'image' => product_asset_url('18-corning-15-ml-centrifuge-tubes-15-ml-centrifuge-tubes-polypropylene-conical-bott.jpeg'),
+        ],
+        [
+            'slug' => 'tarsons-petri-dishes',
+            'name' => 'Tarsons Petri Dishes',
+            'brand' => 'Tarsons',
+            'category' => 'Laboratory Glassware & Plasticware',
+            'availability' => 'In Stock',
+            'specs' => ['Size' => '90 x 14 mm', 'Sterility' => 'Radiation sterile', 'Pack' => '480 pcs'],
+            'summary' => 'Tarsons sterile petri dishes for culture work, microbiology setups and daily laboratory use.',
+            'badge' => 'Tarsons',
+            'image' => product_asset_url('19-tarsons-petri-dishes-non-vented-radiation-sterile-packing-480-packed-in-sleeve-o.jpeg'),
+        ],
+        [
+            'slug' => 'wellvian-3ply-face-mask',
+            'name' => 'Wellvian 3 Ply Face Mask',
+            'brand' => 'Wellvian',
+            'category' => 'Laboratory Safety Products',
+            'availability' => 'In Stock',
+            'specs' => ['Layers' => '3 Ply', 'Type' => 'Disposable', 'Use' => 'Laboratory hygiene'],
+            'summary' => 'Disposable spunbond face masks for lab hygiene, visitor control and routine protective use.',
+            'badge' => 'Safety Stock',
+            'image' => product_asset_url('20-wellvian-3-ply-disposable-spunbond-face-mask-at-2-piece-in-bhiwani-id-2259503929.jpeg'),
+        ],
+        [
+            'slug' => 'kimtech-purple-nitrile-gloves',
+            'name' => 'Kimtech KC 500 Nitrile Exam Gloves',
+            'brand' => 'Kimberly-Clark',
+            'category' => 'Laboratory Safety Products',
+            'availability' => 'In Stock',
+            'specs' => ['Material' => 'Purple nitrile', 'Type' => 'Exam gloves', 'Use' => 'Chemical handling'],
+            'summary' => 'Protective nitrile gloves for examination, sample handling and laboratory safety compliance.',
+            'badge' => 'Protective Wear',
+            'image' => product_asset_url('21-kimberly-clark-kimtech-kc-500-purple-nitrile-exam-gloves.jpeg'),
+        ],
+        [
+            'slug' => 'disposable-head-cover',
+            'name' => 'Disposable Head Cover',
+            'brand' => 'Golden Ar',
+            'category' => 'Laboratory Safety Products',
+            'availability' => 'In Stock',
+            'specs' => ['Type' => 'Head cover', 'Use' => 'Clean handling', 'Format' => 'Disposable'],
+            'summary' => 'Head covers for controlled environments, hygiene-sensitive areas and routine protective use.',
+            'badge' => 'Hygiene Supply',
+            'image' => product_asset_url('23-head-cover-golden-ar.jpeg'),
+        ],
+        [
+            'slug' => 'laboratory-gowns',
+            'name' => 'Laboratory Gowns',
+            'brand' => 'Protective Apparel',
+            'category' => 'Laboratory Safety Products',
+            'availability' => 'On Request',
+            'specs' => ['Use' => 'Lab personnel', 'Type' => 'Protective apparel', 'Application' => 'Routine lab wear'],
+            'summary' => 'Laboratory gown options for personnel protection in academic, research and quality-control environments.',
+            'badge' => 'Protective Apparel',
+            'image' => product_asset_url('24-laboratory-gowns-for-use-by-lab-personnel-knowledge-base.png'),
+        ],
+        [
+            'slug' => 'labcare-microscope-slides-cover-slips',
+            'name' => 'LABCARE Microscope Slides & Cover Slips',
+            'brand' => 'LABCARE',
+            'category' => 'Laboratory Glassware & Plasticware',
+            'availability' => 'In Stock',
+            'specs' => ['Pack' => '100 set', 'Finish' => 'Pre-cleaned', 'Use' => 'Microscopy prep'],
+            'summary' => 'Microscope slides and cover slips for microscopy labs, educational use and clinic sample prep.',
+            'badge' => 'Microscopy',
+            'image' => product_asset_url('26-labcare-microscope-glass-slides-and-cover-slips-set-pack-of-100-pre-cleaned-clea.jpeg'),
+        ],
+        [
+            'slug' => 'parafilm-m',
+            'name' => 'Parafilm M',
+            'brand' => 'Abdos Lifescience',
+            'category' => 'Scientific Consumables',
+            'availability' => 'In Stock',
+            'specs' => ['Type' => 'Sealing film', 'Use' => 'Sample sealing', 'Range' => 'Laboratory consumable'],
+            'summary' => 'Flexible sealing film for temporary closure, sample protection and everyday laboratory handling.',
+            'badge' => 'Consumable',
+            'image' => product_asset_url('27-parafilm-m-abdos-lifescience.jpeg'),
+        ],
+        [
+            'slug' => 'magnus-led-binocular-microscope',
+            'name' => 'Magnus LED Binocular Microscope',
+            'brand' => 'Magnus',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'On Request',
+            'specs' => ['Model' => 'CH-20i LED', 'Type' => 'Binocular microscope', 'Use' => 'Lab observation'],
+            'summary' => 'LED binocular microscope for teaching labs, diagnostics support and routine microscopic analysis.',
+            'badge' => 'Instrument',
+            'image' => product_asset_url('28-magnus-led-binocular-microscope-model-ch-20i-led-amazon-in-electronics.jpeg'),
+        ],
+        [
+            'slug' => 'ifuge-uc02r-refrigerated-centrifuge',
+            'name' => 'iFuge UC02R Refrigerated Centrifuge',
+            'brand' => 'Neuation',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'On Request',
+            'specs' => ['Type' => 'Refrigerated centrifuge', 'Use' => 'Sample separation', 'Format' => 'Laboratory model'],
+            'summary' => 'Refrigerated centrifuge solution for controlled sample separation and temperature-sensitive lab workflows.',
+            'badge' => 'Cold Spin',
+            'image' => product_asset_url('29-ifuge-uc02r-refrigerated-centrifuge-machine-for-laboratory-at-239000-in-jaipur.png'),
+        ],
+        [
+            'slug' => 'labman-digital-water-bath',
+            'name' => 'Labman Digital Water Bath',
+            'brand' => 'Labman',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'On Request',
+            'specs' => ['Model' => 'LMWB8H', 'Range' => 'RT to 100 C', 'Control' => 'PID with LED display'],
+            'summary' => 'Digital water bath for incubation, controlled heating and routine laboratory temperature management.',
+            'badge' => 'Temperature Control',
+            'image' => product_asset_url('30-labman-digital-water-bath-lmwb8h-2-8-holes-led-display-pid-temperature-control-r.jpeg'),
+        ],
+        [
+            'slug' => 'tarsons-spinix-vortex-shaker',
+            'name' => 'Tarsons SPINIX Vortex Shaker',
+            'brand' => 'Tarsons',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'On Request',
+            'specs' => ['Code' => '3020', 'Type' => 'Vortex shaker', 'Control' => 'Speed control'],
+            'summary' => 'Bench-top vortex shaker for fast tube mixing, resuspension and routine sample preparation.',
+            'badge' => 'Mixing System',
+            'image' => product_asset_url('31-tarsons-spinix-vortex-shaker-qty-1-code-3020-spinix-mc-01-with-speed-control-ama.jpeg'),
+        ],
+        [
+            'slug' => 'mini-centrifuge-6000-rpm',
+            'name' => 'Mini Centrifuge 6000 RPM',
+            'brand' => 'BR Biochem',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'In Stock',
+            'specs' => ['Speed' => '6000 RPM', 'Type' => 'Mini centrifuge', 'Use' => 'Routine spin down'],
+            'summary' => 'Compact mini centrifuge for quick spin-down tasks in molecular biology and bench-top workflows.',
+            'badge' => 'Compact Instrument',
+            'image' => product_asset_url('32-mini-centrifuge-6000-rpm-br-biochem-at-9500-laboratory-centrifuge-in-new-delhi-i.jpeg'),
+        ],
+        [
+            'slug' => 'electrophoresis-power-supply',
+            'name' => 'Electrophoresis Power Supply',
+            'brand' => 'BR Biochem',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'On Request',
+            'specs' => ['Use' => 'Electrophoresis setup', 'Type' => 'Power supply', 'Application' => 'Molecular biology'],
+            'summary' => 'Power supply unit for electrophoresis systems and gel-based molecular biology workflows.',
+            'badge' => 'Electrophoresis',
+            'image' => product_asset_url('33-br-biochem-power-supply-for-electrophoresis-at-40000-new-delhi-id-2855886938662.jpeg'),
+        ],
+        [
+            'slug' => 'magnetic-hotplate-stirrer',
+            'name' => 'Magnetic Hotplate Stirrer',
+            'brand' => 'Drawell',
+            'category' => 'Scientific Instruments & Laboratory Equipment',
+            'availability' => 'On Request',
+            'specs' => ['Type' => 'Hotplate stirrer', 'Use' => 'Heating and stirring', 'Application' => 'Routine lab prep'],
+            'summary' => 'Magnetic hotplate stirrer for heating, solution preparation and controlled bench-top mixing.',
+            'badge' => 'Bench Instrument',
+            'image' => product_asset_url('34-how-to-use-a-magnetic-hotplate-stirrer-drawell.jpeg'),
+        ],
+    ];
+}
+
 function site_data(): array
 {
+    $products = document_product_catalog();
+    $productBrands = array_values(array_unique(array_map(static fn(array $product): string => $product['brand'], $products)));
+
     return [
         'company' => [
             'name' => 'SOMADI LIFESCIENCE',
             'short' => 'SL',
             'tagline' => 'Trusted distributor and supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions across India.',
             'founding_year' => '2015',
-            'phone' => '+91 98100 24567',
-            'whatsapp' => '+91 98100 24567',
-            'email' => 'sales@somadilifescience.com',
-            'address' => '3481 Nicholson Road, Mori Gate, Delhi 110006, India',
-            'street_address' => '3481 Nicholson Road, Mori Gate',
+            'phone' => '+91 97178 44841',
+            'whatsapp' => '+91 97178 44841',
+            'email' => 'Info.somadilifesciences@gmail.com',
+            'address' => 'I-1870, Jahangir Puri, Delhi 110033, India',
+            'street_address' => 'I-1870, Jahangir Puri',
             'locality' => 'Delhi',
             'region' => 'Delhi',
-            'postal_code' => '110006',
+            'postal_code' => '110033',
             'country' => 'IN',
-            'gst' => '07AABCA1966Q1Z4',
-            'map' => 'https://www.google.com/maps?q=3481+Nicholson+Road+Mori+Gate+Delhi&output=embed',
+            'gst' => '07CVNPK5540B1ZO',
+            'map' => 'https://www.google.com/maps?q=I-1870+Jahangir+Puri+Delhi+110033&output=embed',
             'intro' => 'Established in 2015, Somadi Lifesciences is a trusted distributor and supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions for customers across India.',
             'commitment' => 'We are committed to delivering reliable laboratory and healthcare solutions with a strong focus on quality, efficiency and customer satisfaction, especially for temperature-sensitive and research-critical requirements.',
             'closing' => 'Our team works closely with customers to provide dependable support, smooth coordination and complete laboratory solutions tailored to their requirements.',
@@ -35,10 +374,10 @@ function site_data(): array
             'favicon' => '/assets/brand/favicon.svg',
         ],
         'metrics' => [
-            ['value' => 2015, 'suffix' => '', 'label' => 'Established'],
-            ['value' => 13, 'suffix' => '+', 'label' => 'Product Segments'],
-            ['value' => 6, 'suffix' => '+', 'label' => 'Core Customer Sectors'],
-            ['value' => 100, 'suffix' => '%', 'label' => 'Quality-Focused Supply'],
+            ['value' => 2015, 'suffix' => '', 'label' => 'Established', 'format' => 'plain'],
+            ['value' => 13, 'suffix' => '+', 'label' => 'Product Segments', 'format' => 'localized'],
+            ['value' => 6, 'suffix' => '+', 'label' => 'Core Customer Sectors', 'format' => 'localized'],
+            ['value' => 100, 'suffix' => '%', 'label' => 'Quality-Focused Supply', 'format' => 'localized'],
         ],
         'categories' => [
             ['slug' => 'research-chemicals', 'name' => 'Research Chemicals', 'summary' => 'Reliable chemicals for research, analytical work and routine laboratory operations.', 'accent' => 'Research Grade', 'icon' => 'flask'],
@@ -47,117 +386,15 @@ function site_data(): array
             ['slug' => 'indian-imported-chemicals', 'name' => 'Indian & Imported Chemicals', 'summary' => 'Authentic products sourced from leading national and international brands.', 'accent' => 'Authentic Sourcing', 'icon' => 'beaker'],
             ['slug' => 'glassware-plasticware', 'name' => 'Laboratory Glassware & Plasticware', 'summary' => 'Daily-use essentials for handling, measuring, storage and sample preparation.', 'accent' => 'Core Labware', 'icon' => 'beaker'],
             ['slug' => 'liquid-handling', 'name' => 'Liquid Handling Products', 'summary' => 'Pipettes, dispensers and accessories for controlled, repeatable handling.', 'accent' => 'Precision Handling', 'icon' => 'pipette'],
-            ['slug' => 'hplc-solvents', 'name' => 'HPLC Solvents', 'summary' => 'High-purity solvents for chromatography and analytical testing.', 'accent' => 'Chromatography Ready', 'icon' => 'droplet'],
-            ['slug' => 'hplc-columns-vials', 'name' => 'HPLC Columns & Vials', 'summary' => 'Separation columns and sample containment products for HPLC workflows.', 'accent' => 'Analytical Support', 'icon' => 'columns'],
             ['slug' => 'culture-media', 'name' => 'Dehydrated Culture Media', 'summary' => 'Microbiology media solutions for research, diagnostics and quality testing.', 'accent' => 'Microbiology', 'icon' => 'wave'],
             ['slug' => 'safety-products', 'name' => 'Laboratory Safety Products', 'summary' => 'Protective gear and safety-focused products for compliant lab environments.', 'accent' => 'Safe Operations', 'icon' => 'shield'],
             ['slug' => 'scientific-instruments', 'name' => 'Scientific Instruments & Laboratory Equipment', 'summary' => 'Instruments and equipment for research, diagnostics and laboratory setup.', 'accent' => 'Equipment Supply', 'icon' => 'scale'],
-            ['slug' => 'medical-diagnostics', 'name' => 'Medical Equipment & Diagnostics', 'summary' => 'Selected healthcare and diagnostics products for medical and clinical needs.', 'accent' => 'Healthcare Ready', 'icon' => 'check'],
             ['slug' => 'scientific-consumables', 'name' => 'Scientific Consumables', 'summary' => 'Fast-moving consumables that keep routine lab operations running smoothly.', 'accent' => 'Daily Supply', 'icon' => 'box'],
         ],
-        'products' => [
-            [
-                'slug' => 'hplc-acetonitrile',
-                'name' => 'HPLC Acetonitrile',
-                'brand' => 'Merck',
-                'category' => 'HPLC Solvents',
-                'availability' => 'In Stock',
-                'specs' => ['Pack' => '2.5 L', 'Grade' => 'HPLC', 'Purity' => '99.9%'],
-                'summary' => 'Low UV absorbance solvent for chromatography and analytical workflows.',
-                'badge' => 'Fast Dispatch',
-            ],
-            [
-                'slug' => 'absolute-ethanol',
-                'name' => 'Absolute Ethanol',
-                'brand' => 'Somadi Supply',
-                'category' => 'Indian & Imported Chemicals',
-                'availability' => 'Ready Stock',
-                'specs' => ['Pack' => '500 mL / 2.5 L', 'Grade' => 'AR', 'Assay' => '99.9%'],
-                'summary' => 'High-purity ethanol for pharma labs, universities and industrial QC.',
-                'badge' => 'Bulk Orders',
-            ],
-            [
-                'slug' => 'volumetric-flask-set',
-                'name' => 'Class A Volumetric Flask Set',
-                'brand' => 'Borosil',
-                'category' => 'Laboratory Glassware & Plasticware',
-                'availability' => 'In Stock',
-                'specs' => ['Range' => '10-1000 mL', 'Class' => 'A', 'Material' => 'Boro 3.3'],
-                'summary' => 'Calibrated laboratory glassware with serialized certification support.',
-                'badge' => 'Certified',
-            ],
-            [
-                'slug' => 'single-channel-pipette',
-                'name' => 'Variable Volume Pipette',
-                'brand' => 'Thermo Fisher',
-                'category' => 'Liquid Handling Products',
-                'availability' => '2 Day Lead',
-                'specs' => ['Range' => '0.5-10 uL', 'Accuracy' => '+/-0.8%', 'Warranty' => '1 Year'],
-                'summary' => 'Ergonomic single-channel pipette for precise liquid handling.',
-                'badge' => 'Calibration Ready',
-            ],
-            [
-                'slug' => 'nitrile-gloves',
-                'name' => 'Powder-Free Nitrile Gloves',
-                'brand' => 'Ansell',
-                'category' => 'Laboratory Safety Products',
-                'availability' => 'In Stock',
-                'specs' => ['Box' => '100 pcs', 'Color' => 'Blue', 'Use' => 'Chemical Handling'],
-                'summary' => 'Reliable hand protection for research, QA and production floors.',
-                'badge' => 'High Rotation',
-            ],
-            [
-                'slug' => 'uv-vis-spectrophotometer',
-                'name' => 'UV-Vis Spectrophotometer',
-                'brand' => 'Shimadzu',
-                'category' => 'Scientific Instruments & Laboratory Equipment',
-                'availability' => 'On Request',
-                'specs' => ['Range' => '190-1100 nm', 'Mode' => 'Scan & Quant', 'Interface' => 'USB'],
-                'summary' => 'Enterprise-grade spectral analysis for regulated laboratory use.',
-                'badge' => 'Installation Support',
-            ],
-            [
-                'slug' => 'hplc-column-c18',
-                'name' => 'C18 HPLC Column',
-                'brand' => 'Avantor',
-                'category' => 'HPLC Columns & Vials',
-                'availability' => 'Ready Stock',
-                'specs' => ['Size' => '250 x 4.6 mm', 'Particle' => '5 um', 'pH' => '2-8'],
-                'summary' => 'Stable reversed-phase column for routine and high-throughput methods.',
-                'badge' => 'Method Ready',
-            ],
-            [
-                'slug' => 'syringe-filters',
-                'name' => 'Sterile Syringe Filters',
-                'brand' => 'Pall',
-                'category' => 'Scientific Consumables',
-                'availability' => 'In Stock',
-                'specs' => ['Pore' => '0.22 um', 'Dia' => '25 mm', 'Pack' => '100 pcs'],
-                'summary' => 'High-flow sterile filters for sample prep and membrane clarification.',
-                'badge' => 'Sterile',
-            ],
-            [
-                'slug' => 'analytical-balance',
-                'name' => 'Analytical Balance 0.1 mg',
-                'brand' => 'Mettler Toledo',
-                'category' => 'Scientific Instruments & Laboratory Equipment',
-                'availability' => '5 Day Lead',
-                'specs' => ['Capacity' => '220 g', 'Readability' => '0.1 mg', 'Calibration' => 'Internal'],
-                'summary' => 'Audit-ready weighing performance for QC, R&D and regulated settings.',
-                'badge' => 'IQ/OQ Support',
-            ],
-            [
-                'slug' => 'tds-meter-kit',
-                'name' => 'Water Quality Test Kit',
-                'brand' => 'Hach',
-                'category' => 'Scientific Instruments & Laboratory Equipment',
-                'availability' => 'In Stock',
-                'specs' => ['Tests' => 'pH/TDS/Conductivity', 'Format' => 'Portable', 'Users' => 'Field + Lab'],
-                'summary' => 'Portable water analysis kit built for environmental and utility teams.',
-                'badge' => 'Field Ready',
-            ],
-        ],
-        'brands' => ['Thermo Fisher', 'Merck', 'Avantor', 'Qiagen', 'Whatman', 'Borosil', 'Pall Corporation', 'Shimadzu', 'Mettler Toledo', 'Hach'],
+        'products' => $products,
+        'authorized_brands' => ['HiMedia', 'Titan Media', 'SRL', 'CDH', 'Biohall', 'Microlit', 'BLD Pharm', 'Spectrochem', 'Labman', 'Wensar', 'Ammatron Instruments'],
+        'dealing_brands' => ['HiMedia', 'Titan Media', 'Borosil', 'Biohall', 'Tarsons', 'Polylab', 'Abdos', 'Avantor', 'Whatman', 'Merck', 'Qualigens', 'Thermo Fisher Scientific', 'Thomas Baker', 'CDH', 'Loba Chemie', 'Otto Chemie', 'TCI', 'NEB', 'Fermentas', 'SRL Chemicals', 'Sigma Aldrich', 'Elabscience', 'Cayman', 'MedChem Express', 'Abbkine', 'Santa Cruz', 'Addgene', 'Zymo', 'Sartorius', 'Ohaus', 'DLAB', 'Eppendorf', 'Magnus', 'Remi', 'Labman', 'Wensar', 'Microlit', 'Neuation', 'Ammatron'],
+        'brands' => $productBrands,
         'industries' => [
             ['name' => 'Research Laboratories', 'summary' => 'Dependable products for day-to-day research workflows and technical studies.'],
             ['name' => 'Educational Institutions', 'summary' => 'Laboratory essentials and instruments for teaching, training and academic research.'],
@@ -178,12 +415,81 @@ function site_data(): array
             ['title' => 'Customized Laboratory Solutions', 'summary' => 'Product combinations and sourcing support tailored to customer requirements.'],
         ],
         'catalogues' => [
-            ['title' => 'Research Chemicals & Imported Chemicals', 'category' => 'Chemicals', 'pages' => 52, 'size' => '11.8 MB'],
-            ['title' => 'Molecular Biology, Biochemicals & Immunochemicals', 'category' => 'Life Science', 'pages' => 46, 'size' => '10.9 MB'],
-            ['title' => 'Glassware, Plasticware & Liquid Handling', 'category' => 'Labware', 'pages' => 38, 'size' => '8.7 MB'],
-            ['title' => 'HPLC Solvents, Columns & Vials', 'category' => 'Chromatography', 'pages' => 34, 'size' => '7.9 MB'],
-            ['title' => 'Culture Media, Safety Products & Consumables', 'category' => 'Consumables', 'pages' => 42, 'size' => '9.8 MB'],
-            ['title' => 'Scientific Instruments, Medical Equipment & Diagnostics', 'category' => 'Equipment', 'pages' => 48, 'size' => '12.2 MB'],
+            [
+                'title' => 'Life Science',
+                'category' => 'Life Science',
+                'brands' => ['HiMedia', 'Titan', 'Takara'],
+                'documents' => [
+                    catalogue_document('HIMEDIA PRICE LIST 2026-27.pdf', 'HiMedia Price List', 'HiMedia'),
+                    catalogue_document('Titan Price List 2026-27.pdf', 'Titan Price List', 'Titan'),
+                    catalogue_document('Takara price list 2026.pdf', 'Takara Price List', 'Takara'),
+                ],
+            ],
+            [
+                'title' => 'Chemicals',
+                'category' => 'Chemicals',
+                'brands' => ['Qualigens', 'SRL', 'CDH', 'Merck', 'Loba', 'Rankem'],
+                'documents' => [
+                    catalogue_document('QUALIGENS revised price list 2026.xlsx', 'Qualigens Price List', 'Qualigens'),
+                    catalogue_document('SRL E CATALOGUE 2026-27.pdf', 'SRL E-Catalogue', 'SRL'),
+                    catalogue_document('CDH PRICE LIST 2026-27.pdf', 'CDH Price List', 'CDH'),
+                    catalogue_document('Merck Price List April 2026.pdf', 'Merck Price List', 'Merck'),
+                    catalogue_document('Loba price list 2026-27.pdf', 'Loba Price List', 'Loba'),
+                    catalogue_document('RANKEM PRICE LIST 2026-27.pdf', 'Rankem Price List', 'Rankem'),
+                ],
+            ],
+            [
+                'title' => 'Plasticware',
+                'category' => 'Plasticware',
+                'brands' => ['Tarsons', 'Abdos', 'Polylab'],
+                'documents' => [
+                    catalogue_document('Tarsons Price List 2026.xlsx', 'Tarsons Price List', 'Tarsons'),
+                    catalogue_document('Abdos Price List 2026-27.xlsx', 'Abdos Price List', 'Abdos'),
+                    catalogue_document('Polylab Price List 2026 (Effective from 01.04.2026).pdf', 'Polylab Price List', 'Polylab'),
+                ],
+            ],
+            [
+                'title' => 'Glassware',
+                'category' => 'Glassware',
+                'brands' => ['Borosil', 'Biohall', 'Riviera', 'Blue Star'],
+                'documents' => [
+                    catalogue_document('Borosil Price List 2026-27.pdf', 'Borosil Price List', 'Borosil'),
+                    catalogue_document('Biohall Germany Glassware Price List-2026-27.pdf', 'Biohall Glassware Price List', 'Biohall'),
+                    catalogue_document('RIVIERA PRICE LIST for 2026-2027 Dt. 08-04-26.pdf', 'Riviera Price List', 'Riviera'),
+                    catalogue_document('Blue star price list 2026.pdf', 'Blue Star Price List', 'Blue Star'),
+                ],
+            ],
+            [
+                'title' => 'Laboratory Filtration',
+                'category' => 'Laboratory Filtration',
+                'brands' => ['Whatman', 'Axiva', 'Borosil', 'Merck'],
+                'documents' => [
+                    catalogue_document('Whatman Price List 2026.pdf', 'Whatman Price List', 'Whatman'),
+                    catalogue_document('AXIVA PRICE LIST 2026.xlsx', 'Axiva Price List', 'Axiva'),
+                    catalogue_document('Borosil Price List 2026-27.pdf', 'Borosil Price List', 'Borosil'),
+                    catalogue_document('Merck Price List April 2026.pdf', 'Merck Price List', 'Merck'),
+                ],
+            ],
+            [
+                'title' => 'Liquid Handling Instruments',
+                'category' => 'Liquid Handling Instruments',
+                'brands' => ['Microlit', 'Thermo', 'Tarsons', 'HiMedia'],
+                'documents' => [
+                    catalogue_document('MICROLIT INR Price List_FY 2026-27.pdf', 'Microlit Price List', 'Microlit'),
+                    catalogue_document('Thermo Pipette Price List 2026-27.pdf', 'Thermo Pipette Price List', 'Thermo'),
+                    catalogue_document('Tarsons Price List 2026.xlsx', 'Tarsons Price List', 'Tarsons'),
+                    catalogue_document('HIMEDIA PRICE LIST 2026-27.pdf', 'HiMedia Price List', 'HiMedia'),
+                ],
+            ],
+            [
+                'title' => 'Instrument',
+                'category' => 'Instrument',
+                'brands' => ['Neuation', 'Labman', 'DLAB'],
+                'documents' => [
+                    catalogue_document('Neuation price list 2026-27.pdf', 'Neuation Price List', 'Neuation'),
+                    catalogue_document('DLAB price list 2026-27.pdf', 'DLAB Price List', 'DLAB'),
+                ],
+            ],
         ],
         'faqs' => [
             ['question' => 'What types of products does Somadi Lifescience supply?', 'answer' => 'We supply laboratory products, scientific instruments, research chemicals, consumables, liquid handling products, HPLC supplies, safety products, medical equipment and diagnostics solutions.'],
@@ -197,6 +503,35 @@ function site_data(): array
             ['icon' => 'check', 'title' => 'Our Commitment', 'summary' => 'We focus on quality, efficiency, careful handling and customer satisfaction for every inquiry, order and delivery.'],
         ],
     ];
+}
+
+function catalogue_items(): array
+{
+    $items = [];
+
+    foreach (site_data()['catalogues'] as $catalogue) {
+        foreach ($catalogue['documents'] as $document) {
+            $items[] = [
+                'title' => $document['label'],
+                'category' => $catalogue['category'],
+                'brand' => $document['brand'] ?? $catalogue['title'],
+                'url' => $document['url'],
+                'extension' => $document['extension'],
+                'size' => $document['size'],
+                'previewable' => $document['previewable'],
+                'filename' => $document['filename'],
+                'search_terms' => implode(' ', array_filter([
+                    $document['label'],
+                    $document['brand'] ?? '',
+                    $catalogue['category'],
+                    $catalogue['title'],
+                    implode(' ', $catalogue['brands']),
+                ])),
+            ];
+        }
+    }
+
+    return $items;
 }
 
 function page_meta(string $page): array
@@ -217,7 +552,7 @@ function page_meta(string $page): array
         ],
         'catalogues' => [
             'title' => 'Scientific Catalogues & Brochures | SOMADI LIFESCIENCE',
-            'description' => 'Explore scientific product catalogues and brochures covering chemicals, life science products, labware, HPLC supplies, consumables and instruments.',
+            'description' => 'Explore scientific product catalogues organized by life science, chemicals, plasticware, glassware, laboratory filtration, liquid handling instruments and instruments.',
             'keywords' => 'scientific catalogue India, laboratory product brochures, scientific equipment supplier India, laboratory chemicals supplier, research chemicals supplier India',
         ],
         'contact' => [
@@ -515,7 +850,7 @@ function build_products_collection_schema(): array
 
 function build_catalogues_collection_schema(): array
 {
-    $catalogues = site_data()['catalogues'];
+    $catalogues = catalogue_items();
 
     return [
         '@type' => 'ItemList',
@@ -526,17 +861,18 @@ function build_catalogues_collection_schema(): array
             static fn(array $catalogue, int $index): array => [
                 '@type' => 'ListItem',
                 'position' => $index + 1,
-                'item' => [
+                'item' => array_filter([
                     '@type' => 'CreativeWork',
                     'name' => $catalogue['title'],
                     'genre' => $catalogue['category'],
-                    'description' => 'Scientific catalogue and brochure resource for technical review and procurement support.',
-                    'url' => absolute_url('/catalogues.php'),
-                    'encoding' => [
+                    'description' => 'Scientific catalogue and brochure resource for ' . $catalogue['brand'] . ' in the ' . $catalogue['category'] . ' category.',
+                    'url' => absolute_url($catalogue['url']),
+                    'keywords' => implode(', ', array_filter([$catalogue['brand'], $catalogue['category'], $catalogue['extension']])),
+                    'encoding' => isset($catalogue['size']) ? [
                         '@type' => 'MediaObject',
                         'fileSize' => $catalogue['size'],
-                    ],
-                ],
+                    ] : null,
+                ]),
             ],
             $catalogues,
             array_keys($catalogues)
@@ -690,7 +1026,7 @@ function render_header(): void
     <div class="topbar">
         <div class="container topbar__inner">
             <p>Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
-            <a href="tel:+919810024567">Delhi Sales Desk: +91 98100 24567</a>
+            <a href="tel:+919717844841">Delhi Sales Desk: +91 97178 44841</a>
         </div>
     </div>
 
@@ -862,8 +1198,8 @@ function render_footer(): void
         window.siteSearch = <?= json_encode([
             'products' => $data['products'],
             'categories' => $data['categories'],
-            'catalogues' => $data['catalogues'],
-            'brands' => $data['brands'],
+            'catalogues' => catalogue_items(),
+            'brands' => array_values(array_unique(array_merge($data['brands'], $data['authorized_brands'], $data['dealing_brands']))),
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
     </script>
     <script src="/assets/js/site.js"></script>

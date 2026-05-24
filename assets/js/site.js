@@ -118,14 +118,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const animateCounter = (node) => {
             const target = Number(node.dataset.counter || 0);
             const suffix = node.dataset.suffix || "";
+            const format = node.dataset.format || "localized";
             const duration = 1200;
             const start = performance.now();
+
+            const formatValue = (value) => {
+                if (format === "plain") {
+                    return String(value);
+                }
+
+                return value.toLocaleString("en-IN");
+            };
 
             const step = (timestamp) => {
                 const progress = Math.min((timestamp - start) / duration, 1);
                 const eased = 1 - Math.pow(1 - progress, 3);
                 const value = Math.round(target * eased);
-                node.textContent = `${value.toLocaleString("en-IN")}${suffix}`;
+                node.textContent = `${formatValue(value)}${suffix}`;
                 if (progress < 1) {
                     requestAnimationFrame(step);
                 }
@@ -308,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })),
             ...(window.siteSearch.catalogues || []).map((item) => ({
                 title: item.title,
-                meta: `${item.category} · ${item.pages} pages`,
+                meta: `${item.category} · ${item.brand} · ${item.extension}`,
                 href: "/catalogues.php",
                 label: "Catalogue",
             })),
@@ -421,7 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let visible = 0;
             cards.forEach((card) => {
                 const categoryMatch = activeCategory === "all" || card.dataset.category === activeCategory;
-                const searchMatch = !term || `${card.dataset.title} ${card.dataset.category}`.toLowerCase().includes(term);
+                const searchMatch = !term || (card.dataset.search || `${card.dataset.title} ${card.dataset.category}`).toLowerCase().includes(term);
                 const show = categoryMatch && searchMatch;
                 card.hidden = !show;
                 if (show) visible += 1;

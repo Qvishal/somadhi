@@ -37,7 +37,7 @@ render_header();
                 <p><?= h($company['commitment']) ?></p>
                 <div class="contact-list contact-list--stacked">
                     <a href="tel:<?= h(str_replace(' ', '', $company['phone'])) ?>"><span><?= icon('phone') ?></span><?= h($company['phone']) ?></a>
-                    <a href="https://wa.me/919810024567" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
+                    <a href="https://wa.me/919717844841" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
                     <a href="mailto:<?= h($company['email']) ?>"><span><?= icon('mail') ?></span><?= h($company['email']) ?></a>
                     <p><span><?= icon('map') ?></span><?= h($company['address']) ?></p>
                 </div>
