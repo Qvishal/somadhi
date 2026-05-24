@@ -1163,6 +1163,10 @@ function render_footer(): void
                     </span>
                 </a>
                 <p><?= h($data['company']['tagline']) ?></p>
+                <div class="footer-badges">
+                    <img src="/assets/brand/msme-logo.png" alt="MSME Registered Enterprise" class="footer-badge-img">
+                    <img src="/assets/brand/gem-logo.png" alt="GeM Registered Seller" class="footer-badge-img">
+                </div>
             </div>
             <div>
                 <span class="eyebrow">Platform</span>

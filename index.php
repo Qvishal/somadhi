@@ -134,9 +134,15 @@ render_header();
                 <article class="product-card reveal" data-product-card data-name="<?= h($product['name']) ?>" data-brand="<?= h($product['brand']) ?>" data-category="<?= h($product['category']) ?>" data-availability="<?= h($product['availability']) ?>">
                     <div class="product-card__visual">
                         <span class="product-badge"><?= h($product['badge']) ?></span>
-                        <div class="product-art product-art--<?= h(strtolower(str_replace([' ', '&'], ['-', 'and'], $product['category']))) ?>">
-                            <span><?= h($product['brand']) ?></span>
-                        </div>
+                        <?php if (!empty($product['image'])): ?>
+                            <div class="product-art product-art--image">
+                                <img class="product-card__image" src="<?= h($product['image']) ?>" alt="<?= h($product['name']) ?>">
+                            </div>
+                        <?php else: ?>
+                            <div class="product-art product-art--<?= h(strtolower(str_replace([' ', '&'], ['-', 'and'], $product['category']))) ?>">
+                                <span><?= h($product['brand']) ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <div class="product-card__copy">
                         <div class="product-card__meta">
@@ -226,11 +232,16 @@ render_header();
                 <span class="eyebrow">Dealing brands</span>
                 <h3>Broader scientific and laboratory sourcing coverage</h3>
                 <p>This extended brand list reflects the wider product ecosystem available for enquiries, catalogues and sourcing discussions.</p>
-                <div class="brand-cloud">
-                    <?php foreach ($data['dealing_brands'] as $brand): ?>
-                        <span class="brand-chip"><?= h($brand) ?></span>
+                <div class="brand-cloud" data-brand-cloud="dealing">
+                    <?php foreach ($data['dealing_brands'] as $index => $brand): ?>
+                        <span class="brand-chip" <?= $index >= 12 ? 'data-brand-extra hidden' : '' ?>><?= h($brand) ?></span>
                     <?php endforeach; ?>
                 </div>
+                <?php if (count($data['dealing_brands']) > 12): ?>
+                    <button class="button button--secondary button--small" style="align-self: flex-start; margin-top: 18px;" type="button" data-brand-toggle>
+                        Show all brands (+<?= count($data['dealing_brands']) - 12 ?>)
+                    </button>
+                <?php endif; ?>
             </article>
         </div>
     </section>
@@ -283,7 +294,7 @@ render_header();
             <p>Use the catalogue center to review category-wise resources for chemicals, labware, consumables, life science products and instruments before placing an inquiry.</p>
         </div>
         <div class="container catalogue-grid">
-            <?php foreach ($data['catalogues'] as $catalogue): ?>
+            <?php foreach (array_slice(catalogue_items(), 0, 4) as $catalogue): ?>
                 <article class="catalogue-card reveal">
                     <div class="catalogue-card__preview">
                         <div class="preview-sheet"></div>
@@ -292,12 +303,15 @@ render_header();
                     <span class="catalogue-card__tag"><?= h($catalogue['category']) ?></span>
                     <h3><?= h($catalogue['title']) ?></h3>
                     <div class="catalogue-card__meta">
-                        <span><?= h((string) $catalogue['pages']) ?> pages</span>
+                        <span><?= h($catalogue['brand']) ?></span>
+                        <span><?= h($catalogue['extension']) ?></span>
                         <span><?= h($catalogue['size']) ?></span>
                     </div>
                     <div class="catalogue-card__actions">
-                        <a class="button button--secondary button--small" href="/catalogues.php">Preview</a>
-                        <a class="button button--ghost button--small" href="/catalogues.php"><?= icon('download') ?> Download</a>
+                        <?php if ($catalogue['previewable']): ?>
+                            <a class="button button--secondary button--small" href="<?= h($catalogue['url']) ?>" target="_blank" rel="noopener noreferrer">View</a>
+                        <?php endif; ?>
+                        <a class="button button--ghost button--small" href="<?= h($catalogue['url']) ?>" download><?= icon('download') ?> Download</a>
                     </div>
                 </article>
             <?php endforeach; ?>

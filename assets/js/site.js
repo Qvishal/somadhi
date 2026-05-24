@@ -578,6 +578,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    const bindBrandToggle = () => {
+        const toggle = $("[data-brand-toggle]");
+        const cloud = $("[data-brand-cloud='dealing']");
+        if (!toggle || !cloud) return;
+
+        let expanded = false;
+        toggle.addEventListener("click", () => {
+            expanded = !expanded;
+            const extraChips = $$("[data-brand-extra]", cloud);
+            extraChips.forEach((chip) => {
+                chip.hidden = !expanded;
+                if (expanded) {
+                    chip.classList.add("reveal-chip");
+                } else {
+                    chip.classList.remove("reveal-chip");
+                }
+            });
+            toggle.textContent = expanded
+                ? "Show less"
+                : `Show all brands (+${extraChips.length})`;
+        });
+    };
+
     const bindToastMessages = () => {
         $$("[data-toast-message]").forEach((button) => {
             button.addEventListener("click", () => {
@@ -601,6 +624,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bindCompare();
     renderCompare();
     bindForms();
+    bindBrandToggle();
     bindToastMessages();
 });
 

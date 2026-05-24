@@ -56,6 +56,7 @@ body {
         radial-gradient(circle at top left, rgba(230, 27, 136, 0.08), transparent 28%),
         radial-gradient(circle at right 18%, rgba(90, 70, 180, 0.1), transparent 24%),
         linear-gradient(180deg, #fdfbff 0%, #f8f5fc 42%, #f3eef8 100%);
+    background-attachment: fixed;
     line-height: 1.65;
     overflow-x: hidden;
 }
@@ -823,7 +824,7 @@ p {
 }
 
 .hero h1 {
-    max-width: 11.5ch;
+    max-width: 14.5ch;
     font-size: clamp(2.6rem, 4.4vw, 4.35rem);
     letter-spacing: -0.035em;
 }
@@ -1426,13 +1427,21 @@ p {
 }
 
 .brand-directory__card {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 18px;
     padding: 28px;
     border-radius: 30px;
     border: 1px solid rgba(79, 63, 159, 0.08);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 244, 252, 0.92));
     box-shadow: var(--shadow-sm);
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.brand-directory__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(90, 70, 180, 0.24);
 }
 
 .brand-directory__card h3 {
@@ -1450,6 +1459,30 @@ p {
     padding: 0 18px;
     filter: none;
     font-size: 0.92rem;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+    cursor: default;
+}
+
+.brand-cloud .brand-chip:hover {
+    transform: scale(1.05);
+    background: white;
+    border-color: rgba(90, 70, 180, 0.28);
+    box-shadow: 0 8px 16px rgba(35, 23, 54, 0.06);
+}
+
+@keyframes chipFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.brand-cloud .brand-chip.reveal-chip {
+    animation: chipFadeIn 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .info-grid {
@@ -1703,6 +1736,29 @@ label {
     padding: 48px 0 28px;
     background: linear-gradient(180deg, #231736 0%, #2b1f43 100%);
     color: rgba(255, 255, 255, 0.74);
+}
+
+.footer-badges {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 14px;
+}
+
+.footer-badge-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    background: white;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-badge-img:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
 }
 
 .site-footer__grid {
