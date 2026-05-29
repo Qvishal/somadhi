@@ -378,7 +378,7 @@ function site_data(): array
             'default_description' => 'Trusted supplier of laboratory products, scientific instruments, research chemicals, consumables and healthcare solutions across India.',
             'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, scientific instruments Delhi, lab consumables distributor, research chemicals supplier India, laboratory products supplier',
             'base_url' => 'https://www.somadilifescience.com',
-            'logo' => '/assets/brand/logo-badge.svg',
+            'logo' => '/assets/brand/logo.png',
             'og_image' => '/assets/brand/og-card.svg',
             'favicon' => '/assets/brand/favicon.svg',
         ],
@@ -1116,11 +1116,11 @@ function schemas_for_page(string $page): array
 function render_schema_markup(string $page): void
 {
     $graph = schemas_for_page($page);
-    ?>
+?>
     <script type="application/ld+json">
-<?= json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>
+        <?= json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>
     </script>
-    <?php
+<?php
 }
 
 function icon(string $name): string
@@ -1165,49 +1165,51 @@ function render_head(string $page): void
     $imageUrl = absolute_url($meta['og_image']);
     $imageAlt = 'Social preview for ' . $title;
     $modifiedAt = site_modified_iso();
-    ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= h($title) ?></title>
-    <meta name="description" content="<?= h($description) ?>">
-    <meta name="keywords" content="<?= h($meta['keywords']) ?>">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="<?= h($company['name']) ?>">
-    <meta name="geo.region" content="IN-DL">
-    <meta name="geo.placename" content="Delhi">
-    <meta name="ICBM" content="28.7256,77.1624">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="theme-color" content="#1f4f3e">
-    <meta property="og:locale" content="en_IN">
-    <meta property="og:site_name" content="<?= h($company['name']) ?>">
-    <meta property="og:title" content="<?= h($title) ?>">
-    <meta property="og:description" content="<?= h($description) ?>">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="<?= h($canonicalUrl) ?>">
-    <meta property="og:image" content="<?= h($imageUrl) ?>">
-    <meta property="og:image:secure_url" content="<?= h($imageUrl) ?>">
-    <meta property="og:image:alt" content="<?= h($imageAlt) ?>">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:updated_time" content="<?= h($modifiedAt) ?>">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<?= h($title) ?>">
-    <meta name="twitter:description" content="<?= h($description) ?>">
-    <meta name="twitter:image" content="<?= h($imageUrl) ?>">
-    <meta name="twitter:image:alt" content="<?= h($imageAlt) ?>">
-    <link rel="canonical" href="<?= h($canonicalUrl) ?>">
-    <link rel="icon" type="image/svg+xml" href="<?= h($meta['favicon']) ?>">
-    <link rel="stylesheet" href="/assets/css/styles.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">    
-    <?php render_schema_markup($page); ?>
-</head>
-<body data-page="<?= h($page) ?>">
+?>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?= h($title) ?></title>
+        <meta name="description" content="<?= h($description) ?>">
+        <meta name="keywords" content="<?= h($meta['keywords']) ?>">
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+        <meta name="author" content="<?= h($company['name']) ?>">
+        <meta name="geo.region" content="IN-DL">
+        <meta name="geo.placename" content="Delhi">
+        <meta name="ICBM" content="28.7256,77.1624">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="theme-color" content="#1f4f3e">
+        <meta property="og:locale" content="en_IN">
+        <meta property="og:site_name" content="<?= h($company['name']) ?>">
+        <meta property="og:title" content="<?= h($title) ?>">
+        <meta property="og:description" content="<?= h($description) ?>">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="<?= h($canonicalUrl) ?>">
+        <meta property="og:image" content="<?= h($imageUrl) ?>">
+        <meta property="og:image:secure_url" content="<?= h($imageUrl) ?>">
+        <meta property="og:image:alt" content="<?= h($imageAlt) ?>">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:updated_time" content="<?= h($modifiedAt) ?>">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?= h($title) ?>">
+        <meta name="twitter:description" content="<?= h($description) ?>">
+        <meta name="twitter:image" content="<?= h($imageUrl) ?>">
+        <meta name="twitter:image:alt" content="<?= h($imageAlt) ?>">
+        <link rel="canonical" href="<?= h($canonicalUrl) ?>">
+        <link rel="icon" type="image/svg+xml" href="<?= h($meta['favicon']) ?>">
+        <link rel="stylesheet" href="/assets/css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <?php render_schema_markup($page); ?>
+    </head>
+
+    <body data-page="<?= h($page) ?>">
     <?php
 }
 
@@ -1215,128 +1217,124 @@ function render_header(): void
 {
     $data = site_data();
     ?>
-    <div class="topbar">
-        <div class="container topbar__inner">
-            <p>Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
-            <div class="topbar__links">
-                <?php foreach ($data['company']['phones'] as $phone): ?>
-                    <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-
-    <header class="site-header" data-header>
-        <div class="container site-header__inner">
-            <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
-                <span class="brand-mark__logo">SL</span>
-                <span class="brand-mark__copy">
-                    <strong><?= h($data['company']['name']) ?></strong>
-                    <small>Scientific Procurement Platform</small>
-                </span>
-            </a>
-
-            <nav class="site-nav" aria-label="Primary navigation">
-                <?php foreach (nav_items() as $item): ?>
-                    <a class="site-nav__link<?= is_active_page($item['page']) ? ' is-active' : '' ?>" href="<?= h($item['href']) ?>">
-                        <?= h($item['label']) ?>
-                    </a>
-                <?php endforeach; ?>
-            </nav>
-
-            <div class="site-actions">
-                <button class="icon-button icon-button--search" type="button" aria-label="Search products" data-search-open><?= icon('search') ?></button>
-                <button class="button button--ghost" type="button" data-quote-open>
-                    <?= icon('quote') ?>
-                    <span>RFQ</span>
-                    <span class="quote-count" data-quote-count>0</span>
-                </button>
-                <a class="button button--primary" href="/contact#rfq-form">Request Quotation</a>
-                <button class="icon-button mobile-only" type="button" aria-label="Open menu" data-menu-open><?= icon('menu') ?></button>
-            </div>
-        </div>
-    </header>
-
-    <div class="mobile-menu" data-mobile-menu aria-hidden="true" inert>
-        <div class="mobile-menu__panel">
-            <div class="mobile-menu__header">
-                <span>Navigation</span>
-                <button class="icon-button" type="button" aria-label="Close menu" data-menu-close><?= icon('close') ?></button>
-            </div>
-            <nav class="mobile-menu__nav">
-                <?php foreach (nav_items() as $item): ?>
-                    <a href="<?= h($item['href']) ?>"><?= h($item['label']) ?></a>
-                <?php endforeach; ?>
-                <a href="/products">Browse Categories</a>
-                <a href="/contact#rfq-form">Request Quotation</a>
-            </nav>
-        </div>
-    </div>
-
-    <div class="search-overlay" data-search-overlay aria-hidden="true" inert>
-        <div class="search-overlay__panel">
-            <div class="search-overlay__header">
-                <div>
-                    <span class="eyebrow">Search-first procurement</span>
-                    <h3>Find products, catalogues and categories instantly</h3>
-                    <p>Search by brand, chemical, instrument, glassware, category or brochure topic.</p>
+        <div class="topbar">
+            <div class="container topbar__inner">
+                <p>Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
+                <div class="topbar__links">
+                    <?php foreach ($data['company']['phones'] as $phone): ?>
+                        <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
+                    <?php endforeach; ?>
                 </div>
-                <button class="icon-button" type="button" aria-label="Close search" data-search-close><?= icon('close') ?></button>
             </div>
-            <label class="search-field">
-                <?= icon('search') ?>
-                <input type="search" placeholder="Search ethanol, pipettes, chromatography, Merck..." data-global-search>
-            </label>
-            <div class="search-overlay__chips">
-                <button class="chip chip--active" type="button">Products</button>
-                <button class="chip" type="button">Catalogues</button>
-                <button class="chip" type="button">Brands</button>
-            </div>
-            <div class="search-results" data-search-results></div>
         </div>
-    </div>
 
-    <aside class="quote-drawer" data-quote-drawer aria-hidden="true" inert>
-        <div class="quote-drawer__header">
-            <div>
-                <span class="eyebrow">Request for quotation</span>
-                <h3>Your procurement shortlist</h3>
+        <header class="site-header" data-header>
+            <div class="container site-header__inner">
+                <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
+                    <img src="/assets/brand/logo.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img">
+                </a>
+
+                <nav class="site-nav" aria-label="Primary navigation">
+                    <?php foreach (nav_items() as $item): ?>
+                        <a class="site-nav__link<?= is_active_page($item['page']) ? ' is-active' : '' ?>" href="<?= h($item['href']) ?>">
+                            <?= h($item['label']) ?>
+                        </a>
+                    <?php endforeach; ?>
+                </nav>
+
+                <div class="site-actions">
+                    <button class="icon-button icon-button--search" type="button" aria-label="Search products" data-search-open><?= icon('search') ?></button>
+                    <button class="button button--ghost" type="button" data-quote-open>
+                        <?= icon('quote') ?>
+                        <span>RFQ</span>
+                        <span class="quote-count" data-quote-count>0</span>
+                    </button>
+                    <a class="button button--primary" href="/contact#rfq-form">Request Quotation</a>
+                    <button class="icon-button mobile-only" type="button" aria-label="Open menu" data-menu-open><?= icon('menu') ?></button>
+                </div>
             </div>
-            <button class="icon-button" type="button" aria-label="Close quote list" data-quote-close><?= icon('close') ?></button>
+        </header>
+
+        <div class="mobile-menu" data-mobile-menu aria-hidden="true" inert>
+            <div class="mobile-menu__panel">
+                <div class="mobile-menu__header">
+                    <span>Navigation</span>
+                    <button class="icon-button" type="button" aria-label="Close menu" data-menu-close><?= icon('close') ?></button>
+                </div>
+                <nav class="mobile-menu__nav">
+                    <?php foreach (nav_items() as $item): ?>
+                        <a href="<?= h($item['href']) ?>"><?= h($item['label']) ?></a>
+                    <?php endforeach; ?>
+                    <a href="/products">Browse Categories</a>
+                    <a href="/contact#rfq-form">Request Quotation</a>
+                </nav>
+            </div>
         </div>
-        <div class="quote-drawer__body" data-quote-items></div>
-        <form class="quote-drawer__form form-card" data-inquiry-form>
-            <input type="hidden" name="form_type" value="Quote Drawer">
-            <input type="hidden" name="quote_items" data-quote-field value="">
-            <div class="form-row">
-                <label>
-                    Name
-                    <input type="text" name="name" placeholder="Procurement manager" required>
+
+        <div class="search-overlay" data-search-overlay aria-hidden="true" inert>
+            <div class="search-overlay__panel">
+                <div class="search-overlay__header">
+                    <div>
+                        <span class="eyebrow">Search-first procurement</span>
+                        <h3>Find products, catalogues and categories instantly</h3>
+                        <p>Search by brand, chemical, instrument, glassware, category or brochure topic.</p>
+                    </div>
+                    <button class="icon-button" type="button" aria-label="Close search" data-search-close><?= icon('close') ?></button>
+                </div>
+                <label class="search-field">
+                    <?= icon('search') ?>
+                    <input type="search" placeholder="Search ethanol, pipettes, chromatography, Merck..." data-global-search>
                 </label>
-                <label>
-                    Organization
-                    <input type="text" name="organization" placeholder="Lab / company" required>
-                </label>
+                <div class="search-overlay__chips">
+                    <button class="chip chip--active" type="button">Products</button>
+                    <button class="chip" type="button">Catalogues</button>
+                    <button class="chip" type="button">Brands</button>
+                </div>
+                <div class="search-results" data-search-results></div>
             </div>
-            <div class="form-row">
-                <label>
-                    Email
-                    <input type="email" name="email" placeholder="you@company.com" required>
-                </label>
-                <label>
-                    Phone
-                    <input type="tel" name="phone" placeholder="+91" required>
-                </label>
+        </div>
+
+        <aside class="quote-drawer" data-quote-drawer aria-hidden="true" inert>
+            <div class="quote-drawer__header">
+                <div>
+                    <span class="eyebrow">Request for quotation</span>
+                    <h3>Your procurement shortlist</h3>
+                </div>
+                <button class="icon-button" type="button" aria-label="Close quote list" data-quote-close><?= icon('close') ?></button>
             </div>
-            <label>
-                Requirement notes
-                <textarea name="message" rows="4" placeholder="Share pack sizes, quantities, delivery location or preferred brands." required></textarea>
-            </label>
-            <button class="button button--primary button--block" type="submit">Submit RFQ</button>
-            <p class="form-status" data-form-status></p>
-        </form>
-    </aside>
-    <div class="page-dim" data-page-dim></div>
+            <div class="quote-drawer__body" data-quote-items></div>
+            <form class="quote-drawer__form form-card" data-inquiry-form>
+                <input type="hidden" name="form_type" value="Quote Drawer">
+                <input type="hidden" name="quote_items" data-quote-field value="">
+                <div class="form-row">
+                    <label>
+                        Name
+                        <input type="text" name="name" placeholder="Procurement manager" required>
+                    </label>
+                    <label>
+                        Organization
+                        <input type="text" name="organization" placeholder="Lab / company" required>
+                    </label>
+                </div>
+                <div class="form-row">
+                    <label>
+                        Email
+                        <input type="email" name="email" placeholder="you@company.com" required>
+                    </label>
+                    <label>
+                        Phone
+                        <input type="tel" name="phone" placeholder="+91" required>
+                    </label>
+                </div>
+                <label>
+                    Requirement notes
+                    <textarea name="message" rows="4" placeholder="Share pack sizes, quantities, delivery location or preferred brands." required></textarea>
+                </label>
+                <button class="button button--primary button--block" type="submit">Submit RFQ</button>
+                <p class="form-status" data-form-status></p>
+            </form>
+        </aside>
+        <div class="page-dim" data-page-dim></div>
     <?php
 }
 
@@ -1344,70 +1342,67 @@ function render_footer(): void
 {
     $data = site_data();
     ?>
-    <section class="mobile-rfq">
-        <a href="/contact#rfq-form" class="button button--primary button--block">Request Quotation</a>
-    </section>
+        <section class="mobile-rfq">
+            <a href="/contact#rfq-form" class="button button--primary button--block">Request Quotation</a>
+        </section>
 
-    <footer class="site-footer">
-        <div class="container site-footer__grid">
-            <div>
-                <a href="/" class="brand-mark brand-mark--footer">
-                    <span class="brand-mark__logo">SL</span>
-                    <span class="brand-mark__copy">
-                        <strong><?= h($data['company']['name']) ?></strong>
-                        <small>Established 2015</small>
-                    </span>
-                </a>
-                <p><?= h($data['company']['tagline']) ?></p>
-                <div class="footer-badges">
-                    <img src="/assets/brand/msme-logo.png" alt="MSME Registered Enterprise" class="footer-badge-img">
-                    <img src="/assets/brand/gem-logo.png" alt="GeM Registered Seller" class="footer-badge-img">
+        <footer class="site-footer">
+            <div class="container site-footer__grid">
+                <div>
+                    <a href="/" class="brand-mark brand-mark--footer">
+                        <img src="/assets/brand/logo1.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img brand-mark__img--footer">
+                    </a>
+                    <p><?= h($data['company']['tagline']) ?></p>
+                    <div class="footer-badges">
+                        <img src="/assets/brand/msme-logo.png" alt="MSME Registered Enterprise" class="footer-badge-img">
+                        <img src="/assets/brand/gem-logo.png" alt="GeM Registered Seller" class="footer-badge-img">
+                    </div>
+                </div>
+                <div>
+                    <span class="eyebrow">Platform</span>
+                    <a href="/products">Products</a>
+                    <a href="/catalogues">Catalogues</a>
+                    <a href="/contact#rfq-form">Request Quotation</a>
+                </div>
+                <div>
+                    <span class="eyebrow">Industries</span>
+                    <a href="/products">Pharma</a>
+                    <a href="/products">Research Labs</a>
+                    <a href="/products">Universities</a>
+                </div>
+                <div>
+                    <span class="eyebrow">Contact</span>
+                    <?php foreach ($data['company']['phones'] as $phone): ?>
+                        <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
+                    <?php endforeach; ?>
+                    <?php foreach ($data['company']['emails'] as $email): ?>
+                        <a href="mailto:<?= h($email) ?>"><?= h($email) ?></a>
+                    <?php endforeach; ?>
+                    <p><?= h($data['company']['address']) ?></p>
                 </div>
             </div>
-            <div>
-                <span class="eyebrow">Platform</span>
-                <a href="/products">Products</a>
-                <a href="/catalogues">Catalogues</a>
-                <a href="/contact#rfq-form">Request Quotation</a>
+            <div class="container site-footer__meta">
+                <p>&copy; <span data-year></span> <?= h($data['company']['name']) ?>. All rights reserved.</p>
+                <div>
+                    <a href="/sitemap.xml">Sitemap</a>
+                    <a href="/robots.txt">Robots</a>
+                </div>
             </div>
-            <div>
-                <span class="eyebrow">Industries</span>
-                <a href="/products">Pharma</a>
-                <a href="/products">Research Labs</a>
-                <a href="/products">Universities</a>
-            </div>
-            <div>
-                <span class="eyebrow">Contact</span>
-                <?php foreach ($data['company']['phones'] as $phone): ?>
-                    <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
-                <?php endforeach; ?>
-                <?php foreach ($data['company']['emails'] as $email): ?>
-                    <a href="mailto:<?= h($email) ?>"><?= h($email) ?></a>
-                <?php endforeach; ?>
-                <p><?= h($data['company']['address']) ?></p>
-            </div>
-        </div>
-        <div class="container site-footer__meta">
-            <p>&copy; <span data-year></span> <?= h($data['company']['name']) ?>. All rights reserved.</p>
-            <div>
-                <a href="/sitemap.xml">Sitemap</a>
-                <a href="/robots.txt">Robots</a>
-            </div>
-        </div>
-    </footer>
+        </footer>
 
-    <div class="toast-stack" data-toast-stack></div>
+        <div class="toast-stack" data-toast-stack></div>
 
-    <script>
-        window.siteSearch = <?= json_encode([
-            'products' => $data['products'],
-            'categories' => $data['categories'],
-            'catalogues' => catalogue_items(),
-            'brands' => array_values(array_unique(array_merge($data['brands'], $data['authorized_brands'], $data['dealing_brands']))),
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
-    </script>
-    <script src="/assets/js/site.js"></script>
-</body>
-</html>
-    <?php
+        <script>
+            window.siteSearch = <?= json_encode([
+                                    'products' => $data['products'],
+                                    'categories' => $data['categories'],
+                                    'catalogues' => catalogue_items(),
+                                    'brands' => array_values(array_unique(array_merge($data['brands'], $data['authorized_brands'], $data['dealing_brands']))),
+                                ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+        </script>
+        <script src="/assets/js/site.js"></script>
+    </body>
+
+    </html>
+<?php
 }
