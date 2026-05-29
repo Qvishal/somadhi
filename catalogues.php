@@ -49,6 +49,7 @@ render_header();
             <?php foreach ($catalogueItems as $catalogue): ?>
                 <article
                     class="catalogue-card reveal"
+                    id="catalogue-<?= h($catalogue['slug']) ?>"
                     data-catalogue-card
                     data-category="<?= h($catalogue['category']) ?>"
                     data-title="<?= h($catalogue['title']) ?>"

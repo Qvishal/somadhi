@@ -92,7 +92,7 @@ render_header();
 
                 <div class="product-grid" id="products-grid" data-products-grid>
                     <?php foreach ($data['products'] as $product): ?>
-                        <article class="product-card reveal" data-product-card data-name="<?= h($product['name']) ?>" data-brand="<?= h($product['brand']) ?>" data-category="<?= h($product['category']) ?>" data-availability="<?= h($product['availability']) ?>">
+                        <article class="product-card reveal" id="product-<?= h($product['slug']) ?>" data-product-card data-name="<?= h($product['name']) ?>" data-brand="<?= h($product['brand']) ?>" data-category="<?= h($product['category']) ?>" data-availability="<?= h($product['availability']) ?>">
                             <div class="product-card__visual">
                                 <span class="product-badge"><?= h($product['badge']) ?></span>
                                 <?php if (!empty($product['image'])): ?>

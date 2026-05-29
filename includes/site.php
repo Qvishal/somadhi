@@ -17,6 +17,11 @@ function product_asset_url(string $filename): string
     return '/storage/extracted_doc_products/images/' . rawurlencode($filename);
 }
 
+function brand_logo_asset_url(string $filename): string
+{
+    return '/storage/brand_logos/' . rawurlencode($filename);
+}
+
 function format_file_size_label(int $bytes): string
 {
     if ($bytes >= 1024 * 1024) {
@@ -345,13 +350,17 @@ function site_data(): array
 
     return [
         'company' => [
-            'name' => 'SOMADI LIFESCIENCE',
+            'name' => 'Somadi Lifesciences',
             'short' => 'SL',
             'tagline' => 'Trusted distributor and supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions across India.',
             'founding_year' => '2015',
             'phone' => '+91 97178 44841',
+            'phone_secondary' => '+91 70424 54067',
+            'phones' => ['+91 97178 44841', '+91 70424 54067'],
             'whatsapp' => '+91 97178 44841',
             'email' => 'Info.somadilifesciences@gmail.com',
+            'email_secondary' => 'somadilifesciences@gmail.com',
+            'emails' => ['Info.somadilifesciences@gmail.com', 'somadilifesciences@gmail.com'],
             'address' => 'I-1870, Jahangir Puri, Delhi 110033, India',
             'street_address' => 'I-1870, Jahangir Puri',
             'locality' => 'Delhi',
@@ -365,7 +374,7 @@ function site_data(): array
             'closing' => 'Our team works closely with customers to provide dependable support, smooth coordination and complete laboratory solutions tailored to their requirements.',
         ],
         'meta' => [
-            'default_title' => 'SOMADI LIFESCIENCE | Scientific Equipment Supplier India',
+            'default_title' => 'Somadi Lifesciences | Scientific Equipment Supplier India',
             'default_description' => 'Trusted supplier of laboratory products, scientific instruments, research chemicals, consumables and healthcare solutions across India.',
             'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, scientific instruments Delhi, lab consumables distributor, research chemicals supplier India, laboratory products supplier',
             'base_url' => 'https://www.somadilifescience.com',
@@ -375,8 +384,8 @@ function site_data(): array
         ],
         'metrics' => [
             ['value' => 2015, 'suffix' => '', 'label' => 'Established', 'format' => 'plain'],
-            ['value' => 13, 'suffix' => '+', 'label' => 'Product Segments', 'format' => 'localized'],
-            ['value' => 6, 'suffix' => '+', 'label' => 'Core Customer Sectors', 'format' => 'localized'],
+            ['value' => 50, 'suffix' => '+', 'label' => 'Product Segments', 'format' => 'localized'],
+            ['value' => 20, 'suffix' => '+', 'label' => 'Core Customer Sectors', 'format' => 'localized'],
             ['value' => 100, 'suffix' => '%', 'label' => 'Quality-Focused Supply', 'format' => 'localized'],
         ],
         'categories' => [
@@ -395,6 +404,18 @@ function site_data(): array
         'authorized_brands' => ['HiMedia', 'Titan Media', 'SRL', 'CDH', 'Biohall', 'Microlit', 'BLD Pharm', 'Spectrochem', 'Labman', 'Wensar', 'Ammatron Instruments'],
         'dealing_brands' => ['HiMedia', 'Titan Media', 'Borosil', 'Biohall', 'Tarsons', 'Polylab', 'Abdos', 'Avantor', 'Whatman', 'Merck', 'Qualigens', 'Thermo Fisher Scientific', 'Thomas Baker', 'CDH', 'Loba Chemie', 'Otto Chemie', 'TCI', 'NEB', 'Fermentas', 'SRL Chemicals', 'Sigma Aldrich', 'Elabscience', 'Cayman', 'MedChem Express', 'Abbkine', 'Santa Cruz', 'Addgene', 'Zymo', 'Sartorius', 'Ohaus', 'DLAB', 'Eppendorf', 'Magnus', 'Remi', 'Labman', 'Wensar', 'Microlit', 'Neuation', 'Ammatron'],
         'brands' => $productBrands,
+        'brand_logos' => [
+            ['name' => 'HiMedia', 'image' => brand_logo_asset_url('himedia.png')],
+            ['name' => 'Titan Media', 'image' => brand_logo_asset_url('tm-media.jpeg')],
+            ['name' => 'SRL', 'image' => brand_logo_asset_url('srl.png')],
+            ['name' => 'CDH', 'image' => brand_logo_asset_url('cdh.png')],
+            ['name' => 'Biohall', 'image' => brand_logo_asset_url('biohall.png')],
+            ['name' => 'Microlit', 'image' => brand_logo_asset_url('microlit.png')],
+            ['name' => 'BLD Pharm', 'image' => brand_logo_asset_url('bld-pharm.png')],
+            ['name' => 'Spectrochem', 'image' => brand_logo_asset_url('spectrochem.png')],
+            ['name' => 'Labman', 'image' => brand_logo_asset_url('labman.jpeg')],
+            ['name' => 'Wensar', 'image' => brand_logo_asset_url('wensar.jpeg')],
+        ],
         'industries' => [
             ['name' => 'Research Laboratories', 'summary' => 'Dependable products for day-to-day research workflows and technical studies.'],
             ['name' => 'Educational Institutions', 'summary' => 'Laboratory essentials and instruments for teaching, training and academic research.'],
@@ -511,7 +532,10 @@ function catalogue_items(): array
 
     foreach (site_data()['catalogues'] as $catalogue) {
         foreach ($catalogue['documents'] as $document) {
+            $slug = slugify($catalogue['category'] . '-' . $document['brand'] . '-' . $document['label']);
+
             $items[] = [
+                'slug' => $slug,
                 'title' => $document['label'],
                 'category' => $catalogue['category'],
                 'brand' => $document['brand'] ?? $catalogue['title'],
@@ -538,31 +562,52 @@ function page_meta(string $page): array
 {
     $data = site_data();
     $meta = $data['meta'];
+    $companyName = $data['company']['name'];
+    $categoryNames = array_map(static fn(array $category): string => $category['name'], $data['categories']);
+    $catalogueItems = catalogue_items();
 
     $pages = [
         'home' => [
-            'title' => 'SOMADI LIFESCIENCE | Scientific Equipment Supplier India',
-            'description' => 'Trusted supplier of laboratory products, scientific instruments, research chemicals and healthcare solutions across India.',
-            'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, research chemicals supplier India, scientific instruments Delhi, lab consumables distributor',
+            'title' => $companyName . ' | Scientific Equipment Supplier India',
+            'description' => $companyName . ' supplies laboratory products, research chemicals, scientific instruments, labware and consumables across India with RFQ support.',
+            'keywords' => implode(', ', [
+                'scientific equipment supplier India',
+                'laboratory products supplier Delhi',
+                'research chemicals supplier India',
+                'lab consumables distributor',
+                'scientific instruments supplier',
+                'laboratory procurement support',
+            ]),
         ],
         'products' => [
-            'title' => 'Laboratory Products & Scientific Equipment | SOMADI LIFESCIENCE',
-            'description' => 'Browse laboratory products, scientific instruments, research chemicals, HPLC supplies, consumables and healthcare-oriented product categories for buyers across India.',
-            'keywords' => 'laboratory chemicals supplier, scientific equipment supplier India, research chemicals supplier India, lab consumables distributor, scientific instruments Delhi',
+            'title' => 'Laboratory Products & Scientific Equipment | ' . $companyName,
+            'description' => 'Browse ' . count($data['products']) . ' representative products across ' . count($data['categories']) . ' lab supply categories including chemicals, liquid handling, safety and instruments.',
+            'keywords' => implode(', ', array_merge([
+                'laboratory products India',
+                'scientific equipment supplier India',
+                'research chemicals supplier',
+            ], $categoryNames)),
         ],
         'catalogues' => [
-            'title' => 'Scientific Catalogues & Brochures | SOMADI LIFESCIENCE',
-            'description' => 'Explore scientific product catalogues organized by life science, chemicals, plasticware, glassware, laboratory filtration, liquid handling instruments and instruments.',
-            'keywords' => 'scientific catalogue India, laboratory product brochures, scientific equipment supplier India, laboratory chemicals supplier, research chemicals supplier India',
+            'title' => 'Scientific Catalogues & Brochures | ' . $companyName,
+            'description' => 'Download ' . count($catalogueItems) . ' searchable scientific catalogues for life science, chemicals, plasticware, glassware, filtration, liquid handling and instruments.',
+            'keywords' => 'scientific catalogue India, laboratory product brochures, chemical price list, labware catalogue, liquid handling catalogue, instrument catalogue',
         ],
         'contact' => [
-            'title' => 'Contact & RFQ | SOMADI LIFESCIENCE',
-            'description' => 'Contact SOMADI LIFESCIENCE for laboratory procurement, product sourcing, technical support, healthcare supply queries and quotation requests.',
-            'keywords' => 'contact laboratory chemicals supplier, scientific equipment supplier India contact, research chemicals supplier India contact, scientific instruments Delhi contact',
+            'title' => 'Contact & RFQ | ' . $companyName,
+            'description' => 'Contact ' . $companyName . ' in Delhi for laboratory product quotations, catalogue requests, stock confirmation and scientific procurement support.',
+            'keywords' => 'contact laboratory supplier Delhi, lab products RFQ India, scientific equipment quotation, research chemicals supplier contact',
         ],
     ];
 
     return array_merge($meta, $pages[$page] ?? []);
+}
+
+function slugify(string $value): string
+{
+    $slug = strtolower(trim($value));
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug) ?? '';
+    return trim($slug, '-') ?: 'item';
 }
 
 function current_page(): string
@@ -595,6 +640,46 @@ function nav_items(): array
 function h(?string $value): string
 {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+function site_modified_iso(): string
+{
+    $files = [
+        __DIR__ . '/site.php',
+        dirname(__DIR__) . '/index.php',
+        dirname(__DIR__) . '/products.php',
+        dirname(__DIR__) . '/catalogues.php',
+        dirname(__DIR__) . '/contact.php',
+        dirname(__DIR__) . '/assets/css/styles.css',
+        dirname(__DIR__) . '/assets/js/site.js',
+    ];
+
+    $modified = max(array_map(
+        static fn(string $file): int => is_file($file) ? (int) filemtime($file) : 0,
+        $files
+    ));
+
+    return date(DATE_ATOM, $modified ?: time());
+}
+
+function product_page_url(array $product): string
+{
+    return absolute_url('/products.php#product-' . $product['slug']);
+}
+
+function catalogue_page_url(array $catalogue): string
+{
+    return absolute_url('/catalogues.php#catalogue-' . $catalogue['slug']);
+}
+
+function phone_href(string $phone): string
+{
+    return 'tel:' . preg_replace('/\D+/', '', $phone);
+}
+
+function whatsapp_href(string $phone): string
+{
+    return 'https://wa.me/' . preg_replace('/\D+/', '', $phone);
 }
 
 function absolute_url(string $path = '/'): string
@@ -670,16 +755,28 @@ function build_business_schema(): array
     $data = site_data();
     $company = $data['company'];
     $meta = $data['meta'];
+    $categoryNames = array_map(static fn(array $category): string => $category['name'], $data['categories']);
+    $brandNodes = array_map(
+        static fn(array $brand): array => [
+            '@type' => 'Brand',
+            '@id' => absolute_url('/#brand-' . slugify($brand['name'])),
+            'name' => $brand['name'],
+            'logo' => absolute_url($brand['image']),
+        ],
+        $data['brand_logos']
+    );
 
     return [
         '@type' => ['Organization', 'LocalBusiness'],
         '@id' => absolute_url('/#organization'),
         'name' => $company['name'],
+        'legalName' => $company['name'],
         'alternateName' => $company['short'],
         'url' => absolute_url('/'),
-        'email' => $company['email'],
-        'telephone' => $company['phone'],
+        'email' => $company['emails'],
+        'telephone' => $company['phones'],
         'description' => $company['tagline'],
+        'slogan' => $company['tagline'],
         'logo' => absolute_url($meta['logo']),
         'image' => absolute_url($meta['og_image']),
         'foundingDate' => $company['founding_year'],
@@ -703,11 +800,21 @@ function build_business_schema(): array
             [
                 '@type' => 'ContactPoint',
                 'contactType' => 'customer support',
-                'telephone' => $company['whatsapp'],
+                'telephone' => $company['phone_secondary'],
+                'email' => $company['email_secondary'],
                 'areaServed' => 'IN',
                 'availableLanguage' => ['en', 'hi'],
             ],
         ],
+        'brand' => $brandNodes,
+        'knowsAbout' => array_values(array_unique(array_merge($categoryNames, [
+            'Laboratory products',
+            'Scientific instruments',
+            'Research chemicals',
+            'Healthcare supply',
+            'Laboratory consumables',
+            'Scientific procurement',
+        ]))),
         'areaServed' => [
             '@type' => 'Country',
             'name' => 'India',
@@ -718,6 +825,9 @@ function build_business_schema(): array
             'value' => $company['gst'],
         ],
         'hasMap' => $company['map'],
+        'priceRange' => 'RFQ',
+        'currenciesAccepted' => 'INR',
+        'paymentAccepted' => 'Bank transfer, UPI, cheque',
     ];
 }
 
@@ -734,6 +844,11 @@ function build_website_schema(): array
         'image' => absolute_url($data['meta']['og_image']),
         'publisher' => [
             '@id' => absolute_url('/#organization'),
+        ],
+        'potentialAction' => [
+            '@type' => 'ContactAction',
+            'name' => 'Request a laboratory product quotation',
+            'target' => absolute_url('/contact.php#rfq-form'),
         ],
         'inLanguage' => 'en-IN',
     ];
@@ -762,14 +877,22 @@ function build_breadcrumb_schema(string $page): array
 function build_page_schema(string $page): array
 {
     $meta = page_meta($page);
+    $mainEntity = match ($page) {
+        'products' => ['@id' => absolute_url('/products.php#itemlist')],
+        'catalogues' => ['@id' => absolute_url('/catalogues.php#itemlist')],
+        'contact' => ['@id' => absolute_url('/contact.php#contact-page')],
+        'home' => ['@id' => absolute_url('/#brand-list')],
+        default => null,
+    };
 
-    return [
+    return array_filter([
         '@type' => page_schema_type($page),
         '@id' => current_page_url() . '#webpage',
         'url' => current_page_url(),
         'name' => $meta['title'] ?? $meta['default_title'],
         'description' => $meta['description'] ?? $meta['default_description'],
         'keywords' => $meta['keywords'],
+        'dateModified' => site_modified_iso(),
         'isPartOf' => [
             '@id' => absolute_url('/#website'),
         ],
@@ -783,8 +906,9 @@ function build_page_schema(string $page): array
             '@id' => absolute_url('/#organization'),
         ],
         'primaryImageOfPage' => absolute_url($meta['og_image']),
+        'mainEntity' => $mainEntity,
         'inLanguage' => 'en-IN',
-    ];
+    ]);
 }
 
 function build_home_faq_schema(): array
@@ -815,7 +939,8 @@ function build_products_collection_schema(): array
     return [
         '@type' => 'ItemList',
         '@id' => absolute_url('/products.php#itemlist'),
-        'name' => 'Scientific products',
+        'name' => 'Laboratory products and scientific equipment',
+        'description' => 'Representative laboratory products, research chemicals, life science reagents, safety products, consumables and scientific instruments available through RFQ.',
         'numberOfItems' => count($products),
         'itemListElement' => array_map(
             static fn(array $product, int $index): array => [
@@ -823,14 +948,18 @@ function build_products_collection_schema(): array
                 'position' => $index + 1,
                 'item' => [
                     '@type' => 'Product',
+                    '@id' => product_page_url($product),
                     'name' => $product['name'],
+                    'sku' => $product['slug'],
+                    'image' => !empty($product['image']) ? absolute_url($product['image']) : null,
                     'brand' => [
                         '@type' => 'Brand',
+                        '@id' => absolute_url('/#brand-' . slugify($product['brand'])),
                         'name' => $product['brand'],
                     ],
                     'category' => $product['category'],
                     'description' => $product['summary'],
-                    'url' => absolute_url('/products.php#products-grid'),
+                    'url' => product_page_url($product),
                     'additionalProperty' => array_map(
                         static fn(string $label, string $value): array => [
                             '@type' => 'PropertyValue',
@@ -840,6 +969,10 @@ function build_products_collection_schema(): array
                         array_keys($product['specs']),
                         array_values($product['specs'])
                     ),
+                    'potentialAction' => [
+                        '@type' => 'ContactAction',
+                        'target' => absolute_url('/contact.php#rfq-form'),
+                    ],
                 ],
             ],
             $products,
@@ -855,7 +988,8 @@ function build_catalogues_collection_schema(): array
     return [
         '@type' => 'ItemList',
         '@id' => absolute_url('/catalogues.php#itemlist'),
-        'name' => 'Scientific catalogues',
+        'name' => 'Scientific catalogues and price lists',
+        'description' => 'Downloadable catalogue and price-list resources for laboratory chemicals, life science products, labware, filtration, liquid handling and instruments.',
         'numberOfItems' => count($catalogues),
         'itemListElement' => array_map(
             static fn(array $catalogue, int $index): array => [
@@ -863,19 +997,56 @@ function build_catalogues_collection_schema(): array
                 'position' => $index + 1,
                 'item' => array_filter([
                     '@type' => 'CreativeWork',
+                    '@id' => catalogue_page_url($catalogue),
                     'name' => $catalogue['title'],
                     'genre' => $catalogue['category'],
                     'description' => 'Scientific catalogue and brochure resource for ' . $catalogue['brand'] . ' in the ' . $catalogue['category'] . ' category.',
-                    'url' => absolute_url($catalogue['url']),
+                    'url' => catalogue_page_url($catalogue),
+                    'contentUrl' => absolute_url($catalogue['url']),
+                    'fileFormat' => $catalogue['extension'],
                     'keywords' => implode(', ', array_filter([$catalogue['brand'], $catalogue['category'], $catalogue['extension']])),
+                    'about' => [
+                        '@type' => 'Brand',
+                        '@id' => absolute_url('/#brand-' . slugify($catalogue['brand'])),
+                        'name' => $catalogue['brand'],
+                    ],
                     'encoding' => isset($catalogue['size']) ? [
                         '@type' => 'MediaObject',
+                        'name' => $catalogue['title'],
+                        'contentUrl' => absolute_url($catalogue['url']),
+                        'encodingFormat' => $catalogue['extension'],
                         'fileSize' => $catalogue['size'],
                     ] : null,
                 ]),
             ],
             $catalogues,
             array_keys($catalogues)
+        ),
+    ];
+}
+
+function build_brand_collection_schema(): array
+{
+    $brands = site_data()['brand_logos'];
+
+    return [
+        '@type' => 'ItemList',
+        '@id' => absolute_url('/#brand-list'),
+        'name' => 'Featured scientific brands',
+        'numberOfItems' => count($brands),
+        'itemListElement' => array_map(
+            static fn(array $brand, int $index): array => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'item' => [
+                    '@type' => 'Brand',
+                    '@id' => absolute_url('/#brand-' . slugify($brand['name'])),
+                    'name' => $brand['name'],
+                    'logo' => absolute_url($brand['image']),
+                ],
+            ],
+            $brands,
+            array_keys($brands)
         ),
     ];
 }
@@ -888,13 +1059,13 @@ function build_contact_page_schema(): array
         '@type' => 'ContactPage',
         '@id' => absolute_url('/contact.php#contact-page'),
         'url' => absolute_url('/contact.php'),
-        'name' => 'Contact SOMADI LIFESCIENCE',
-        'description' => 'Contact SOMADI LIFESCIENCE for laboratory procurement, quotations, bulk sourcing and technical product support.',
+        'name' => 'Contact ' . $company['name'],
+        'description' => 'Contact ' . $company['name'] . ' for laboratory procurement, quotations, bulk sourcing and technical product support.',
         'mainEntity' => [
             '@type' => 'ContactPoint',
             'contactType' => 'sales',
-            'telephone' => $company['phone'],
-            'email' => $company['email'],
+            'telephone' => $company['phones'],
+            'email' => $company['emails'],
             'areaServed' => 'IN',
             'availableLanguage' => ['en', 'hi'],
         ],
@@ -912,6 +1083,7 @@ function schemas_for_page(string $page): array
 
     if ($page === 'home') {
         $schemas[] = build_home_faq_schema();
+        $schemas[] = build_brand_collection_schema();
     }
 
     if ($page === 'products') {
@@ -974,11 +1146,13 @@ function icon(string $name): string
 function render_head(string $page): void
 {
     $meta = page_meta($page);
+    $company = site_data()['company'];
     $title = $meta['title'] ?? $meta['default_title'];
     $description = $meta['description'] ?? $meta['default_description'];
     $canonicalUrl = current_page_url();
     $imageUrl = absolute_url($meta['og_image']);
     $imageAlt = 'Social preview for ' . $title;
+    $modifiedAt = site_modified_iso();
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -989,24 +1163,30 @@ function render_head(string $page): void
     <meta name="description" content="<?= h($description) ?>">
     <meta name="keywords" content="<?= h($meta['keywords']) ?>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="SOMADI LIFESCIENCE">
+    <meta name="author" content="<?= h($company['name']) ?>">
+    <meta name="geo.region" content="IN-DL">
+    <meta name="geo.placename" content="Delhi">
+    <meta name="ICBM" content="28.7256,77.1624">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#1f4f3e">
     <meta property="og:locale" content="en_IN">
-    <meta property="og:site_name" content="SOMADI LIFESCIENCE">
+    <meta property="og:site_name" content="<?= h($company['name']) ?>">
     <meta property="og:title" content="<?= h($title) ?>">
     <meta property="og:description" content="<?= h($description) ?>">
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?= h($canonicalUrl) ?>">
     <meta property="og:image" content="<?= h($imageUrl) ?>">
+    <meta property="og:image:secure_url" content="<?= h($imageUrl) ?>">
     <meta property="og:image:alt" content="<?= h($imageAlt) ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:updated_time" content="<?= h($modifiedAt) ?>">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= h($title) ?>">
     <meta name="twitter:description" content="<?= h($description) ?>">
     <meta name="twitter:image" content="<?= h($imageUrl) ?>">
+    <meta name="twitter:image:alt" content="<?= h($imageAlt) ?>">
     <link rel="canonical" href="<?= h($canonicalUrl) ?>">
     <link rel="icon" type="image/svg+xml" href="<?= h($meta['favicon']) ?>">
     <link rel="stylesheet" href="/assets/css/styles.css">
@@ -1026,16 +1206,20 @@ function render_header(): void
     <div class="topbar">
         <div class="container topbar__inner">
             <p>Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
-            <a href="tel:+919717844841">Delhi Sales Desk: +91 97178 44841</a>
+            <div class="topbar__links">
+                <?php foreach ($data['company']['phones'] as $phone): ?>
+                    <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 
     <header class="site-header" data-header>
         <div class="container site-header__inner">
-            <a href="/index.php" class="brand-mark" aria-label="SOMADI LIFESCIENCE home">
+            <a href="/index.php" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
                 <span class="brand-mark__logo">SL</span>
                 <span class="brand-mark__copy">
-                    <strong>SOMADI LIFESCIENCE</strong>
+                    <strong><?= h($data['company']['name']) ?></strong>
                     <small>Scientific Procurement Platform</small>
                 </span>
             </a>
@@ -1158,7 +1342,7 @@ function render_footer(): void
                 <a href="/index.php" class="brand-mark brand-mark--footer">
                     <span class="brand-mark__logo">SL</span>
                     <span class="brand-mark__copy">
-                        <strong>SOMADI LIFESCIENCE</strong>
+                        <strong><?= h($data['company']['name']) ?></strong>
                         <small>Established 2015</small>
                     </span>
                 </a>
@@ -1182,13 +1366,17 @@ function render_footer(): void
             </div>
             <div>
                 <span class="eyebrow">Contact</span>
-                <a href="tel:<?= h(str_replace(' ', '', $data['company']['phone'])) ?>"><?= h($data['company']['phone']) ?></a>
-                <a href="mailto:<?= h($data['company']['email']) ?>"><?= h($data['company']['email']) ?></a>
+                <?php foreach ($data['company']['phones'] as $phone): ?>
+                    <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
+                <?php endforeach; ?>
+                <?php foreach ($data['company']['emails'] as $email): ?>
+                    <a href="mailto:<?= h($email) ?>"><?= h($email) ?></a>
+                <?php endforeach; ?>
                 <p><?= h($data['company']['address']) ?></p>
             </div>
         </div>
         <div class="container site-footer__meta">
-            <p>&copy; <span data-year></span> SOMADI LIFESCIENCE. All rights reserved.</p>
+            <p>&copy; <span data-year></span> <?= h($data['company']['name']) ?>. All rights reserved.</p>
             <div>
                 <a href="/sitemap.xml">Sitemap</a>
                 <a href="/robots.txt">Robots</a>

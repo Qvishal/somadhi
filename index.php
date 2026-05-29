@@ -201,8 +201,11 @@ render_header();
             </div>
             <div class="marquee">
                 <div class="marquee__track">
-                    <?php foreach (array_merge($data['brands'], $data['brands']) as $brand): ?>
-                        <span class="brand-chip"><?= h($brand) ?></span>
+                    <?php foreach (array_merge($data['brand_logos'], $data['brand_logos']) as $brand): ?>
+                        <span class="brand-chip brand-chip--logo">
+                            <img src="<?= h($brand['image']) ?>" alt="<?= h($brand['name']) ?> logo" loading="lazy">
+                            <span><?= h($brand['name']) ?></span>
+                        </span>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -323,11 +326,15 @@ render_header();
             <div class="contact-panel reveal">
                 <span class="eyebrow">Direct access</span>
                 <h2>Talk to the scientific procurement team</h2>
-                <p>For urgent requirements, recurring supply needs, diagnostics support or product sourcing assistance, connect directly with the SOMADI LIFESCIENCE team.</p>
+                <p>For urgent requirements, recurring supply needs, diagnostics support or product sourcing assistance, connect directly with the <?= h($company['name']) ?> team.</p>
                 <div class="contact-list">
-                    <a href="tel:<?= h(str_replace(' ', '', $company['phone'])) ?>"><span><?= icon('phone') ?></span><?= h($company['phone']) ?></a>
-                    <a href="https://wa.me/919717844841" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
-                    <a href="mailto:<?= h($company['email']) ?>"><span><?= icon('mail') ?></span><?= h($company['email']) ?></a>
+                    <?php foreach ($company['phones'] as $phone): ?>
+                        <a href="<?= h(phone_href($phone)) ?>"><span><?= icon('phone') ?></span><?= h($phone) ?></a>
+                    <?php endforeach; ?>
+                    <a href="<?= h(whatsapp_href($company['whatsapp'])) ?>" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
+                    <?php foreach ($company['emails'] as $email): ?>
+                        <a href="mailto:<?= h($email) ?>"><span><?= icon('mail') ?></span><?= h($email) ?></a>
+                    <?php endforeach; ?>
                     <p><span><?= icon('map') ?></span><?= h($company['address']) ?></p>
                 </div>
             </div>

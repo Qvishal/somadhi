@@ -33,12 +33,16 @@ render_header();
         <div class="container contact-split contact-split--page">
             <div class="contact-panel reveal">
                 <span class="eyebrow">Office details</span>
-                <h2>SOMADI LIFESCIENCE</h2>
+                <h2><?= h($company['name']) ?></h2>
                 <p><?= h($company['commitment']) ?></p>
                 <div class="contact-list contact-list--stacked">
-                    <a href="tel:<?= h(str_replace(' ', '', $company['phone'])) ?>"><span><?= icon('phone') ?></span><?= h($company['phone']) ?></a>
-                    <a href="https://wa.me/919717844841" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
-                    <a href="mailto:<?= h($company['email']) ?>"><span><?= icon('mail') ?></span><?= h($company['email']) ?></a>
+                    <?php foreach ($company['phones'] as $phone): ?>
+                        <a href="<?= h(phone_href($phone)) ?>"><span><?= icon('phone') ?></span><?= h($phone) ?></a>
+                    <?php endforeach; ?>
+                    <a href="<?= h(whatsapp_href($company['whatsapp'])) ?>" target="_blank" rel="noreferrer"><span><?= icon('whatsapp') ?></span><?= h($company['whatsapp']) ?></a>
+                    <?php foreach ($company['emails'] as $email): ?>
+                        <a href="mailto:<?= h($email) ?>"><span><?= icon('mail') ?></span><?= h($email) ?></a>
+                    <?php endforeach; ?>
                     <p><span><?= icon('map') ?></span><?= h($company['address']) ?></p>
                 </div>
                 <div class="contact-meta-card">
@@ -47,7 +51,7 @@ render_header();
                     <p><?= h($company['gst']) ?></p>
                 </div>
                 <div class="map-frame">
-                    <iframe src="<?= h($company['map']) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="SOMADI LIFESCIENCE location"></iframe>
+                    <iframe src="<?= h($company['map']) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="<?= h($company['name']) ?> location"></iframe>
                 </div>
             </div>
 
