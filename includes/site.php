@@ -612,13 +612,22 @@ function slugify(string $value): string
 
 function current_page(): string
 {
-    $script = basename($_SERVER['SCRIPT_NAME'] ?? 'index.php');
+    // Support both clean URLs (/products) and direct .php hits
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $path = rtrim((string) $path, '/');
+    $script = basename($_SERVER['SCRIPT_NAME'] ?? 'index.php', '.php');
 
+    // Match by clean path first
+    if (in_array($path, ['/products', '/catalogues', '/contact'], true)) {
+        return ltrim($path, '/');
+    }
+
+    // Fallback: match by script name (direct .php access)
     return match ($script) {
-        'products.php' => 'products',
-        'catalogues.php' => 'catalogues',
-        'contact.php' => 'contact',
-        default => 'home',
+        'products'   => 'products',
+        'catalogues' => 'catalogues',
+        'contact'    => 'contact',
+        default      => 'home',
     };
 }
 
@@ -630,10 +639,10 @@ function is_active_page(string $page): bool
 function nav_items(): array
 {
     return [
-        ['label' => 'Home', 'href' => '/index.php', 'page' => 'home'],
-        ['label' => 'Products', 'href' => '/products.php', 'page' => 'products'],
-        ['label' => 'Catalogues', 'href' => '/catalogues.php', 'page' => 'catalogues'],
-        ['label' => 'Contact', 'href' => '/contact.php', 'page' => 'contact'],
+        ['label' => 'Home',       'href' => '/',           'page' => 'home'],
+        ['label' => 'Products',   'href' => '/products',   'page' => 'products'],
+        ['label' => 'Catalogues', 'href' => '/catalogues', 'page' => 'catalogues'],
+        ['label' => 'Contact',    'href' => '/contact',    'page' => 'contact'],
     ];
 }
 
@@ -664,12 +673,12 @@ function site_modified_iso(): string
 
 function product_page_url(array $product): string
 {
-    return absolute_url('/products.php#product-' . $product['slug']);
+    return absolute_url('/products#product-' . $product['slug']);
 }
 
 function catalogue_page_url(array $catalogue): string
 {
-    return absolute_url('/catalogues.php#catalogue-' . $catalogue['slug']);
+    return absolute_url('/catalogues#catalogue-' . $catalogue['slug']);
 }
 
 function phone_href(string $phone): string
@@ -694,8 +703,11 @@ function current_request_path(): string
 {
     $requestUri = $_SERVER['REQUEST_URI'] ?? ($_SERVER['SCRIPT_NAME'] ?? '/');
     $path = (string) parse_url($requestUri, PHP_URL_PATH);
+    $path = rtrim($path, '/') ?: '/';
 
-    if ($path === '' || $path === '/index.php') {
+    // Normalise: strip .php suffix and /index → /
+    $path = preg_replace('/\.php$/', '', $path) ?? $path;
+    if ($path === '' || $path === '/index') {
         return '/';
     }
 
@@ -710,10 +722,10 @@ function current_page_url(): string
 function page_slug(string $page): string
 {
     return match ($page) {
-        'products' => 'products.php',
-        'catalogues' => 'catalogues.php',
-        'contact' => 'contact.php',
-        default => 'index.php',
+        'products'   => 'products',
+        'catalogues' => 'catalogues',
+        'contact'    => 'contact',
+        default      => '',
     };
 }
 
@@ -848,7 +860,7 @@ function build_website_schema(): array
         'potentialAction' => [
             '@type' => 'ContactAction',
             'name' => 'Request a laboratory product quotation',
-            'target' => absolute_url('/contact.php#rfq-form'),
+            'target' => absolute_url('/contact#rfq-form'),
         ],
         'inLanguage' => 'en-IN',
     ];
@@ -878,11 +890,11 @@ function build_page_schema(string $page): array
 {
     $meta = page_meta($page);
     $mainEntity = match ($page) {
-        'products' => ['@id' => absolute_url('/products.php#itemlist')],
-        'catalogues' => ['@id' => absolute_url('/catalogues.php#itemlist')],
-        'contact' => ['@id' => absolute_url('/contact.php#contact-page')],
-        'home' => ['@id' => absolute_url('/#brand-list')],
-        default => null,
+        'products'   => ['@id' => absolute_url('/products#itemlist')],
+        'catalogues' => ['@id' => absolute_url('/catalogues#itemlist')],
+        'contact'    => ['@id' => absolute_url('/contact#contact-page')],
+        'home'       => ['@id' => absolute_url('/#brand-list')],
+        default      => null,
     };
 
     return array_filter([
@@ -917,7 +929,7 @@ function build_home_faq_schema(): array
 
     return [
         '@type' => 'FAQPage',
-        '@id' => absolute_url('/index.php#faq'),
+        '@id' => absolute_url('/#faq'),
         'mainEntity' => array_map(
             static fn(array $faq): array => [
                 '@type' => 'Question',
@@ -938,7 +950,7 @@ function build_products_collection_schema(): array
 
     return [
         '@type' => 'ItemList',
-        '@id' => absolute_url('/products.php#itemlist'),
+        '@id' => absolute_url('/products#itemlist'),
         'name' => 'Laboratory products and scientific equipment',
         'description' => 'Representative laboratory products, research chemicals, life science reagents, safety products, consumables and scientific instruments available through RFQ.',
         'numberOfItems' => count($products),
@@ -971,7 +983,7 @@ function build_products_collection_schema(): array
                     ),
                     'potentialAction' => [
                         '@type' => 'ContactAction',
-                        'target' => absolute_url('/contact.php#rfq-form'),
+                        'target' => absolute_url('/contact#rfq-form'),
                     ],
                 ],
             ],
@@ -987,7 +999,7 @@ function build_catalogues_collection_schema(): array
 
     return [
         '@type' => 'ItemList',
-        '@id' => absolute_url('/catalogues.php#itemlist'),
+        '@id' => absolute_url('/catalogues#itemlist'),
         'name' => 'Scientific catalogues and price lists',
         'description' => 'Downloadable catalogue and price-list resources for laboratory chemicals, life science products, labware, filtration, liquid handling and instruments.',
         'numberOfItems' => count($catalogues),
@@ -1057,8 +1069,8 @@ function build_contact_page_schema(): array
 
     return [
         '@type' => 'ContactPage',
-        '@id' => absolute_url('/contact.php#contact-page'),
-        'url' => absolute_url('/contact.php'),
+        '@id' => absolute_url('/contact#contact-page'),
+        'url' => absolute_url('/contact'),
         'name' => 'Contact ' . $company['name'],
         'description' => 'Contact ' . $company['name'] . ' for laboratory procurement, quotations, bulk sourcing and technical product support.',
         'mainEntity' => [
@@ -1216,7 +1228,7 @@ function render_header(): void
 
     <header class="site-header" data-header>
         <div class="container site-header__inner">
-            <a href="/index.php" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
+            <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
                 <span class="brand-mark__logo">SL</span>
                 <span class="brand-mark__copy">
                     <strong><?= h($data['company']['name']) ?></strong>
@@ -1239,7 +1251,7 @@ function render_header(): void
                     <span>RFQ</span>
                     <span class="quote-count" data-quote-count>0</span>
                 </button>
-                <a class="button button--primary" href="/contact.php#rfq-form">Request Quotation</a>
+                <a class="button button--primary" href="/contact#rfq-form">Request Quotation</a>
                 <button class="icon-button mobile-only" type="button" aria-label="Open menu" data-menu-open><?= icon('menu') ?></button>
             </div>
         </div>
@@ -1255,8 +1267,8 @@ function render_header(): void
                 <?php foreach (nav_items() as $item): ?>
                     <a href="<?= h($item['href']) ?>"><?= h($item['label']) ?></a>
                 <?php endforeach; ?>
-                <a href="/products.php">Browse Categories</a>
-                <a href="/contact.php#rfq-form">Request Quotation</a>
+                <a href="/products">Browse Categories</a>
+                <a href="/contact#rfq-form">Request Quotation</a>
             </nav>
         </div>
     </div>
@@ -1333,13 +1345,13 @@ function render_footer(): void
     $data = site_data();
     ?>
     <section class="mobile-rfq">
-        <a href="/contact.php#rfq-form" class="button button--primary button--block">Request Quotation</a>
+        <a href="/contact#rfq-form" class="button button--primary button--block">Request Quotation</a>
     </section>
 
     <footer class="site-footer">
         <div class="container site-footer__grid">
             <div>
-                <a href="/index.php" class="brand-mark brand-mark--footer">
+                <a href="/" class="brand-mark brand-mark--footer">
                     <span class="brand-mark__logo">SL</span>
                     <span class="brand-mark__copy">
                         <strong><?= h($data['company']['name']) ?></strong>
@@ -1354,15 +1366,15 @@ function render_footer(): void
             </div>
             <div>
                 <span class="eyebrow">Platform</span>
-                <a href="/products.php">Products</a>
-                <a href="/catalogues.php">Catalogues</a>
-                <a href="/contact.php#rfq-form">Request Quotation</a>
+                <a href="/products">Products</a>
+                <a href="/catalogues">Catalogues</a>
+                <a href="/contact#rfq-form">Request Quotation</a>
             </div>
             <div>
                 <span class="eyebrow">Industries</span>
-                <a href="/products.php">Pharma</a>
-                <a href="/products.php">Research Labs</a>
-                <a href="/products.php">Universities</a>
+                <a href="/products">Pharma</a>
+                <a href="/products">Research Labs</a>
+                <a href="/products">Universities</a>
             </div>
             <div>
                 <span class="eyebrow">Contact</span>

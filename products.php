@@ -14,7 +14,7 @@ render_header();
     <section class="page-hero page-hero--compact page-hero--detail">
         <div class="container">
             <div class="breadcrumb reveal">
-                <a href="/index.php">Home</a>
+                <a href="/">Home</a>
                 <span class="breadcrumb__sep" aria-hidden="true">/</span>
                 <span>Products</span>
             </div>
@@ -125,7 +125,7 @@ render_header();
                                 </div>
                                 <div class="product-card__actions">
                                     <button class="button button--primary button--small" type="button" data-add-quote data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Quotation</button>
-                                    <a class="button button--ghost button--small" href="/catalogues.php">Brochure</a>
+                                    <a class="button button--ghost button--small" href="/catalogues">Brochure</a>
                                 </div>
                             </div>
                         </article>

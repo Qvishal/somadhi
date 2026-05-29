@@ -15,7 +15,7 @@ render_header();
     <section class="page-hero page-hero--compact page-hero--detail">
         <div class="container">
             <div class="breadcrumb reveal">
-                <a href="/index.php">Home</a>
+                <a href="/">Home</a>
                 <span class="breadcrumb__sep" aria-hidden="true">/</span>
                 <span>Catalogues</span>
             </div>

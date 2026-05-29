@@ -20,9 +20,9 @@ render_header();
                 <h1>Trusted Laboratory Products and Scientific Supplies Across India</h1>
                 <p class="hero__lead">Laboratory products, scientific instruments and research chemicals for customers across India. <?= h($company['intro']) ?></p>
                 <div class="hero__actions">
-                    <a class="button button--primary" href="/products.php">Explore Products <?= icon('arrow') ?></a>
-                    <a class="button button--secondary" href="/contact.php#rfq-form">Request Quotation</a>
-                    <a class="button button--ghost" href="/catalogues.php">Download Catalogues</a>
+                    <a class="button button--primary" href="/products">Explore Products <?= icon('arrow') ?></a>
+                    <a class="button button--secondary" href="/contact#rfq-form">Request Quotation</a>
+                    <a class="button button--ghost" href="/catalogues">Download Catalogues</a>
                 </div>
             </div>
             <div class="hero__visual reveal reveal--delay">
@@ -162,7 +162,7 @@ render_header();
                         </div>
                         <div class="product-card__actions">
                             <button class="button button--primary button--small" type="button" data-add-quote data-product='<?= h(json_encode($product, JSON_UNESCAPED_SLASHES)) ?>'>Quotation</button>
-                            <a class="button button--ghost button--small" href="/catalogues.php">Brochure</a>
+                            <a class="button button--ghost button--small" href="/catalogues">Brochure</a>
                         </div>
                     </div>
                 </article>
@@ -185,7 +185,7 @@ render_header();
                     <span class="category-card__accent"><?= h($category['accent']) ?></span>
                     <h3><?= h($category['name']) ?></h3>
                     <p><?= h($category['summary']) ?></p>
-                    <a href="/products.php#products-grid">Quick navigation <?= icon('arrow') ?></a>
+                    <a href="/products#products-grid">Quick navigation <?= icon('arrow') ?></a>
                 </article>
             <?php endforeach; ?>
         </div>

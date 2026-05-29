@@ -1,0 +1,29 @@
+Options -Indexes
+
+# Clean URLs: remove .php extension
+RewriteEngine On
+
+# If the request is for an actual file or directory, serve it directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Map /products  -> /products.php
+# Map /catalogues -> /catalogues.php
+# Map /contact   -> /contact.php
+RewriteRule ^products$   products.php   [L]
+RewriteRule ^catalogues$ catalogues.php [L]
+RewriteRule ^contact$    contact.php    [L]
+
+# Redirect old .php URLs to clean URLs (301 permanent)
+RewriteCond %{THE_REQUEST} /index\.php[\s?] [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+RewriteCond %{THE_REQUEST} /products\.php[\s?] [NC]
+RewriteRule ^products\.php$ /products [R=301,L]
+
+RewriteCond %{THE_REQUEST} /catalogues\.php[\s?] [NC]
+RewriteRule ^catalogues\.php$ /catalogues [R=301,L]
+
+RewriteCond %{THE_REQUEST} /contact\.php[\s?] [NC]
+RewriteRule ^contact\.php$ /contact [R=301,L]
