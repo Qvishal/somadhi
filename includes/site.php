@@ -22,6 +22,57 @@ function brand_logo_asset_url(string $filename): string
     return '/storage/brand_logos/' . rawurlencode($filename);
 }
 
+/**
+ * Given an image URL (png/jpg/jpeg), derive its WebP and AVIF siblings.
+ * Returns HTML for a <picture> element with AVIF → WebP → original fallback.
+ *
+ * @param string $src     Original image URL e.g. /assets/brand/logo.png
+ * @param string $alt     Alt text
+ * @param string $class   Optional CSS class for the <img>
+ * @param string $extra   Extra attributes for <img> e.g. width="400" height="300" loading="lazy"
+ */
+function picture(string $src, string $alt, string $class = '', string $extra = ''): string
+{
+    // Strip query string for extension detection
+    $base  = preg_replace('/\?.*$/', '', $src);
+    $avif  = preg_replace('/\.(png|jpe?g)$/i', '.avif', $base);
+    $webp  = preg_replace('/\.(png|jpe?g)$/i', '.webp', $base);
+
+    // Only add modern sources if the extension changed (i.e. it was png/jpg)
+    $hasModern = ($avif !== $base && $webp !== $base);
+
+    $classAttr = $class ? ' class="' . h($class) . '"' : '';
+    $extraAttr = $extra ? ' ' . $extra : '';
+
+    if (!$hasModern) {
+        // SVG or already webp — just return a plain img
+        return '<img src="' . h($src) . '" alt="' . h($alt) . '"' . $classAttr . $extraAttr . '>';
+    }
+
+    return '<picture>'
+        . '<source type="image/avif" srcset="' . h($avif) . '">'
+        . '<source type="image/webp" srcset="' . h($webp) . '">'
+        . '<img src="' . h($src) . '" alt="' . h($alt) . '"' . $classAttr . $extraAttr . '>'
+        . '</picture>';
+}
+
+/**
+ * Return best available src for use directly in src="" (picks webp if exists on disk).
+ * Falls back to original if webp conversion doesn't exist.
+ */
+function best_src(string $src): string
+{
+    $base = preg_replace('/\?.*$/', '', $src);
+    $webp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $base);
+
+    // Map URL to filesystem path
+    $root     = dirname(__DIR__);
+    $webpPath = $root . $webp;
+
+    return file_exists($webpPath) ? $webp : $src;
+}
+
+
 function format_file_size_label(int $bytes): string
 {
     if ($bytes >= 1024 * 1024) {
@@ -1207,12 +1258,14 @@ function render_head(string $page): void
         <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png">
         <link rel="preload" href="/assets/css/styles.css" as="style">
         <link rel="stylesheet" href="/assets/css/styles.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <!-- Non-blocking Google Fonts: load as print, swap to all on load -->
-        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
-        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"></noscript>
+        <!-- Preload the 3 Poppins woff2 weights directly — skips googleapis redirect chain -->
+        <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrFJXUdVNF.woff2">
+        <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6V15vEv-L.woff2">
+        <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7V15vEv-L.woff2">
+        <!-- font-display:optional prevents CLS from font swap (no reflow when font loads) -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional" media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional"></noscript>
         <?php render_schema_markup($page); ?>
     </head>
 
@@ -1226,7 +1279,7 @@ function render_header(): void
     ?>
         <div class="topbar">
             <div class="container topbar__inner">
-                <p>Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
+                <p class="text-xs">Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
                 <div class="topbar__links">
                     <?php foreach ($data['company']['phones'] as $phone): ?>
                         <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
@@ -1238,7 +1291,7 @@ function render_header(): void
         <header class="site-header" data-header>
             <div class="container site-header__inner">
                 <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
-                    <img src="/assets/brand/logo.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img" width="400" height="133">
+                    <?= picture('/assets/brand/logo.png', h($data['company']['name']), 'brand-mark__img', 'width="400" height="133" fetchpriority="high"') ?>
                 </a>
 
                 <nav class="site-nav" aria-label="Primary navigation">
@@ -1357,12 +1410,12 @@ function render_footer(): void
             <div class="container site-footer__grid">
                 <div>
                     <a href="/" class="brand-mark brand-mark--footer">
-                        <img src="/assets/brand/logo1.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img brand-mark__img--footer" width="400" height="300">
+                        <?= picture('/assets/brand/logo1.png', h($data['company']['name']), 'brand-mark__img brand-mark__img--footer', 'width="400" height="300"') ?>
                     </a>
                     <p><?= h($data['company']['tagline']) ?></p>
                     <div class="footer-badges">
-                        <img src="/assets/brand/msme-logo.png" alt="MSME Registered Enterprise" class="footer-badge-img" width="120" height="60" loading="lazy">
-                        <img src="/assets/brand/gem-logo.png" alt="GeM Registered Seller" class="footer-badge-img" width="120" height="60" loading="lazy">
+                        <?= picture('/assets/brand/msme-logo.png', 'MSME Registered Enterprise', 'footer-badge-img', 'width="120" height="60" loading="lazy"') ?>
+                        <?= picture('/assets/brand/gem-logo.png', 'GeM Registered Seller', 'footer-badge-img', 'width="120" height="60" loading="lazy"') ?>
                     </div>
                 </div>
                 <div>

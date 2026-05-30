@@ -35,11 +35,21 @@
     --header-height: 88px;
 }
 
+/* Metric-compatible Poppins fallback — eliminates font-swap CLS on h1 */
+@font-face {
+    font-family: 'Poppins-fallback';
+    src: local('Arial');
+    size-adjust: 105%;
+    ascent-override: 93%;
+    descent-override: 31%;
+    line-gap-override: 9%;
+}
+
 *,
 *::before,
 *::after {
     box-sizing: border-box;
-    font-family: 'Poppins','Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Poppins', 'Poppins-fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 }
 
 html {
@@ -2216,13 +2226,15 @@ label {
     :root {
         --container: min(1200px, calc(100vw - 32px));
     }
-
     .topbar__inner,
     .catalogue-toolbar,
     .compare-bar,
     .site-footer__meta,
     .form-row {
         flex-direction: column;
+    }
+    .topbar__inner p{
+       display: none;
     }
 
     .form-row {

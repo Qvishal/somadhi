@@ -97,7 +97,7 @@ render_header();
                                 <span class="product-badge"><?= h($product['badge']) ?></span>
                                 <?php if (!empty($product['image'])): ?>
                                     <div class="product-art product-art--image">
-                                        <img class="product-card__image" src="<?= h($product['image']) ?>" alt="<?= h($product['name']) ?>" width="400" height="300" loading="lazy">
+                                        <?= picture(h($product['image']), h($product['name']), 'product-card__image', 'width="400" height="300" loading="lazy"') ?>
                                     </div>
                                 <?php else: ?>
                                     <div class="product-art product-art--<?= h(strtolower(str_replace([' ', '&'], ['-', 'and'], $product['category']))) ?>">
