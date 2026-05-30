@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+ini_set('zlib.output_compression', 'On');
+
+
 function catalogue_asset_path(string $filename): string
 {
     return dirname(__DIR__) . '/storage/cataloges/' . $filename;
@@ -710,8 +713,8 @@ function site_modified_iso(): string
         dirname(__DIR__) . '/products.php',
         dirname(__DIR__) . '/catalogues.php',
         dirname(__DIR__) . '/contact.php',
-        dirname(__DIR__) . '/assets/css/styles.css',
-        dirname(__DIR__) . '/assets/js/site.js',
+        dirname(__DIR__) . '/assets/css/styles.min.css',
+        dirname(__DIR__) . '/assets/js/site.min.js',
     ];
 
     $modified = max(array_map(
@@ -1256,8 +1259,10 @@ function render_head(string $page): void
         <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16.png">
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png">
-        <link rel="preload" href="/assets/css/styles.css" as="style">
-        <link rel="stylesheet" href="/assets/css/styles.css">
+        <!-- Preload LCP Logo Image for high-speed rendering -->
+        <link rel="preload" as="image" href="/assets/brand/logo.avif" type="image/avif" fetchpriority="high">
+        <link rel="preload" href="/assets/css/styles.min.css" as="style">
+        <link rel="stylesheet" href="/assets/css/styles.min.css">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <!-- Preload the 3 Poppins woff2 weights directly — skips googleapis redirect chain -->
         <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrFJXUdVNF.woff2">
@@ -1460,7 +1465,7 @@ function render_footer(): void
                                     'brands' => array_values(array_unique(array_merge($data['brands'], $data['authorized_brands'], $data['dealing_brands']))),
                                 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
         </script>
-        <script src="/assets/js/site.js"></script>
+        <script src="/assets/js/site.min.js"></script>
     </body>
 
     </html>
