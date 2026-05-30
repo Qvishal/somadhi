@@ -1201,7 +1201,10 @@ function render_head(string $page): void
         <meta name="twitter:image" content="<?= h($imageUrl) ?>">
         <meta name="twitter:image:alt" content="<?= h($imageAlt) ?>">
         <link rel="canonical" href="<?= h($canonicalUrl) ?>">
-        <link rel="icon" type="image/svg+xml" href="<?= h($meta['favicon']) ?>">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png">
         <link rel="stylesheet" href="/assets/css/styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
