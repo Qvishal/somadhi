@@ -177,6 +177,22 @@ textarea {
     font-weight: 600;
 }
 
+.topbar__links svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    fill: none;
+    opacity: 0.85;
+    margin-right: 2px;
+}
+
+.topbar__separator {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+
 .site-header {
     position: sticky;
     top: 0;
@@ -1916,6 +1932,12 @@ label {
     gap: 14px;
 }
 
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .feature-list {
     display: grid;
     gap: 12px;
@@ -2298,6 +2320,14 @@ label {
         display: block;
     }
 
+    .hero__actions .button--secondary {
+        display: none;
+    }
+
+    .filter-panel .filter-panel__section:last-child {
+        display: none;
+    }
+
     .site-footer {
         padding-bottom: 110px;
     }
@@ -2348,6 +2378,10 @@ label {
     .toolbar-filters .chip {
         width: auto;
         flex: 0 0 auto;
+    }
+
+    .filter-panel .filter-panel__section:first-child {
+        display: none;
     }
 
     .site-header__inner {

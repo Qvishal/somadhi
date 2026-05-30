@@ -1263,11 +1263,8 @@ function render_head(string $page): void
         <link rel="preload" as="image" href="/assets/brand/logo.avif" type="image/avif" fetchpriority="high">
         <link rel="preload" href="/assets/css/styles.min.css" as="style">
         <link rel="stylesheet" href="/assets/css/styles.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <!-- Preload the 3 Poppins woff2 weights directly — skips googleapis redirect chain -->
-        <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrFJXUdVNF.woff2">
-        <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6V15vEv-L.woff2">
-        <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7V15vEv-L.woff2">
         <!-- font-display:optional prevents CLS from font swap (no reflow when font loads) -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional" media="print" onload="this.media='all'">
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional"></noscript>
@@ -1286,7 +1283,11 @@ function render_header(): void
             <div class="container topbar__inner">
                 <p class="text-xs">Laboratory products, research chemicals, scientific instruments and healthcare solutions supplied across India.</p>
                 <div class="topbar__links">
-                    <?php foreach ($data['company']['phones'] as $phone): ?>
+                    <?= icon('phone') ?>
+                    <?php foreach ($data['company']['phones'] as $index => $phone): ?>
+                        <?php if ($index > 0): ?>
+                            <span class="topbar__separator" aria-hidden="true">|</span>
+                        <?php endif; ?>
                         <a href="<?= h(phone_href($phone)) ?>"><?= h($phone) ?></a>
                     <?php endforeach; ?>
                 </div>

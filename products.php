@@ -63,10 +63,12 @@ render_header();
                 </div>
                 <div class="filter-panel__section">
                     <span class="filter-label">Availability</span>
-                    <button class="chip chip--active" type="button" data-filter-availability="all">All</button>
-                    <button class="chip" type="button" data-filter-availability="In Stock">In Stock</button>
-                    <button class="chip" type="button" data-filter-availability="Ready Stock">Ready Stock</button>
-                    <button class="chip" type="button" data-filter-availability="On Request">On Request</button>
+                    <div class="filter-chips">
+                        <button class="chip chip--active" type="button" data-filter-availability="all">All</button>
+                        <button class="chip" type="button" data-filter-availability="In Stock">In Stock</button>
+                        <button class="chip" type="button" data-filter-availability="Ready Stock">Ready Stock</button>
+                        <button class="chip" type="button" data-filter-availability="On Request">On Request</button>
+                    </div>
                 </div>
                 <div class="filter-panel__section">
                     <span class="eyebrow">Conversion tools</span>
