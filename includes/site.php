@@ -1205,10 +1205,14 @@ function render_head(string $page): void
         <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16.png">
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png">
+        <link rel="preload" href="/assets/css/styles.css" as="style">
         <link rel="stylesheet" href="/assets/css/styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <!-- Non-blocking Google Fonts: load as print, swap to all on load -->
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"></noscript>
         <?php render_schema_markup($page); ?>
     </head>
 
@@ -1234,7 +1238,7 @@ function render_header(): void
         <header class="site-header" data-header>
             <div class="container site-header__inner">
                 <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
-                    <img src="/assets/brand/logo.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img">
+                    <img src="/assets/brand/logo.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img" width="400" height="133">
                 </a>
 
                 <nav class="site-nav" aria-label="Primary navigation">
@@ -1353,12 +1357,12 @@ function render_footer(): void
             <div class="container site-footer__grid">
                 <div>
                     <a href="/" class="brand-mark brand-mark--footer">
-                        <img src="/assets/brand/logo1.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img brand-mark__img--footer">
+                        <img src="/assets/brand/logo1.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img brand-mark__img--footer" width="400" height="300">
                     </a>
                     <p><?= h($data['company']['tagline']) ?></p>
                     <div class="footer-badges">
-                        <img src="/assets/brand/msme-logo.png" alt="MSME Registered Enterprise" class="footer-badge-img">
-                        <img src="/assets/brand/gem-logo.png" alt="GeM Registered Seller" class="footer-badge-img">
+                        <img src="/assets/brand/msme-logo.png" alt="MSME Registered Enterprise" class="footer-badge-img" width="120" height="60" loading="lazy">
+                        <img src="/assets/brand/gem-logo.png" alt="GeM Registered Seller" class="footer-badge-img" width="120" height="60" loading="lazy">
                     </div>
                 </div>
                 <div>

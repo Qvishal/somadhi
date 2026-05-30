@@ -136,7 +136,7 @@ render_header();
                         <span class="product-badge"><?= h($product['badge']) ?></span>
                         <?php if (!empty($product['image'])): ?>
                             <div class="product-art product-art--image">
-                                <img class="product-card__image" src="<?= h($product['image']) ?>" alt="<?= h($product['name']) ?>">
+                                <img class="product-card__image" src="<?= h($product['image']) ?>" alt="<?= h($product['name']) ?>" width="400" height="300" loading="lazy">
                             </div>
                         <?php else: ?>
                             <div class="product-art product-art--<?= h(strtolower(str_replace([' ', '&'], ['-', 'and'], $product['category']))) ?>">
@@ -203,7 +203,7 @@ render_header();
                 <div class="marquee__track">
                     <?php foreach (array_merge($data['brand_logos'], $data['brand_logos']) as $brand): ?>
                         <span class="brand-chip brand-chip--logo">
-                            <img src="<?= h($brand['image']) ?>" alt="<?= h($brand['name']) ?> logo" loading="lazy">
+                            <img src="<?= h($brand['image']) ?>" alt="<?= h($brand['name']) ?> logo" loading="lazy" width="120" height="60">
                             <span><?= h($brand['name']) ?></span>
                         </span>
                     <?php endforeach; ?>
