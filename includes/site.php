@@ -1297,7 +1297,7 @@ function render_header(): void
         <header class="site-header" data-header>
             <div class="container site-header__inner">
                 <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
-                    <?= picture('/assets/brand/logo.png', h($data['company']['name']), 'brand-mark__img', 'width="400" height="133" fetchpriority="high"') ?>
+                    <?= picture('/assets/brand/logo.webp', h($data['company']['name']), 'brand-mark__img', 'width="400" height="133" fetchpriority="high"') ?>
                 </a>
 
                 <nav class="site-nav" aria-label="Primary navigation">
