@@ -1009,38 +1009,54 @@ function build_products_collection_schema(): array
         'description' => 'Representative laboratory products, research chemicals, life science reagents, safety products, consumables and scientific instruments available through RFQ.',
         'numberOfItems' => count($products),
         'itemListElement' => array_map(
-            static fn(array $product, int $index): array => [
-                '@type' => 'ListItem',
-                'position' => $index + 1,
-                'item' => [
-                    '@type' => 'Product',
-                    '@id' => product_page_url($product),
-                    'name' => $product['name'],
-                    'sku' => $product['slug'],
-                    'image' => !empty($product['image']) ? absolute_url($product['image']) : null,
-                    'brand' => [
-                        '@type' => 'Brand',
-                        '@id' => absolute_url('/#brand-' . slugify($product['brand'])),
-                        'name' => $product['brand'],
-                    ],
-                    'category' => $product['category'],
-                    'description' => $product['summary'],
-                    'url' => product_page_url($product),
-                    'additionalProperty' => array_map(
-                        static fn(string $label, string $value): array => [
-                            '@type' => 'PropertyValue',
-                            'name' => $label,
-                            'value' => $value,
+            function (array $product, int $index): array {
+                $availability = strtolower($product['availability'] ?? '');
+                $availabilityUri = match (true) {
+                    strcasecmp($availability, 'in stock') === 0 => 'http://schema.org/InStock',
+                    strcasecmp($availability, 'ready stock') === 0 => 'http://schema.org/InStock',
+                    strcasecmp($availability, 'on request') === 0 => 'http://schema.org/PreOrder',
+                    default => 'http://schema.org/OutOfStock',
+                };
+
+                return [
+                    '@type' => 'ListItem',
+                    'position' => $index + 1,
+                    'item' => [
+                        '@type' => 'Product',
+                        '@id' => product_page_url($product),
+                        'name' => $product['name'],
+                        'sku' => $product['slug'],
+                        'image' => !empty($product['image']) ? absolute_url($product['image']) : null,
+                        'brand' => [
+                            '@type' => 'Brand',
+                            '@id' => absolute_url('/#brand-' . slugify($product['brand'])),
+                            'name' => $product['brand'],
                         ],
-                        array_keys($product['specs']),
-                        array_values($product['specs'])
-                    ),
-                    'potentialAction' => [
-                        '@type' => 'ContactAction',
-                        'target' => absolute_url('/contact#rfq-form'),
+                        'category' => $product['category'],
+                        'description' => $product['summary'],
+                        'url' => product_page_url($product),
+                        'additionalProperty' => array_map(
+                            static fn(string $label, string $value): array => [
+                                '@type' => 'PropertyValue',
+                                'name' => $label,
+                                'value' => $value,
+                            ],
+                            array_keys($product['specs']),
+                            array_values($product['specs'])
+                        ),
+                        'potentialAction' => [
+                            '@type' => 'ContactAction',
+                            'target' => absolute_url('/contact#rfq-form'),
+                        ],
+                        'offers' => [
+                            '@type' => 'Offer',
+                            'url' => product_page_url($product),
+                            'availability' => $availabilityUri,
+                            'priceCurrency' => 'INR',
+                        ],
                     ],
-                ],
-            ],
+                ];
+            },
             $products,
             array_keys($products)
         ),
