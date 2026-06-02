@@ -412,9 +412,9 @@ function site_data(): array
             'phone_secondary' => '+91 70424 54067',
             'phones' => ['+91 97178 44841', '+91 70424 54067'],
             'whatsapp' => '+91 97178 44841',
-            'email' => 'Info.somadilifesciences@gmail.com',
+            'email' => 'info.somadilifesciences@gmail.com',
             'email_secondary' => 'somadilifesciences@gmail.com',
-            'emails' => ['Info.somadilifesciences@gmail.com', 'somadilifesciences@gmail.com'],
+            'emails' => ['info.somadilifesciences@gmail.com', 'somadilifesciences@gmail.com'],
             'address' => 'I-1870, Jahangir Puri, Delhi 110033, India',
             'street_address' => 'I-1870, Jahangir Puri',
             'locality' => 'Delhi',
@@ -431,7 +431,7 @@ function site_data(): array
             'default_title' => 'Somadi Lifesciences | Scientific Equipment Supplier India',
             'default_description' => 'Trusted supplier of laboratory products, scientific instruments, research chemicals, consumables and healthcare solutions across India.',
             'keywords' => 'scientific equipment supplier India, laboratory chemicals supplier, scientific instruments Delhi, lab consumables distributor, research chemicals supplier India, laboratory products supplier',
-            'base_url' => 'https://www.somadilifescience.com',
+            'base_url' => 'https://www.somadilifesciences.com',
             'logo' => '/assets/brand/logo.png',
             'og_image' => '/assets/brand/og-card.svg',
             'favicon' => '/assets/brand/favicon.svg',
@@ -1053,6 +1053,7 @@ function build_products_collection_schema(): array
                             'url' => product_page_url($product),
                             'availability' => $availabilityUri,
                             'priceCurrency' => 'INR',
+                            'price' => '0.00',
                         ],
                     ],
                 ];
@@ -1283,7 +1284,9 @@ function render_head(string $page): void
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <!-- font-display:optional prevents CLS from font swap (no reflow when font loads) -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional" media="print" onload="this.media='all'">
-        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional"></noscript>
+        <noscript>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional">
+        </noscript>
         <?php render_schema_markup($page); ?>
     </head>
 
@@ -1482,7 +1485,7 @@ function render_footer(): void
                                     'brands' => array_values(array_unique(array_merge($data['brands'], $data['authorized_brands'], $data['dealing_brands']))),
                                 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
         </script>
-        <script src="/assets/js/site.min.js"></script>
+        <script defer src="/assets/js/site.min.js"></script>
     </body>
 
     </html>
