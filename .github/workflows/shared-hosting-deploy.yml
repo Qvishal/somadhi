@@ -38,9 +38,10 @@ on:
       project_type:
         description: Project technology/type (helps choose build defaults)
         required: false
-        default: php
+        default: auto
         type: choice
         options:
+          - auto
           - node
           - react
           - nextjs
@@ -67,27 +68,52 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        if: ${{ inputs.project_type == 'node' || inputs.project_type == 'react' || inputs.project_type == 'nextjs' || inputs.project_type == 'laravel' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: ${{ hashFiles('**/yarn.lock') != '' && 'yarn' || hashFiles('**/pnpm-lock.yaml') != '' && 'pnpm' || hashFiles('**/package-lock.json') != '' && 'npm' || '' }}
-
-      - name: Setup PHP (if required)
-        if: ${{ inputs.project_type == 'laravel' || (inputs.project_type == 'php' && hashFiles('**/composer.json') != '') }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, xml, zip
-          tools: composer:2
-
       - name: Determine build command and output directory
         id: vars
         run: |
+          # Parse FTP credentials and build configurations from PROJECTS_JSON secret
+          projects_json='${{ secrets.PROJECTS_JSON }}'
+          project_key="${{ inputs.project_key }}"
+
+          if [ -n "$projects_json" ] && [ "$projects_json" != 'null' ]; then
+            # Extract credentials with flexible naming (camelCase and snake_case)
+            ftp_host=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpHost // .[\"$project_key\"].ftp_host // .[\"$project_key\"].server // .[\"$project_key\"].host // \"\"")
+            ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpUser // .[\"$project_key\"].ftp_user // .[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
+            ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpPassword // .[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
+            remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remoteDir // .[\"$project_key\"].remote_dir // \"\"")
+            
+            # Extract build configuration from JSON
+            proj_type_json=$(echo "$projects_json" | jq -r ".[\"$project_key\"].project_type // .[\"$project_key\"].projectType // \"\"")
+            build_json=$(echo "$projects_json" | jq -r ".[\"$project_key\"].buildCommand // .[\"$project_key\"].build_command // \"\"")
+            local_json=$(echo "$projects_json" | jq -r ".[\"$project_key\"].localDir // .[\"$project_key\"].local_dir // \"\"")
+          fi
+
+          # Fallbacks for credentials
+          ftp_host="${ftp_host:-${{ secrets.FTP_HOST }}}"
+          ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
+          ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
+          remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
+
+          # Determine project type
           project_type="${{ inputs.project_type }}"
+          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
+            project_type="${proj_type_json:-auto}"
+          fi
+          
+          # Auto-detect project type if still auto/empty
+          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
+            if [ -f composer.json ]; then
+              project_type="php"
+            elif [ -f package.json ]; then
+              project_type="node"
+            else
+              project_type="static"
+            fi
+          fi
+
+          # Determine build command
           build="${{ inputs.build_command }}"
-          local="${{ inputs.local_dir }}"
+          build="${build:-$build_json}"
 
           get_node_build_cmd() {
             if [ -f yarn.lock ]; then
@@ -154,6 +180,10 @@ jobs:
             esac
           fi
 
+          # Determine local directory
+          local="${{ inputs.local_dir }}"
+          local="${local:-$local_json}"
+
           if [ -z "$local" ]; then
             case "$project_type" in
               node)     local="dist" ;;
@@ -166,25 +196,6 @@ jobs:
             esac
           fi
 
-          # Parse FTP credentials from PROJECTS_JSON secret
-          projects_json='${{ secrets.PROJECTS_JSON }}'
-          project_key="${{ inputs.project_key }}"
-
-          if [ -n "$projects_json" ] && [ "$projects_json" != 'null' ]; then
-            ftp_host=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_host // .[\"$project_key\"].server // .[\"$project_key\"].host // \"\"")
-            ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
-            ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
-            remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remote_dir // \"\"")
-            if [ -z "$remote_dir" ]; then
-              remote_dir="${{ inputs.remote_dir }}"
-            fi
-          fi
-
-          ftp_host="${ftp_host:-${{ secrets.FTP_HOST }}}"
-          ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
-          ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
-          remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
-
           echo "::add-mask::$ftp_password"
 
           echo "build_cmd=$build" >> "$GITHUB_OUTPUT"
@@ -193,6 +204,22 @@ jobs:
           echo "ftp_username=$ftp_username" >> "$GITHUB_OUTPUT"
           echo "ftp_password=$ftp_password" >> "$GITHUB_OUTPUT"
           echo "remote_dir=$remote_dir" >> "$GITHUB_OUTPUT"
+          echo "project_type=$project_type" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node.js
+        if: ${{ steps.vars.outputs.project_type == 'node' || steps.vars.outputs.project_type == 'react' || steps.vars.outputs.project_type == 'nextjs' || steps.vars.outputs.project_type == 'laravel' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: ${{ hashFiles('**/yarn.lock') != '' && 'yarn' || hashFiles('**/pnpm-lock.yaml') != '' && 'pnpm' || hashFiles('**/package-lock.json') != '' && 'npm' || '' }}
+
+      - name: Setup PHP (if required)
+        if: ${{ steps.vars.outputs.project_type == 'laravel' || (steps.vars.outputs.project_type == 'php' && hashFiles('**/composer.json') != '') }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, xml, zip
+          tools: composer:2
 
       - name: Build website
         if: ${{ steps.vars.outputs.build_cmd != 'true' }}
@@ -203,7 +230,7 @@ jobs:
         shell: bash
         run: |
           local_dir="${{ steps.vars.outputs.local_dir }}"
-          project_type="${{ inputs.project_type }}"
+          project_type="${{ steps.vars.outputs.project_type }}"
           
           test -d "$local_dir"
           
@@ -288,10 +315,10 @@ jobs:
           project_key="${{ inputs.project_key }}"
           
           if [ -n "$projects_json" ] && [ "$projects_json" != 'null' ]; then
-            ftp_host=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_host // .[\"$project_key\"].server // .[\"$project_key\"].host // \"\"")
-            ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
-            ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
-            remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remote_dir // \"\"")
+            ftp_host=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpHost // .[\"$project_key\"].ftp_host // .[\"$project_key\"].server // .[\"$project_key\"].host // \"\"")
+            ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpUser // .[\"$project_key\"].ftp_user // .[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
+            ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpPassword // .[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
+            remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remoteDir // .[\"$project_key\"].remote_dir // \"\"")
             if [ -z "$remote_dir" ]; then
               remote_dir="${{ inputs.remote_dir }}"
             fi
