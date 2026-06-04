@@ -94,6 +94,35 @@ jobs:
           ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
           remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
 
+          # Pre-flight check to validate and correct remote_dir if FTP user is chrooted
+          corrected_remote_dir=$(python3 -c "
+import ftplib, sys
+host, user, password, rdir = sys.argv[1:5]
+try:
+    ftp = ftplib.FTP(host, timeout=5)
+    ftp.login(user, password)
+    try:
+        ftp.cwd(rdir)
+        print(rdir)
+    except Exception:
+        alt = rdir.lstrip('/')
+        if alt.startswith('public_html'):
+            alt = alt[len('public_html'):].lstrip('/')
+        alt = alt if alt else '.'
+        try:
+            ftp.cwd(alt)
+            print(alt)
+        except Exception:
+            print(rdir)
+    ftp.quit()
+except Exception:
+    print(rdir)
+" "$ftp_host" "$ftp_username" "$ftp_password" "$remote_dir")
+
+          remote_dir="$corrected_remote_dir"
+          remote_dir="${remote_dir%/}"
+          remote_dir="${remote_dir:-.}"
+
           # Determine project type
           project_type="${{ inputs.project_type }}"
           if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
@@ -328,6 +357,35 @@ jobs:
           ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
           ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
           remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
+
+          # Pre-flight check to validate and correct remote_dir if FTP user is chrooted
+          corrected_remote_dir=$(python3 -c "
+import ftplib, sys
+host, user, password, rdir = sys.argv[1:5]
+try:
+    ftp = ftplib.FTP(host, timeout=5)
+    ftp.login(user, password)
+    try:
+        ftp.cwd(rdir)
+        print(rdir)
+    except Exception:
+        alt = rdir.lstrip('/')
+        if alt.startswith('public_html'):
+            alt = alt[len('public_html'):].lstrip('/')
+        alt = alt if alt else '.'
+        try:
+            ftp.cwd(alt)
+            print(alt)
+        except Exception:
+            print(rdir)
+    ftp.quit()
+except Exception:
+    print(rdir)
+" "$ftp_host" "$ftp_username" "$ftp_password" "$remote_dir")
+
+          remote_dir="$corrected_remote_dir"
+          remote_dir="${remote_dir%/}"
+          remote_dir="${remote_dir:-.}"
           
           echo "::add-mask::$ftp_password"
           
