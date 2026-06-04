@@ -81,6 +81,8 @@ jobs:
             ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpUser // .[\"$project_key\"].ftp_user // .[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
             ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpPassword // .[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
             remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remoteDir // .[\"$project_key\"].remote_dir // \"\"")
+            ftp_protocol=$(echo "$projects_json" | jq -r ".[\"$project_key\"].protocol // .[\"$project_key\"].ftp_protocol // \"\"")
+            ftp_port=$(echo "$projects_json" | jq -r ".[\"$project_key\"].port // .[\"$project_key\"].ftp_port // \"\"")
             
             # Extract build configuration from JSON
             proj_type_json=$(echo "$projects_json" | jq -r ".[\"$project_key\"].project_type // .[\"$project_key\"].projectType // \"\"")
@@ -88,11 +90,39 @@ jobs:
             local_json=$(echo "$projects_json" | jq -r ".[\"$project_key\"].localDir // .[\"$project_key\"].local_dir // \"\"")
           fi
 
-          # Fallbacks for credentials
+          # Determine project type
+          project_type="${{ inputs.project_type }}"
+          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
+            project_type="${proj_type_json:-auto}"
+          fi
+          
+          # Auto-detect project type if still auto/empty
+          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
+            if [ -f composer.json ]; then
+              project_type="php"
+            elif [ -f package.json ]; then
+              project_type="node"
+            else
+              project_type="static"
+            fi
+          fi
+
+          # Fallbacks and static/php custom defaults
           ftp_host="${ftp_host:-${{ secrets.FTP_HOST }}}"
           ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
           ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
           remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
+
+          if [ "$project_type" = "static" ] || [ "$project_type" = "php" ]; then
+            ftp_host="${ftp_host:-ftp.somadilifesciences.com}"
+            ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
+            ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
+            ftp_protocol="${ftp_protocol:-ftps}"
+            ftp_port="${ftp_port:-21}"
+          else
+            ftp_protocol="${ftp_protocol:-ftp}"
+            ftp_port="${ftp_port:-21}"
+          fi
 
           # Pre-flight check to validate and correct remote_dir if FTP user is chrooted
           corrected_remote_dir=$(python3 -c "
@@ -122,23 +152,6 @@ jobs:
           remote_dir="$corrected_remote_dir"
           remote_dir="${remote_dir%/}"
           remote_dir="${remote_dir:-.}"
-
-          # Determine project type
-          project_type="${{ inputs.project_type }}"
-          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
-            project_type="${proj_type_json:-auto}"
-          fi
-          
-          # Auto-detect project type if still auto/empty
-          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
-            if [ -f composer.json ]; then
-              project_type="php"
-            elif [ -f package.json ]; then
-              project_type="node"
-            else
-              project_type="static"
-            fi
-          fi
 
           # Determine build command
           build="${{ inputs.build_command }}"
@@ -234,6 +247,8 @@ jobs:
           echo "ftp_password=$ftp_password" >> "$GITHUB_OUTPUT"
           echo "remote_dir=$remote_dir" >> "$GITHUB_OUTPUT"
           echo "project_type=$project_type" >> "$GITHUB_OUTPUT"
+          echo "ftp_protocol=$ftp_protocol" >> "$GITHUB_OUTPUT"
+          echo "ftp_port=$ftp_port" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node.js
         if: ${{ steps.vars.outputs.project_type == 'node' || steps.vars.outputs.project_type == 'react' || steps.vars.outputs.project_type == 'nextjs' || steps.vars.outputs.project_type == 'laravel' }}
@@ -311,6 +326,8 @@ jobs:
           server: ${{ steps.vars.outputs.ftp_host }}
           username: ${{ steps.vars.outputs.ftp_username }}
           password: ${{ steps.vars.outputs.ftp_password }}
+          protocol: ${{ steps.vars.outputs.ftp_protocol }}
+          port: ${{ steps.vars.outputs.ftp_port }}
           local-dir: ${{ steps.vars.outputs.local_dir }}/
           server-dir: ${{ steps.vars.outputs.remote_dir }}/
           log-level: verbose
@@ -348,15 +365,46 @@ jobs:
             ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpUser // .[\"$project_key\"].ftp_user // .[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
             ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftpPassword // .[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
             remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remoteDir // .[\"$project_key\"].remote_dir // \"\"")
-            if [ -z "$remote_dir" ]; then
-              remote_dir="${{ inputs.remote_dir }}"
+            ftp_protocol=$(echo "$projects_json" | jq -r ".[\"$project_key\"].protocol // .[\"$project_key\"].ftp_protocol // \"\"")
+            ftp_port=$(echo "$projects_json" | jq -r ".[\"$project_key\"].port // .[\"$project_key\"].ftp_port // \"\"")
+            
+            # Extract project type
+            proj_type_json=$(echo "$projects_json" | jq -r ".[\"$project_key\"].project_type // .[\"$project_key\"].projectType // \"\"")
+          fi
+
+          # Determine project type
+          project_type="${{ inputs.project_type }}"
+          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
+            project_type="${proj_type_json:-auto}"
+          fi
+          
+          # Auto-detect project type if still auto/empty
+          if [ "$project_type" = "auto" ] || [ -z "$project_type" ]; then
+            if [ -f composer.json ]; then
+              project_type="php"
+            elif [ -f package.json ]; then
+              project_type="node"
+            else
+              project_type="static"
             fi
           fi
           
+          # Fallbacks and static/php custom defaults
           ftp_host="${ftp_host:-${{ secrets.FTP_HOST }}}"
           ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
           ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
           remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
+
+          if [ "$project_type" = "static" ] || [ "$project_type" = "php" ]; then
+            ftp_host="${ftp_host:-ftp.somadilifesciences.com}"
+            ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
+            ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
+            ftp_protocol="${ftp_protocol:-ftps}"
+            ftp_port="${ftp_port:-21}"
+          else
+            ftp_protocol="${ftp_protocol:-ftp}"
+            ftp_port="${ftp_port:-21}"
+          fi
 
           # Pre-flight check to validate and correct remote_dir if FTP user is chrooted
           corrected_remote_dir=$(python3 -c "
@@ -393,6 +441,8 @@ jobs:
           echo "ftp_username=$ftp_username" >> "$GITHUB_OUTPUT"
           echo "ftp_password=$ftp_password" >> "$GITHUB_OUTPUT"
           echo "remote_dir=$remote_dir" >> "$GITHUB_OUTPUT"
+          echo "ftp_protocol=$ftp_protocol" >> "$GITHUB_OUTPUT"
+          echo "ftp_port=$ftp_port" >> "$GITHUB_OUTPUT"
 
       - name: Download previous deployment artifact
         uses: actions/download-artifact@v4
@@ -413,6 +463,8 @@ jobs:
           server: ${{ steps.vars.outputs.ftp_host }}
           username: ${{ steps.vars.outputs.ftp_username }}
           password: ${{ steps.vars.outputs.ftp_password }}
+          protocol: ${{ steps.vars.outputs.ftp_protocol }}
+          port: ${{ steps.vars.outputs.ftp_port }}
           local-dir: rollback-build/
           server-dir: ${{ steps.vars.outputs.remote_dir }}/
           log-level: verbose
