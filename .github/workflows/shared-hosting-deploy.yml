@@ -181,25 +181,25 @@ jobs:
           fi
 
           # Determine local directory
-          local="${{ inputs.local_dir }}"
-          local="${local:-$local_json}"
+          local_dir_var="${{ inputs.local_dir }}"
+          local_dir_var="${local_dir_var:-$local_json}"
 
-          if [ -z "$local" ]; then
+          if [ -z "$local_dir_var" ]; then
             case "$project_type" in
-              node)     local="dist" ;;
-              react)    local="build" ;;
-              nextjs)   local="out" ;;
-              php)      local="." ;;
-              laravel)  local="public" ;;
-              static)   local="." ;;
-              *)        local="dist" ;;
+              node)     local_dir_var="dist" ;;
+              react)    local_dir_var="build" ;;
+              nextjs)   local_dir_var="out" ;;
+              php)      local_dir_var="." ;;
+              laravel)  local_dir_var="public" ;;
+              static)   local_dir_var="." ;;
+              *)        local_dir_var="dist" ;;
             esac
           fi
 
           echo "::add-mask::$ftp_password"
 
           echo "build_cmd=$build" >> "$GITHUB_OUTPUT"
-          echo "local_dir=$local" >> "$GITHUB_OUTPUT"
+          echo "local_dir=$local_dir_var" >> "$GITHUB_OUTPUT"
           echo "ftp_host=$ftp_host" >> "$GITHUB_OUTPUT"
           echo "ftp_username=$ftp_username" >> "$GITHUB_OUTPUT"
           echo "ftp_password=$ftp_password" >> "$GITHUB_OUTPUT"
@@ -211,7 +211,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: ${{ hashFiles('**/yarn.lock') != '' && 'yarn' || hashFiles('**/pnpm-lock.yaml') != '' && 'pnpm' || hashFiles('**/package-lock.json') != '' && 'npm' || '' }}
+          cache: ${{ hashFiles('**/yarn.lock') != '' && 'yarn' || hashFiles('**/pnpm-lock.yaml') != '' && 'pnpm' || hashFiles('**/package-lock.json') != '' && 'npm' || null }}
 
       - name: Setup PHP (if required)
         if: ${{ steps.vars.outputs.project_type == 'laravel' || (steps.vars.outputs.project_type == 'php' && hashFiles('**/composer.json') != '') }}
