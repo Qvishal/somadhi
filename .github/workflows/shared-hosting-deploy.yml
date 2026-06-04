@@ -35,6 +35,18 @@ on:
       rollback_run_id:
         description: Previous workflow run ID used for rollback
         required: false
+      project_type:
+        description: Project technology/type (helps choose build defaults)
+        required: false
+        default: node
+        type: choice
+        options:
+          - node
+          - react
+          - nextjs
+          - php
+          - laravel
+          - static
 
 concurrency:
   group: shared-hosting-${{ inputs.project_key }}-${{ inputs.environment }}
@@ -60,19 +72,74 @@ jobs:
           node-version: "22"
           cache: npm
 
+      - name: Setup PHP (if required)
+        if: ${{ inputs.project_type == 'php' || inputs.project_type == 'laravel' }}
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, xml, zip
+          tools: composer:2
+
+      - name: Determine build command and output directory
+        id: vars
+        run: |
+          project_type="${{ inputs.project_type }}"
+          build="${{ inputs.build_command }}"
+          local="${{ inputs.local_dir }}"
+
+          if [ -z "$build" ]; then
+            case "$project_type" in
+              node)
+                build="npm ci && npm run build"
+                local="${local:-dist}"
+                ;;
+              react)
+                build="npm ci && npm run build"
+                local="${local:-build}"
+                ;;
+              nextjs)
+                # Try to build and export static output (if project supports export)
+                build="npm ci && npm run build && (npm run export || true)"
+                local="${local:-out}"
+                ;;
+              php)
+                build="composer install --no-dev --optimize-autoloader"
+                local="${local:-.}"
+                ;;
+              laravel)
+                build="composer install --no-dev --optimize-autoloader && if [ -f package.json ]; then npm ci && npm run build; fi"
+                local="${local:-public}"
+                ;;
+              static)
+                build="true"
+                local="${local:-.}"
+                ;;
+              *)
+                build="npm ci && npm run build"
+                local="${local:-dist}"
+                ;;
+            esac
+          fi
+
+          echo "build_cmd=$build" >> "$GITHUB_OUTPUT"
+          echo "local_dir=$local" >> "$GITHUB_OUTPUT"
+
       - name: Build website
         shell: bash
-        run: ${{ inputs.build_command }}
+        run: ${{ steps.vars.outputs.build_cmd }}
 
       - name: Validate build output
         shell: bash
         run: |
-          test -d "${{ inputs.local_dir }}"
-          find "${{ inputs.local_dir }}" -type f | wc -l
+          local_dir="${{ steps.vars.outputs.local_dir }}"
+          test -d "$local_dir"
+          find "$local_dir" -type f | wc -l
 
       - name: Archive build artifact
         shell: bash
-        run: tar -czf deployment-artifact.tar.gz -C "${{ inputs.local_dir }}" .
+        run: |
+          local_dir="${{ steps.vars.outputs.local_dir }}"
+          tar -czf deployment-artifact.tar.gz -C "$local_dir" .
 
       - name: Store deployment artifact
         uses: actions/upload-artifact@v4
@@ -87,7 +154,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ${{ inputs.local_dir }}/
+          local-dir: ${{ steps.vars.outputs.local_dir }}/
           server-dir: ${{ inputs.remote_dir }}/
           log-level: verbose
           timeout: 60000
