@@ -1,0 +1,134 @@
+name: Shared Hosting Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Deployment action
+        required: true
+        type: choice
+        options:
+          - deploy
+          - rollback
+      project_key:
+        description: Project key from the WhatsApp agent
+        required: true
+      project_name:
+        description: Human-readable project name
+        required: true
+      environment:
+        description: Deployment environment
+        required: true
+        default: Production
+      remote_dir:
+        description: FTP remote directory
+        required: true
+        default: /public_html
+      build_command:
+        description: Build command
+        required: true
+        default: npm ci && npm run build
+      local_dir:
+        description: Build output directory
+        required: true
+        default: dist
+      rollback_run_id:
+        description: Previous workflow run ID used for rollback
+        required: false
+
+concurrency:
+  group: shared-hosting-${{ inputs.project_key }}-${{ inputs.environment }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  deploy:
+    name: Build and FTP Deploy
+    if: ${{ inputs.action == 'deploy' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Build website
+        shell: bash
+        run: ${{ inputs.build_command }}
+
+      - name: Validate build output
+        shell: bash
+        run: |
+          test -d "${{ inputs.local_dir }}"
+          find "${{ inputs.local_dir }}" -type f | wc -l
+
+      - name: Archive build artifact
+        shell: bash
+        run: tar -czf deployment-artifact.tar.gz -C "${{ inputs.local_dir }}" .
+
+      - name: Store deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-hosting-${{ inputs.project_key }}-${{ github.run_id }}
+          path: deployment-artifact.tar.gz
+          retention-days: 30
+
+      - name: Deploy to shared hosting via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ${{ inputs.local_dir }}/
+          server-dir: ${{ inputs.remote_dir }}/
+          log-level: verbose
+          timeout: 60000
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env
+
+  rollback:
+    name: Rollback FTP Deployment
+    if: ${{ inputs.action == 'rollback' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Validate rollback target
+        shell: bash
+        run: test -n "${{ inputs.rollback_run_id }}"
+
+      - name: Download previous deployment artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: shared-hosting-${{ inputs.project_key }}-${{ inputs.rollback_run_id }}
+          run-id: ${{ inputs.rollback_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract rollback artifact
+        shell: bash
+        run: |
+          mkdir rollback-build
+          tar -xzf deployment-artifact.tar.gz -C rollback-build
+
+      - name: Upload rollback build via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: rollback-build/
+          server-dir: ${{ inputs.remote_dir }}/
+          log-level: verbose
+          timeout: 60000
+          dangerous-clean-slate: false
