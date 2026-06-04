@@ -71,7 +71,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
+          cache: ${{ hashFiles('**/yarn.lock') != '' && 'yarn' || hashFiles('**/pnpm-lock.yaml') != '' && 'pnpm' || hashFiles('**/package-lock.json') != '' && 'npm' || '' }}
 
       - name: Setup PHP (if required)
         if: ${{ inputs.project_type == 'laravel' || (inputs.project_type == 'php' && hashFiles('**/composer.json') != '') }}
@@ -88,32 +88,67 @@ jobs:
           build="${{ inputs.build_command }}"
           local="${{ inputs.local_dir }}"
 
+          get_node_build_cmd() {
+            if [ -f yarn.lock ]; then
+              echo "yarn install --frozen-lockfile && yarn build"
+            elif [ -f pnpm-lock.yaml ]; then
+              echo "pnpm install --frozen-lockfile && pnpm build"
+            elif [ -f package-lock.json ]; then
+              echo "npm ci && npm run build"
+            elif [ -f package.json ]; then
+              echo "npm install && npm run build"
+            else
+              echo "true"
+            fi
+          }
+
           if [ -z "$build" ]; then
             case "$project_type" in
-              node)
-                build="npm ci && npm run build"
-                ;;
-              react)
-                build="npm ci && npm run build"
+              node|react)
+                build=$(get_node_build_cmd)
                 ;;
               nextjs)
-                build="npm ci && npm run build && (npm run export || true)"
+                if [ -f yarn.lock ]; then
+                  build="yarn install --frozen-lockfile && yarn build && (yarn export || true)"
+                elif [ -f pnpm-lock.yaml ]; then
+                  build="pnpm install --frozen-lockfile && pnpm build && (pnpm export || true)"
+                elif [ -f package-lock.json ]; then
+                  build="npm ci && npm run build && (npm run export || true)"
+                elif [ -f package.json ]; then
+                  build="npm install && npm run build && (npm run export || true)"
+                else
+                  build="true"
+                fi
                 ;;
               php)
                 if [ -f composer.json ]; then
                   build="composer install --no-dev --optimize-autoloader"
                 else
-                  build="echo 'No composer.json found, skipping PHP dependencies build step.'"
+                  build="true"
                 fi
                 ;;
               laravel)
-                build="composer install --no-dev --optimize-autoloader && if [ -f package.json ]; then npm ci && npm run build; fi"
+                build_cmd=""
+                if [ -f composer.json ]; then
+                  build_cmd="composer install --no-dev --optimize-autoloader"
+                fi
+                if [ -f package.json ]; then
+                  node_cmd=$(get_node_build_cmd)
+                  if [ "$node_cmd" != "true" ]; then
+                    if [ -n "$build_cmd" ]; then
+                      build_cmd="$build_cmd && $node_cmd"
+                    else
+                      build_cmd="$node_cmd"
+                    fi
+                  fi
+                fi
+                build="${build_cmd:-true}"
                 ;;
               static)
                 build="true"
                 ;;
               *)
-                build="npm ci && npm run build"
+                build=$(get_node_build_cmd)
                 ;;
             esac
           fi
@@ -134,6 +169,7 @@ jobs:
           echo "local_dir=$local" >> "$GITHUB_OUTPUT"
 
       - name: Build website
+        if: ${{ steps.vars.outputs.build_cmd != 'true' }}
         shell: bash
         run: ${{ steps.vars.outputs.build_cmd }}
 
@@ -141,14 +177,43 @@ jobs:
         shell: bash
         run: |
           local_dir="${{ steps.vars.outputs.local_dir }}"
+          project_type="${{ inputs.project_type }}"
+          
           test -d "$local_dir"
+          
+          case "$project_type" in
+            node|react|nextjs|static)
+              if [ -f "$local_dir/index.html" ] || [ -f "$local_dir/index.php" ]; then
+                echo "Validation passed: Entry file found."
+              else
+                echo "Warning: No entry file (index.html or index.php) found in $local_dir"
+              fi
+              ;;
+            php|laravel)
+              if [ -f "$local_dir/index.php" ] || [ -f "$local_dir/artisan" ] || [ -f "$local_dir/index.html" ]; then
+                echo "Validation passed: PHP/Laravel entry file/artisan found."
+              else
+                echo "Warning: No standard entry file found in $local_dir"
+              fi
+              ;;
+          esac
+          
           find "$local_dir" -type f | wc -l
 
       - name: Archive build artifact
         shell: bash
         run: |
           local_dir="${{ steps.vars.outputs.local_dir }}"
-          tar -czf /tmp/deployment-artifact.tar.gz -C "$local_dir" .
+          tar -czf /tmp/deployment-artifact.tar.gz -C "$local_dir" \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude="node_modules" \
+            --exclude=".env" \
+            --exclude="Dockerfile" \
+            --exclude="docker-compose.yml" \
+            --exclude="docker-compose.yaml" \
+            --exclude=".dockerignore" \
+            .
           mv /tmp/deployment-artifact.tar.gz .
 
       - name: Store deployment artifact
@@ -174,6 +239,10 @@ jobs:
             **/.git*/**
             **/node_modules/**
             **/.env
+            **/Dockerfile
+            **/docker-compose.yml
+            **/docker-compose.yaml
+            **/.dockerignore
 
   rollback:
     name: Rollback FTP Deployment
