@@ -62,6 +62,7 @@ jobs:
     if: ${{ inputs.action == 'deploy' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -165,8 +166,33 @@ jobs:
             esac
           fi
 
+          # Parse FTP credentials from PROJECTS_JSON secret
+          projects_json='${{ secrets.PROJECTS_JSON }}'
+          project_key="${{ inputs.project_key }}"
+
+          if [ -n "$projects_json" ] && [ "$projects_json" != 'null' ]; then
+            ftp_host=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_host // .[\"$project_key\"].server // .[\"$project_key\"].host // \"\"")
+            ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
+            ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
+            remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remote_dir // \"\"")
+            if [ -z "$remote_dir" ]; then
+              remote_dir="${{ inputs.remote_dir }}"
+            fi
+          fi
+
+          ftp_host="${ftp_host:-${{ secrets.FTP_HOST }}}"
+          ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
+          ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
+          remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
+
+          echo "::add-mask::$ftp_password"
+
           echo "build_cmd=$build" >> "$GITHUB_OUTPUT"
           echo "local_dir=$local" >> "$GITHUB_OUTPUT"
+          echo "ftp_host=$ftp_host" >> "$GITHUB_OUTPUT"
+          echo "ftp_username=$ftp_username" >> "$GITHUB_OUTPUT"
+          echo "ftp_password=$ftp_password" >> "$GITHUB_OUTPUT"
+          echo "remote_dir=$remote_dir" >> "$GITHUB_OUTPUT"
 
       - name: Build website
         if: ${{ steps.vars.outputs.build_cmd != 'true' }}
@@ -226,11 +252,11 @@ jobs:
       - name: Deploy to shared hosting via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ steps.vars.outputs.ftp_host }}
+          username: ${{ steps.vars.outputs.ftp_username }}
+          password: ${{ steps.vars.outputs.ftp_password }}
           local-dir: ${{ steps.vars.outputs.local_dir }}/
-          server-dir: ${{ inputs.remote_dir }}/
+          server-dir: ${{ steps.vars.outputs.remote_dir }}/
           log-level: verbose
           timeout: 60000
           dangerous-clean-slate: false
@@ -249,10 +275,39 @@ jobs:
     if: ${{ inputs.action == 'rollback' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment: ${{ inputs.environment }}
     steps:
       - name: Validate rollback target
         shell: bash
         run: test -n "${{ inputs.rollback_run_id }}"
+
+      - name: Determine FTP credentials
+        id: vars
+        run: |
+          projects_json='${{ secrets.PROJECTS_JSON }}'
+          project_key="${{ inputs.project_key }}"
+          
+          if [ -n "$projects_json" ] && [ "$projects_json" != 'null' ]; then
+            ftp_host=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_host // .[\"$project_key\"].server // .[\"$project_key\"].host // \"\"")
+            ftp_username=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_username // .[\"$project_key\"].username // .[\"$project_key\"].user // \"\"")
+            ftp_password=$(echo "$projects_json" | jq -r ".[\"$project_key\"].ftp_password // .[\"$project_key\"].password // .[\"$project_key\"].pass // \"\"")
+            remote_dir=$(echo "$projects_json" | jq -r ".[\"$project_key\"].remote_dir // \"\"")
+            if [ -z "$remote_dir" ]; then
+              remote_dir="${{ inputs.remote_dir }}"
+            fi
+          fi
+          
+          ftp_host="${ftp_host:-${{ secrets.FTP_HOST }}}"
+          ftp_username="${ftp_username:-${{ secrets.FTP_USERNAME }}}"
+          ftp_password="${ftp_password:-${{ secrets.FTP_PASSWORD }}}"
+          remote_dir="${remote_dir:-${{ inputs.remote_dir }}}"
+          
+          echo "::add-mask::$ftp_password"
+          
+          echo "ftp_host=$ftp_host" >> "$GITHUB_OUTPUT"
+          echo "ftp_username=$ftp_username" >> "$GITHUB_OUTPUT"
+          echo "ftp_password=$ftp_password" >> "$GITHUB_OUTPUT"
+          echo "remote_dir=$remote_dir" >> "$GITHUB_OUTPUT"
 
       - name: Download previous deployment artifact
         uses: actions/download-artifact@v4
@@ -270,11 +325,11 @@ jobs:
       - name: Upload rollback build via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ steps.vars.outputs.ftp_host }}
+          username: ${{ steps.vars.outputs.ftp_username }}
+          password: ${{ steps.vars.outputs.ftp_password }}
           local-dir: rollback-build/
-          server-dir: ${{ inputs.remote_dir }}/
+          server-dir: ${{ steps.vars.outputs.remote_dir }}/
           log-level: verbose
           timeout: 60000
           dangerous-clean-slate: false
