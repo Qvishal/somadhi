@@ -96,28 +96,28 @@ jobs:
 
           # Pre-flight check to validate and correct remote_dir if FTP user is chrooted
           corrected_remote_dir=$(python3 -c "
-import ftplib, sys
-host, user, password, rdir = sys.argv[1:5]
-try:
-    ftp = ftplib.FTP(host, timeout=5)
-    ftp.login(user, password)
-    try:
-        ftp.cwd(rdir)
-        print(rdir)
-    except Exception:
-        alt = rdir.lstrip('/')
-        if alt.startswith('public_html'):
-            alt = alt[len('public_html'):].lstrip('/')
-        alt = alt if alt else '.'
-        try:
-            ftp.cwd(alt)
-            print(alt)
-        except Exception:
-            print(rdir)
-    ftp.quit()
-except Exception:
-    print(rdir)
-" "$ftp_host" "$ftp_username" "$ftp_password" "$remote_dir")
+          import ftplib, sys
+          host, user, password, rdir = sys.argv[1:5]
+          try:
+              ftp = ftplib.FTP(host, timeout=5)
+              ftp.login(user, password)
+              try:
+                  ftp.cwd(rdir)
+                  print(rdir)
+              except Exception:
+                  alt = rdir.lstrip('/')
+                  if alt.startswith('public_html'):
+                      alt = alt[len('public_html'):].lstrip('/')
+                  alt = alt if alt else '.'
+                  try:
+                      ftp.cwd(alt)
+                      print(alt)
+                  except Exception:
+                      print(rdir)
+              ftp.quit()
+          except Exception:
+              print(rdir)
+          " "$ftp_host" "$ftp_username" "$ftp_password" "$remote_dir")
 
           remote_dir="$corrected_remote_dir"
           remote_dir="${remote_dir%/}"
@@ -360,28 +360,28 @@ except Exception:
 
           # Pre-flight check to validate and correct remote_dir if FTP user is chrooted
           corrected_remote_dir=$(python3 -c "
-import ftplib, sys
-host, user, password, rdir = sys.argv[1:5]
-try:
-    ftp = ftplib.FTP(host, timeout=5)
-    ftp.login(user, password)
-    try:
-        ftp.cwd(rdir)
-        print(rdir)
-    except Exception:
-        alt = rdir.lstrip('/')
-        if alt.startswith('public_html'):
-            alt = alt[len('public_html'):].lstrip('/')
-        alt = alt if alt else '.'
-        try:
-            ftp.cwd(alt)
-            print(alt)
-        except Exception:
-            print(rdir)
-    ftp.quit()
-except Exception:
-    print(rdir)
-" "$ftp_host" "$ftp_username" "$ftp_password" "$remote_dir")
+          import ftplib, sys
+          host, user, password, rdir = sys.argv[1:5]
+          try:
+              ftp = ftplib.FTP(host, timeout=5)
+              ftp.login(user, password)
+              try:
+                  ftp.cwd(rdir)
+                  print(rdir)
+              except Exception:
+                  alt = rdir.lstrip('/')
+                  if alt.startswith('public_html'):
+                      alt = alt[len('public_html'):].lstrip('/')
+                  alt = alt if alt else '.'
+                  try:
+                      ftp.cwd(alt)
+                      print(alt)
+                  except Exception:
+                      print(rdir)
+              ftp.quit()
+          except Exception:
+              print(rdir)
+          " "$ftp_host" "$ftp_username" "$ftp_password" "$remote_dir")
 
           remote_dir="$corrected_remote_dir"
           remote_dir="${remote_dir%/}"
