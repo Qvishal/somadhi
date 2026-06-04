@@ -26,8 +26,8 @@ function brand_logo_asset_url(string $filename): string
 }
 
 /**
- * Given an image URL (png/jpg/jpeg), derive its WebP and AVIF siblings.
- * Returns HTML for a <picture> element with AVIF → WebP → original fallback.
+ * Given an image URL (png/jpg/jpeg), derive its WebP sibling.
+ * Returns HTML for a <picture> element with WebP → original fallback.
  *
  * @param string $src     Original image URL e.g. /assets/brand/logo.png
  * @param string $alt     Alt text
@@ -38,11 +38,10 @@ function picture(string $src, string $alt, string $class = '', string $extra = '
 {
     // Strip query string for extension detection
     $base  = preg_replace('/\?.*$/', '', $src);
-    $avif  = preg_replace('/\.(png|jpe?g)$/i', '.avif', $base);
     $webp  = preg_replace('/\.(png|jpe?g)$/i', '.webp', $base);
 
     // Only add modern sources if the extension changed (i.e. it was png/jpg)
-    $hasModern = ($avif !== $base && $webp !== $base);
+    $hasModern = ($webp !== $base);
 
     $classAttr = $class ? ' class="' . h($class) . '"' : '';
     $extraAttr = $extra ? ' ' . $extra : '';
@@ -53,7 +52,6 @@ function picture(string $src, string $alt, string $class = '', string $extra = '
     }
 
     return '<picture>'
-        . '<source type="image/avif" srcset="' . h($avif) . '">'
         . '<source type="image/webp" srcset="' . h($webp) . '">'
         . '<img src="' . h($src) . '" alt="' . h($alt) . '"' . $classAttr . $extraAttr . '>'
         . '</picture>';
@@ -1118,6 +1116,12 @@ function build_products_collection_schema(): array
                                 ],
                                 'deliveryTime' => [
                                     '@type' => 'ShippingDeliveryTime',
+                                    'handlingTime' => [
+                                        '@type' => 'QuantitativeValue',
+                                        'minValue' => 1,
+                                        'maxValue' => 3,
+                                        'unitCode' => 'd',
+                                    ],
                                     'transitTime' => [
                                         '@type' => 'QuantitativeValue',
                                         'minValue' => 1,
@@ -1348,10 +1352,12 @@ function render_head(string $page): void
         <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16.png">
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png">
-        <!-- Preload LCP Logo Image for high-speed rendering -->
-        <link rel="preload" as="image" href="/assets/brand/logo.avif" type="image/avif" fetchpriority="high">
-        <link rel="preload" href="/assets/css/styles.min.css" as="style">
-        <link rel="stylesheet" href="/assets/css/styles.min.css">
+        <!-- Preload LCP Logo Image for high-speed rendering (responsive) -->
+        <link rel="preload" as="image" href="/assets/brand/logo-mobile.webp" type="image/webp" media="(max-width: 640px)" fetchpriority="high">
+        <link rel="preload" as="image" href="/assets/brand/logo.webp" type="image/webp" media="(min-width: 641px)" fetchpriority="high">
+        <style>
+            <?= file_get_contents(dirname(__DIR__) . '/assets/css/styles.min.css') ?>
+        </style>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <!-- font-display:optional prevents CLS from font swap (no reflow when font loads) -->
@@ -1388,7 +1394,18 @@ function render_header(): void
         <header class="site-header" data-header>
             <div class="container site-header__inner">
                 <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
-                    <?= picture('/assets/brand/logo.webp', h($data['company']['name']), 'brand-mark__img', 'width="400" height="133" fetchpriority="high"') ?>
+                    <picture>
+                        <!-- Mobile AVIF -->
+                        <source media="(max-width: 640px)" srcset="/assets/brand/logo-mobile.avif" type="image/avif">
+                        <!-- Mobile WebP -->
+                        <source media="(max-width: 640px)" srcset="/assets/brand/logo-mobile.webp" type="image/webp">
+                        <!-- Desktop AVIF -->
+                        <source media="(min-width: 641px)" srcset="/assets/brand/logo.avif" type="image/avif">
+                        <!-- Desktop WebP -->
+                        <source media="(min-width: 641px)" srcset="/assets/brand/logo.webp" type="image/webp">
+                        <!-- Fallback PNG -->
+                        <img src="/assets/brand/logo.png" alt="<?= h($data['company']['name']) ?>" class="brand-mark__img" width="230" height="84" fetchpriority="high">
+                    </picture>
                 </a>
 
                 <nav class="site-nav" aria-label="Primary navigation">

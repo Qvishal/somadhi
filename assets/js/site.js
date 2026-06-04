@@ -157,10 +157,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const syncHeader = () => {
         if (!header) return;
-        const onScroll = () => {
-            header.classList.toggle("is-scrolled", window.scrollY > 16);
+        let lastScrollY = 0;
+        let ticking = false;
+
+        const updateHeader = () => {
+            header.classList.toggle("is-scrolled", lastScrollY > 16);
+            ticking = false;
         };
-        onScroll();
+
+        const onScroll = () => {
+            lastScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        };
+
+        // Use requestAnimationFrame for the initial sync to prevent forced layout reflow on load
+        window.requestAnimationFrame(() => {
+            lastScrollY = window.scrollY;
+            updateHeader();
+        });
+
         window.addEventListener("scroll", onScroll, { passive: true });
     };
 

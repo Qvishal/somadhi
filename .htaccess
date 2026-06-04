@@ -6,6 +6,11 @@ Options -Indexes
 </IfModule>
 
 # ── Browser Caching ───────────────────────────────────────────────────────────
+<IfModule mod_mime.c>
+    AddType image/webp .webp
+    AddType image/avif .avif
+</IfModule>
+
 <IfModule mod_expires.c>
     ExpiresActive On
     # HTML — short cache (1 hour)
@@ -15,7 +20,6 @@ Options -Indexes
     ExpiresByType application/javascript    "access plus 1 year"
     # Images & fonts — 1 year
     ExpiresByType image/png                 "access plus 1 year"
-    ExpiresByType image/avif                 "access plus 1 year"
     ExpiresByType image/jpeg                "access plus 1 year"
     ExpiresByType image/svg+xml             "access plus 1 year"
     ExpiresByType image/webp                "access plus 1 year"

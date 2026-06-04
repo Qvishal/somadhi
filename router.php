@@ -23,10 +23,30 @@ $routes = [
     '/contact'    => '/contact.php',
 ];
 
-// Serve static files directly (css, js, images, fonts, etc.)
+// Serve static files with custom Cache-Control headers
 $filePath = __DIR__ . $path;
 if ($path !== '/' && file_exists($filePath) && is_file($filePath)) {
-    return false; // let built-in server handle it
+    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'css'   => 'text/css',
+        'js'    => 'application/javascript',
+        'png'   => 'image/png',
+        'jpg'   => 'image/jpeg',
+        'jpeg'  => 'image/jpeg',
+        'gif'   => 'image/gif',
+        'svg'   => 'image/svg+xml',
+        'webp'  => 'image/webp',
+        'avif'  => 'image/avif',
+        'woff2' => 'font/woff2',
+        'pdf'   => 'application/pdf',
+    ];
+
+    if (isset($mimeTypes[$ext])) {
+        header('Content-Type: ' . $mimeTypes[$ext]);
+    }
+    header('Cache-Control: public, max-age=31536000, immutable');
+    readfile($filePath);
+    return true;
 }
 
 // Resolve route

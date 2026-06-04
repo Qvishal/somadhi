@@ -4,8 +4,8 @@ FROM php:8.2-apache
 # Use the default production configuration for PHP
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# Enable Apache mod_rewrite for cleaner URL routing if needed in the future
-RUN a2enmod rewrite
+# Enable Apache mod_rewrite, mod_headers, and mod_expires for cleaner routing and caching
+RUN a2enmod rewrite headers expires
 
 # Configure custom PHP settings
 RUN echo "upload_max_filesize = 32M" >> "$PHP_INI_DIR/php.ini" \
