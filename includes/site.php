@@ -1395,12 +1395,8 @@ function render_header(): void
             <div class="container site-header__inner">
                 <a href="/" class="brand-mark" aria-label="<?= h($data['company']['name']) ?> home">
                     <picture>
-                        <!-- Mobile AVIF -->
-                        <source media="(max-width: 640px)" srcset="/assets/brand/logo-mobile.avif" type="image/avif">
                         <!-- Mobile WebP -->
                         <source media="(max-width: 640px)" srcset="/assets/brand/logo-mobile.webp" type="image/webp">
-                        <!-- Desktop AVIF -->
-                        <source media="(min-width: 641px)" srcset="/assets/brand/logo.avif" type="image/avif">
                         <!-- Desktop WebP -->
                         <source media="(min-width: 641px)" srcset="/assets/brand/logo.webp" type="image/webp">
                         <!-- Fallback PNG -->
