@@ -1360,10 +1360,10 @@ function render_head(string $page): void
         </style>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <!-- font-display:optional prevents CLS from font swap (no reflow when font loads) -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional" media="print" onload="this.media='all'">
+        <!-- font-display:swap ensures the font loads even on first visit or disabled cache -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
         <noscript>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=optional">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
         </noscript>
         <?php render_schema_markup($page); ?>
     </head>
