@@ -16,7 +16,10 @@ render_header();
         <div class="hero__backdrop"></div>
         <div class="container hero__grid">
             <div class="hero__content reveal">
-                <span class="eyebrow">Welcome to Somadi Lifesciences</span>
+                <div class="hero__intro">
+                    <span class="eyebrow">Welcome to</span>
+                    <div class="hero__brand-name">Somadi Lifesciences</div>
+                </div>
                 <h1>Trusted Laboratory Products and Scientific Supplies Across India</h1>
                 <p class="hero__lead">Laboratory products, scientific instruments and research chemicals for customers across India. <?= h($company['intro']) ?></p>
                 <div class="hero__actions">

@@ -1560,7 +1560,7 @@ function render_footer(): void
             </div>
             <div class="container site-footer__meta">
                 <p>&copy; <span data-year></span> <?= h($data['company']['name']) ?>. All rights reserved.</p>
-                <p style="font-size: 0.78rem; color: var(--muted);">Designed &amp; Developed by <a href="https://hwttechy.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Hwt Techy</a></p>
+                <p>Designed &amp; Developed by <a href="https://hwttechy.com" target="_blank" rel="noopener noreferrer" style="color: orange;">Hwt Techy</a></p>
             </div>
         </footer>
 
