@@ -1534,15 +1534,18 @@ function render_footer(): void
                 </div>
                 <div>
                     <span class="eyebrow">Platform</span>
+                    <a href="/">Home</a>
                     <a href="/products">Products</a>
                     <a href="/catalogues">Catalogues</a>
                     <a href="/contact#rfq-form">Request Quotation</a>
                 </div>
                 <div>
                     <span class="eyebrow">Industries</span>
-                    <a href="/products">Pharma</a>
-                    <a href="/products">Research Labs</a>
-                    <a href="/products">Universities</a>
+                    <a href="/products?category=Research+Chemicals">Pharma &amp; Research</a>
+                    <a href="/products?category=Scientific+Instruments+%26+Laboratory+Equipment">Research Labs</a>
+                    <a href="/products?category=Laboratory+Glassware+%26+Plasticware">Universities</a>
+                    <a href="/products?category=Molecular+Biology+Reagents">Biotechnology</a>
+                    <a href="/products?category=Laboratory+Safety+Products">Healthcare</a>
                 </div>
                 <div>
                     <span class="eyebrow">Contact</span>
@@ -1557,10 +1560,7 @@ function render_footer(): void
             </div>
             <div class="container site-footer__meta">
                 <p>&copy; <span data-year></span> <?= h($data['company']['name']) ?>. All rights reserved.</p>
-                <div>
-                    <a href="/sitemap.xml">Sitemap</a>
-                    <a href="/robots.txt">Robots</a>
-                </div>
+                <p style="font-size: 0.78rem; color: var(--muted);">Designed &amp; Developed by <a href="https://hwttechy.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;">Hwt Techy</a></p>
             </div>
         </footer>
 

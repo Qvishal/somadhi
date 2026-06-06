@@ -324,25 +324,25 @@ document.addEventListener("DOMContentLoaded", () => {
             ...(window.siteSearch.products || []).map((item) => ({
                 title: item.name,
                 meta: `${item.brand} · ${item.category}`,
-                href: "/products.php",
+                href: `/products#product-${item.slug || ''}`,
                 label: "Product",
             })),
             ...(window.siteSearch.categories || []).map((item) => ({
                 title: item.name,
                 meta: item.summary,
-                href: "/products.php",
+                href: `/products?category=${encodeURIComponent(item.name)}#products-grid`,
                 label: "Category",
             })),
             ...(window.siteSearch.catalogues || []).map((item) => ({
                 title: item.title,
                 meta: `${item.category} · ${item.brand} · ${item.extension}`,
-                href: "/catalogues.php",
+                href: `/catalogues#catalogue-${item.slug || ''}`,
                 label: "Catalogue",
             })),
             ...(window.siteSearch.brands || []).map((item) => ({
                 title: item,
                 meta: "Brand partner",
-                href: "/products.php",
+                href: "/products",
                 label: "Brand",
             })),
         ];
@@ -433,6 +433,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         searchInput?.addEventListener("input", apply);
         brandSelect?.addEventListener("change", apply);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const presetCategory = urlParams.get("category");
+        if (presetCategory) {
+            const matchingChip = $$("[data-filter-category]").find(
+                (btn) => btn.dataset.filterCategory === presetCategory
+            );
+            if (matchingChip) {
+                stateFilters.category = presetCategory;
+                $$("[data-filter-category]").forEach((node) => node.classList.remove("chip--active"));
+                matchingChip.classList.add("chip--active");
+            }
+        }
+
         apply();
     };
 

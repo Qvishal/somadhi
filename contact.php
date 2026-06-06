@@ -115,17 +115,25 @@ render_header();
                 <span class="info-card__icon"><?= icon('quote') ?></span>
                 <h3>Quotation support</h3>
                 <p>Share multiple products, quantities and delivery details in one place for faster follow-up.</p>
+                <a class="link-button" href="/products" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Browse products first <?= icon('arrow') ?></a>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('whatsapp') ?></span>
                 <h3>Direct communication</h3>
                 <p>Move from web inquiry to phone or WhatsApp quickly when your requirement is urgent or time-sensitive.</p>
+                <a class="link-button" href="<?= h(whatsapp_href($company['whatsapp'])) ?>" target="_blank" rel="noreferrer" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Message on WhatsApp <?= icon('arrow') ?></a>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('spark') ?></span>
                 <h3>Trust and coordination</h3>
                 <p>Clear business details, careful coordination and responsive support help build long-term customer confidence.</p>
+                <a class="link-button" href="/catalogues" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Download catalogues <?= icon('arrow') ?></a>
             </article>
+        </div>
+        <div class="container" style="text-align:center; margin-top: 32px;">
+            <p style="color: var(--muted); font-size: .9rem; margin-bottom: 12px;">Not ready to inquire yet?</p>
+            <a class="button button--secondary" href="/products">Browse our products <?= icon('arrow') ?></a>
+            <a class="button button--ghost" href="/catalogues" style="margin-left:12px;">Download catalogues</a>
         </div>
     </section>
 </main>

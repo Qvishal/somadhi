@@ -168,6 +168,9 @@ render_header();
                 </article>
             <?php endforeach; ?>
         </div>
+        <div class="container" style="text-align:center; margin-top: 32px;">
+            <a class="button button--secondary" href="/products">View all products <?= icon('arrow') ?></a>
+        </div>
     </section>
 
     <section class="section">
@@ -185,7 +188,7 @@ render_header();
                     <span class="category-card__accent"><?= h($category['accent']) ?></span>
                     <h3><?= h($category['name']) ?></h3>
                     <p><?= h($category['summary']) ?></p>
-                    <a href="/products#products-grid">Quick navigation <?= icon('arrow') ?></a>
+                    <a href="/products?category=<?= urlencode($category['name']) ?>#products-grid">Browse products <?= icon('arrow') ?></a>
                 </article>
             <?php endforeach; ?>
         </div>
@@ -266,6 +269,10 @@ render_header();
                 </article>
             <?php endforeach; ?>
         </div>
+        <div class="container" style="text-align:center; margin-top: 32px;">
+            <a class="button button--primary" href="/contact#rfq-form">Get in touch with our team <?= icon('arrow') ?></a>
+            <a class="button button--ghost" href="/products" style="margin-left:12px;">Browse products</a>
+        </div>
     </section>
 
     <section class="section section--alt">
@@ -282,8 +289,12 @@ render_header();
                     <article class="industry-card reveal">
                         <h3><?= h($industry['name']) ?></h3>
                         <p><?= h($industry['summary']) ?></p>
+                        <a class="link-button" href="/products" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">View products <?= icon('arrow') ?></a>
                     </article>
                 <?php endforeach; ?>
+            </div>
+            <div style="text-align:center; margin-top: 32px;">
+                <a class="button button--secondary" href="/contact#rfq-form">Inquire for your sector <?= icon('arrow') ?></a>
             </div>
         </div>
     </section>
@@ -318,6 +329,9 @@ render_header();
                     </div>
                 </article>
             <?php endforeach; ?>
+        </div>
+        <div class="container" style="text-align:center; margin-top: 32px;">
+            <a class="button button--secondary" href="/catalogues">Browse all catalogues <?= icon('arrow') ?></a>
         </div>
     </section>
 

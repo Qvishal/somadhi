@@ -135,7 +135,7 @@ render_header();
                 </div>
                 <div class="empty-state" data-empty-state hidden>
                     <h3>No products match the current filters</h3>
-                    <p>Try another category, clear availability filters or use the RFQ form so the team can assist manually.</p>
+                    <p>Try another category, clear availability filters or <a href="/contact#rfq-form">contact the team</a> so we can assist manually.</p>
                 </div>
             </div>
         </div>
@@ -159,12 +159,18 @@ render_header();
                 <span class="info-card__icon"><?= icon('quote') ?></span>
                 <h3>Multi-product inquiry flow</h3>
                 <p>Collect multiple SKUs across categories and submit one cleaner RFQ with notes and quantities.</p>
+                <a class="link-button" href="/contact#rfq-form" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Start your RFQ <?= icon('arrow') ?></a>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('download') ?></span>
                 <h3>Catalogue-backed decisions</h3>
                 <p>Use downloadable resources to support internal approvals, comparisons and requirement planning.</p>
+                <a class="link-button" href="/catalogues" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Browse catalogues <?= icon('arrow') ?></a>
             </article>
+        </div>
+        <div class="container" style="text-align:center; margin-top: 32px;">
+            <a class="button button--primary" href="/contact#rfq-form">Request a quotation <?= icon('arrow') ?></a>
+            <a class="button button--ghost" href="/catalogues" style="margin-left:12px;">Download catalogues</a>
         </div>
     </section>
 

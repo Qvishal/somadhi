@@ -95,17 +95,24 @@ render_header();
                 <span class="info-card__icon"><?= icon('search') ?></span>
                 <h3>Searchable structure</h3>
                 <p>Search by product family or category instead of scanning long lists of static files.</p>
+                <a class="link-button" href="/products" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Browse products <?= icon('arrow') ?></a>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('download') ?></span>
                 <h3>Useful downloads</h3>
                 <p>Brochures can be shared with internal teams to support product validation and planning.</p>
+                <a class="link-button" href="/contact#rfq-form" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Request a specific catalogue <?= icon('arrow') ?></a>
             </article>
             <article class="info-card reveal">
                 <span class="info-card__icon"><?= icon('spark') ?></span>
                 <h3>Organized content blocks</h3>
-                <p>Each catalogue group is structured to reflect Somadi’s real supply categories and inquiry flow.</p>
+                <p>Each catalogue group is structured to reflect Somadi's real supply categories and inquiry flow.</p>
+                <a class="link-button" href="/contact" style="margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-size:.85rem;">Get in touch <?= icon('arrow') ?></a>
             </article>
+        </div>
+        <div class="container" style="text-align:center; margin-top: 32px;">
+            <a class="button button--primary" href="/contact#rfq-form">Submit an inquiry <?= icon('arrow') ?></a>
+            <a class="button button--ghost" href="/products" style="margin-left:12px;">Browse products</a>
         </div>
     </section>
 </main>
